@@ -9,9 +9,23 @@ Route::get('/', function () {
     return view('landing');
 });
 
+// Route::middleware(['auth'])->group(function () {
+//     Route::resource('materi', MateriController::class);
+// });
+
+// routes/web.php
+
+// use App\Http\Controllers\MateriController;
+
 Route::middleware(['auth'])->group(function () {
-    Route::resource('materi', MateriController::class);
+    Route::get('/materi', [MateriController::class, 'index'])->name('materi.index');
+    Route::get('/materi/create', [MateriController::class, 'create'])->name('materi.create');
+    Route::post('/materi', [MateriController::class, 'store'])->name('materi.store');
+    Route::get('/materi/{materi}/edit', [MateriController::class, 'edit'])->name('materi.edit');
+    Route::put('/materi/{materi}', [MateriController::class, 'update'])->name('materi.update');
+    Route::delete('/materi/{materi}', [MateriController::class, 'destroy'])->name('materi.destroy');
 });
+
 
 Route::get('/data-siswa', [DataSiswaController::class, 'index'])->name('data-siswa');
 
