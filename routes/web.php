@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\DataSiswaController;
+use App\Http\Controllers\ModulController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,20 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/materi/{materi}', [MateriController::class, 'update'])->name('materi.update');
     Route::delete('/materi/{materi}', [MateriController::class, 'destroy'])->name('materi.destroy');
 });
+
+
+// Route to list moduls and show the form to add a new modul
+Route::get('/modul', [ModulController::class, 'index'])->name('modul.index');
+
+// Route to handle the form submission for adding a new modul
+Route::post('/modul', [ModulController::class, 'store'])->name('modul.store');
+
+// Route to handle the form submission for updating an existing modul
+Route::put('/modul/{modul}', [ModulController::class, 'update'])->name('modul.update');
+
+// Route to handle the deletion of a modul
+Route::delete('/modul/{modul}', [ModulController::class, 'destroy'])->name('modul.destroy');
+
 
 
 Route::get('/data-siswa', [DataSiswaController::class, 'index'])->name('data-siswa');
