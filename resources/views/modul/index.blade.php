@@ -8,90 +8,78 @@
                 <a href="#" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
                 <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                 <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
+                @if(auth()->user()->role == '0' || auth()->user()->role == '1')
+                    <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
+                @endif
             </nav>
         </div>
-        <div class="p-6 text-gray-900">
+        <div class="p-6 text-gray-900 w-full">
+
+            <!-- Success Alert -->
+            @if(session('success'))
+                <div id="success-alert" class="bg-green-500 text-black p-4 rounded mb-4">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <h1 class="text-2xl font-bold mb-4">Modul List</h1>
-            <!-- Button to open the Add Modul modal -->
-            <button onclick="openAddModal()"
-                class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mb-4">
+
+            <!-- Add Modul Button (Visible to Admin and Guru) -->
+            @if(auth()->user()->role == '0' || auth()->user()->role == '1')
+            <button onclick="openAddModal()" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mb-4">
                 Add Modul
             </button>
+            @endif
 
-            <!-- Table to display moduls -->
-            <table class="min-w-full divide-y divide-gray-200 border border-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama
-                            Modul</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File
-                            PDF</th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($moduls as $index => $modul)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $index + 1 }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $modul->nama_modul }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            @if($modul->file_pdf)
-                            <a href="{{ asset('storage/' . $modul->file_pdf) }}" class="text-blue-500"
-                                target="_blank">View PDF</a>
-                            @else
-                            <span class="text-gray-500">No PDF</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <!-- Edit button -->
-                            <button
-                                onclick="openEditModal({{ $modul->id }}, '{{ $modul->nama_modul }}', '{{ asset('storage/' . $modul->file_pdf) }}')"
-                                class="text-blue-500 hover:text-blue-700">Edit</button> |
-                            <!-- Delete button -->
-                            <form action="{{ route('modul.destroy', $modul->id) }}" method="POST" class="inline-block">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-700"
-                                    onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <!-- Card container to display moduls -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($moduls as $index => $modul)
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <h2 class="text-xl font-semibold text-gray-800">{{ $modul->nama_modul }}</h2>
+                    <div class="mt-4">
+                        @if($modul->file_pdf)
+                        <a href="{{ asset('storage/' . $modul->file_pdf) }}" class="text-blue-500" target="_blank">View PDF</a>
+                        @else
+                        <span class="text-gray-500">No PDF</span>
+                        @endif
+                    </div>
+                    @if(auth()->user()->role == '0' || auth()->user()->role == '1')
+                    <div class="flex justify-between items-center mt-6">
+                        <!-- Edit button -->
+                        <button onclick="openEditModal({{ $modul->id }}, '{{ $modul->nama_modul }}', '{{ asset('storage/' . $modul->file_pdf) }}')" class="text-blue-500 hover:text-blue-700">
+                            Edit
+                        </button>
+                        <!-- Delete button -->
+                        <button type="button" onclick="openDeleteModal({{ $modul->id }})" class="text-red-500 hover:text-red-700">
+                            Delete
+                        </button>
+                    </div>
+                    @endif
+                </div>
+                @endforeach
+            </div>
         </div>
 
         <!-- Modal Background for Add Modul -->
         <div id="add-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden">
             <!-- Add Modul Modal Content -->
-            <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+            <div class="bg-white p-8 rounded shadow-md w-full max-w-lg h-auto">
                 <h2 class="text-xl font-bold mb-4">Add New Modul</h2>
                 <form action="{{ route('modul.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-4">
                         <label for="nama_modul" class="block text-sm font-medium text-gray-700">Nama Modul</label>
-                        <input type="text" name="nama_modul" id="nama_modul" required
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" name="nama_modul" id="nama_modul" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="mb-4">
                         <label for="file_pdf" class="block text-sm font-medium text-gray-700">Upload PDF</label>
-                        <input type="file" name="file_pdf" id="file_pdf" accept="application/pdf" required
-                            class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <input type="file" name="file_pdf" id="file_pdf" accept="application/pdf" required class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                     </div>
                     <div class="flex justify-end">
-                        <button type="button" onclick="closeAddModal()"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+                        <button type="button" onclick="closeAddModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
                             Cancel
                         </button>
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
                             Save
                         </button>
                     </div>
@@ -102,32 +90,48 @@
         <!-- Modal Background for Edit Modul -->
         <div id="edit-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden">
             <!-- Edit Modul Modal Content -->
-            <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+            <div class="bg-white p-8 rounded shadow-md w-full max-w-lg h-auto">
                 <h2 class="text-xl font-bold mb-4">Edit Modul</h2>
                 <form id="edit-form" action="" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
                         <label for="edit_nama_modul" class="block text-sm font-medium text-gray-700">Nama Modul</label>
-                        <input type="text" name="nama_modul" id="edit_nama_modul" required
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" name="nama_modul" id="edit_nama_modul" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="mb-4">
                         <label for="edit_file_pdf" class="block text-sm font-medium text-gray-700">Upload PDF</label>
-                        <input type="file" name="file_pdf" id="edit_file_pdf" accept="application/pdf"
-                            class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <input type="file" name="file_pdf" id="edit_file_pdf" accept="application/pdf" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                     </div>
                     <div class="flex justify-end">
-                        <button type="button" onclick="closeEditModal()"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+                        <button type="button" onclick="closeEditModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
                             Cancel
                         </button>
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
                             Save
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="delete-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden">
+            <div class="bg-white p-8 rounded shadow-md w-full max-w-lg h-auto">
+                <h2 class="text-xl font-bold mb-4">Confirm Deletion</h2>
+                <p>Are you sure you want to delete this modul?</p>
+                <div class="flex justify-end mt-4">
+                    <button type="button" onclick="closeDeleteModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+                        No
+                    </button>
+                    <form id="delete-form" action="" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 rounded">
+                            Yes
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -151,6 +155,23 @@
                 document.getElementById('edit-modal').classList.add('hidden');
             }
 
+            function openDeleteModal(modulId) {
+                document.getElementById('delete-form').action = `/modul/${modulId}`;
+                document.getElementById('delete-modal').classList.remove('hidden');
+            }
+
+            function closeDeleteModal() {
+                document.getElementById('delete-modal').classList.add('hidden');
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const successAlert = document.getElementById('success-alert');
+                if (successAlert) {
+                    setTimeout(() => {
+                        successAlert.classList.add('hidden');
+                    }, 3000); // Hide after 3 seconds
+                }
+            });
         </script>
     </div>
 </x-app-layout>

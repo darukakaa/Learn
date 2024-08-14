@@ -9,7 +9,7 @@
                 <a href="#" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
                 <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                 <a href="#" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
+                <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
             </nav>
         </div>
 

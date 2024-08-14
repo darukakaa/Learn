@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MateriController;
+use App\Http\Controllers\KuisTugasController;
 use App\Http\Controllers\DataSiswaController;
 use App\Http\Controllers\ModulController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,8 @@ Route::put('/modul/{modul}', [ModulController::class, 'update'])->name('modul.up
 // Route to handle the deletion of a modul
 Route::delete('/modul/{modul}', [ModulController::class, 'destroy'])->name('modul.destroy');
 
+
+Route::get('/kuis-tugas', [KuisTugasController::class, 'index'])->name('kuis-tugas.index');
 
 
 Route::get('/data-siswa', [DataSiswaController::class, 'index'])->name('data-siswa');

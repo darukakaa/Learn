@@ -4,11 +4,11 @@
         <div class="w-64 h-screen bg-gray-800 text-white flex flex-col">
             <nav class="flex-1">
                 <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
+                <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
                 <a href="#" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
                 <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                 <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
+                <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
             </nav>
         </div>
 
