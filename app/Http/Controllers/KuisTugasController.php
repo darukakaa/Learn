@@ -10,5 +10,6 @@ class KuisTugasController extends Controller
     {
         return view('kuis-tugas.index');
     }
+    
 }
 

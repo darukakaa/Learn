@@ -8,6 +8,7 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="/bootstrap-5.1.3-dist/css/bootstrap.css" rel="stylesheet">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
 
         <!-- Styles -->
@@ -85,5 +86,6 @@
                 </div>
             </div>
         </div>
+        <script src="/bootstrap-5.1.3-dist/js/bootstrap.js" rel="stylesheet"></script>
     </body>
 </html>

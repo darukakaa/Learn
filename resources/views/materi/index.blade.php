@@ -26,11 +26,11 @@
                             <!-- Only show the "Add Materi" button to admin and guru roles -->
                             @if(auth()->user()->role == '0' || auth()->user()->role == '1')
                             <a href="{{ route('materi.create') }}"
-                                class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded inline-block mb-4">Add
+                                class="btn btn-primary">Add
                                 Materi</a>
                             @endif
 
-                            <table class="min-w-full divide-y divide-gray-200 border border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200 border border-gray-200 table table-hover">
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col"
@@ -82,12 +82,12 @@
                                         @if(auth()->user()->role == '0' || auth()->user()->role == '1')
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <a href="{{ route('materi.edit', $materi->id) }}"
-                                                class="text-blue-500 hover:text-blue-700">Edit</a> |
+                                                class="btn btn-warning">Edit</a> |
                                             <form action="{{ route('materi.destroy', $materi->id) }}" method="POST"
                                                 class="inline-block">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-500 hover:text-red-700"
+                                                <button type="submit" class="btn btn-danger"
                                                     onclick="return confirm('Are you sure?')">Delete</button>
                                             </form>
                                         </td>

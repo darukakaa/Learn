@@ -6,7 +6,7 @@
                 <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
                 <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
                 <a href="#" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
+                <a href="{{ route('kuis-tugas.index') }}" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                 <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
                 @if(auth()->user()->role == '0' || auth()->user()->role == '1')
                     <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
@@ -26,7 +26,7 @@
 
             <!-- Add Modul Button (Visible to Admin and Guru) -->
             @if(auth()->user()->role == '0' || auth()->user()->role == '1')
-            <button onclick="openAddModal()" class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mb-4">
+            <button onclick="openAddModal()" class="btn btn-primary">
                 Add Modul
             </button>
             @endif
@@ -90,7 +90,7 @@
         <!-- Modal Background for Edit Modul -->
         <div id="edit-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center hidden">
             <!-- Edit Modul Modal Content -->
-            <div class="bg-white p-8 rounded shadow-md w-full max-w-lg h-auto">
+            <div class=" bg-white p-8 rounded shadow-md w-full max-w-lg h-auto">
                 <h2 class="text-xl font-bold mb-4">Edit Modul</h2>
                 <form id="edit-form" action="" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -121,15 +121,13 @@
                 <h2 class="text-xl font-bold mb-4">Confirm Deletion</h2>
                 <p>Are you sure you want to delete this modul?</p>
                 <div class="flex justify-end mt-4">
-                    <button type="button" onclick="closeDeleteModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+                    <button type="button" onclick="closeDeleteModal()" class="btn btn-secondary" >
                         No
                     </button>
                     <form id="delete-form" action="" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 rounded">
-                            Yes
-                        </button>
+                        <button type="submit" class="btn btn-danger">Yes</button>
                     </form>
                 </div>
             </div>
