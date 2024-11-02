@@ -31,26 +31,32 @@
                     <!-- Cards Section -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                         <!-- Card 1 -->
-                        <div class="bg-white shadow rounded-lg p-4">
+                        <a href="{{ route('data-siswa') }}"
+                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
                             <h3 class="font-semibold text-lg">Jumlah Siswa</h3>
                             <p>{{ $jumlahSiswa }}</p>
-                            
-                        </div>
+                        </a>
+
                         <!-- Card 2 -->
-                        <div class="bg-white shadow rounded-lg p-4">
+                        <a href="{{ route('materi.index') }}"
+                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            <h3 class="font-semibold text-lg">Jumlah Materi</h3>
+                            <p>{{ $jumlahMateri }}</p>
+                        </a>
+
+                        <!-- Card 3 -->
+                        <a href="{{ route('modul.index') }}"
+                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
                             <h3 class="font-semibold text-lg">Modul</h3>
                             <p>{{ $jumlahModul }}</p>
-                        </div>
-                        <!-- Card 3 -->
-                        <div class="bg-white shadow rounded-lg p-4">
-                            <h3 class="font-semibold text-lg">Card Title 3</h3>
-                            <p class="mt-2 text-gray-600">Some description for card 3.</p>
-                        </div>
+                        </a>
+
                         <!-- Card 4 -->
-                        <div class="bg-white shadow rounded-lg p-4">
-                            <h3 class="font-semibold text-lg">Card Title 4</h3>
-                            <p class="mt-2 text-gray-600">Some description for card 4.</p>
-                        </div>
+                        <a href="{{ route('tugas.index') }}"
+                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            <h3 class="font-semibold text-lg">Tugas</h3>
+                            <p>{{ $jumlahTugas }}</p>
+                        </a>
                     </div>
                 </div>
             </div>

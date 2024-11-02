@@ -17,7 +17,7 @@ class LearningController extends Controller
         return view('learning.index', compact('learnings'));
     }
 
-    
+
 
     // Store a new learning item
     public function store(Request $request)
@@ -25,12 +25,12 @@ class LearningController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
         ]);
-    
+
         // Create new learning (you would replace this with your actual model)
         Learning::create([
             'name' => $request->nama,
         ]);
-    
+
         return redirect()->route('learning.index')->with('success', 'Learning added successfully.');
     }
     public function destroy($id)
@@ -45,10 +45,4 @@ class LearningController extends Controller
         $learning = Learning::findOrFail($id);
         return view('learning.show', compact('learning'));
     }
-    
-    
-
-    
-    
 }
-
