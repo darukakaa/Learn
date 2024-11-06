@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Learning;
 use App\Models\User;
+use App\Models\Learning;
 use App\Models\Modul;
 use App\Models\Materi;
 use App\Models\Tugas;
 use Illuminate\Http\Request;
 
-class AdminDashboardController extends Controller
+class GuruDashboardController extends Controller
 {
     public function index()
     {
@@ -20,6 +20,6 @@ class AdminDashboardController extends Controller
         $jumlahMateri = Materi::all()->count();
         $jumlahTugas = Tugas::all()->count();
 
-        return view('admin', compact('jumlahSiswa', 'jumlahLearning', 'jumlahModul', 'jumlahMateri', 'jumlahTugas'));
+        return view('guru', compact('jumlahSiswa', 'jumlahLearning', 'jumlahModul', 'jumlahMateri', 'jumlahTugas'));
     }
 }

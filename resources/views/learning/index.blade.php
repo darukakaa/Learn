@@ -1,17 +1,21 @@
 <!-- resources/views/learning/index.blade.php -->
 <x-app-layout>
-    <div class="flex">
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <div class="w-64 h-screen bg-gray-800 text-white flex flex-col">
-            <nav class="flex-1">
-                <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
-                <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
-                <a href="{{ route('learning.index') }}" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
-                <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
-                @if(auth()->user()->role == '0' || auth()->user()->role == '1')
-                <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
-                @endif
+        <div class="w-64 h-full bg-gray-200">
+            <nav class="flex flex-col p-4 space-y-4">
+                <a href="{{ route('dashboard') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Dashboard</a>
+                <a href="{{ route('materi.index') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Materi</a>
+                <a href="{{ route('learning.index') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Learning</a>
+                <a href="{{ route('kuis-tugas.index') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Kuis/Tugas</a>
+                <a href="{{ route('data-siswa') }}" class="block text-center py-3 rounded bg-gray-300 text-black">Data
+                    Siswa</a>
+                <a href="{{ route('modul.index') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Modul</a>
             </nav>
         </div>
 
@@ -20,29 +24,30 @@
             <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <!-- Button to add new Learning -->
-                    <div class="flex justify-end mb-4">
-                    @if(auth()->user()->role == '0' || auth()->user()->role == '1') 
-                        <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-                            onclick="openAddModal()">
-                            Tambah Learning
-                        </button>
-                    @endif    
+                    <div class="flex justify mb-4">
+                        @if (auth()->user()->role == '0' || auth()->user()->role == '1')
+                            <button class="btn btn-primary" onclick="openAddModal()">
+                                Tambah Learning
+                            </button>
+                        @endif
                     </div>
 
                     <!-- Grid of Learning items as Cards -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach ($learnings as $learning)
-                        <a href="{{ route('learning.show', $learning->id) }}" class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
-                            <div class="p-6 text-center">
-                                <h3 class="text-lg font-bold mb-2">{{ $learning->name }}</h3>
-                                <p class="text-gray-600">Learning Description or any extra content.</p>
-                            </div>
-                            <div class="bg-gray-200 text-center py-2 flex justify-around">
-                                <span class="text-blue-500 hover:text-blue-700 font-bold">View Details</span>
-                                <!-- Delete Button -->
-                                <button type="button" class="text-red-500 hover:text-red-700 font-bold" onclick="event.preventDefault(); openDeleteModal({{ $learning->id }})">Hapus</button>
-                            </div>
-                        </a>
+                            <a href="{{ route('learning.show', $learning->id) }}"
+                                class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
+                                <div class="p-6 text-center">
+                                    <h3 class="text-lg font-bold mb-2">{{ $learning->name }}</h3>
+                                    <p class="text-gray-600">Learning Description or any extra content.</p>
+                                </div>
+                                <div class="bg-gray-200 text-center py-2 flex justify-around">
+                                    <span class="text-blue-500 hover:text-blue-700 font-bold">View Details</span>
+                                    <!-- Delete Button -->
+                                    <button type="button" class="text-red-500 hover:text-red-700 font-bold"
+                                        onclick="event.preventDefault(); openDeleteModal({{ $learning->id }})">Hapus</button>
+                                </div>
+                            </a>
                         @endforeach
                     </div>
                 </div>
@@ -58,8 +63,8 @@
                 @csrf
                 <div class="mb-4">
                     <label for="nama" class="block text-gray-700">Nama Learning</label>
-                    <input type="text" id="nama" name="nama" class="w-full px-3 py-2 border border-gray-300 rounded"
-                        required>
+                    <input type="text" id="nama" name="nama"
+                        class="w-full px-3 py-2 border border-gray-300 rounded" required>
                 </div>
                 <div class="flex justify-end">
                     <button type="button"

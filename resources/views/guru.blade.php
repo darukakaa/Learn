@@ -6,32 +6,61 @@
                 <a href="dashboard" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
                 <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
                 <a href="{{ route('learning.index') }}" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
-                @if(auth()->user()->role == '0' || auth()->user()->role == '1')
-                    <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
-                @endif
+                <a href="{{ route('kuis-tugas.index') }}" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
+                <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
+                <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
             </nav>
         </div>
 
         <!-- Main Content -->
         <div class="flex-1">
-                <div class="py-12">
-                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                            <div class="p-6 text-gray-900">
-                                {{ __("You're logged in!") }}
-                            </div>
-                        </div>
+            <div class="flex justify-between items-center p-4 bg-gray-100 border-b border-gray-200">
+                <x-slot name="header">
+                    <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                        {{ __('Guru Dashboard') }}
+                    </h2>
+                </x-slot>
+            </div>
+            <div class="py-12">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <!-- Cards Section -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                        <!-- Card 1 -->
+                        <a href="{{ route('data-siswa') }}"
+                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            <h3 class="font-semibold text-lg">Jumlah Siswa</h3>
+                            <p>{{ $jumlahSiswa }}</p>
+                        </a>
+
+                        <!-- Card 2 -->
+                        <a href="{{ route('learning.index') }}"
+                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            <h3 class="font-semibold text-lg">Learning</h3>
+                            <p>{{ $jumlahLearning }}</p>
+                        </a>
+                        <!-- Card 3 -->
+                        <a href="{{ route('materi.index') }}"
+                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            <h3 class="font-semibold text-lg">Jumlah Materi</h3>
+                            <p>{{ $jumlahMateri }}</p>
+                        </a>
+
+                        <!-- Card 4 -->
+                        <a href="{{ route('modul.index') }}"
+                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            <h3 class="font-semibold text-lg">Modul</h3>
+                            <p>{{ $jumlahModul }}</p>
+                        </a>
+
+                        <!-- Card 5 -->
+                        <a href="{{ route('tugas.index') }}"
+                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            <h3 class="font-semibold text-lg">Tugas</h3>
+                            <p>{{ $jumlahTugas }}</p>
+                        </a>
                     </div>
                 </div>
-            <x-slot name="header">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    {{ __('Guru Dashboard') }}
-                </h2>
-            </x-slot>
-
-
+            </div>
         </div>
     </div>
 </x-app-layout>

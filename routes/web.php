@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\GuruDashboardController;
+use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\LearningController;
@@ -36,6 +38,8 @@ Route::get('/learning', [LearningController::class, 'index'])->name('learning.in
 Route::post('/learning/store', [LearningController::class, 'store'])->name('learning.store');
 Route::delete('/learning/{id}', [LearningController::class, 'destroy'])->name('learning.destroy');
 Route::get('/learning/{id}', [LearningController::class, 'show'])->name('learning.show');
+
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->middleware(['auth', 'verified', 'rolemanager:admin'])->name('admin');
 
 Route::resource('learning', LearningController::class);
 
@@ -80,13 +84,18 @@ Route::get('/data-siswa', [DataSiswaController::class, 'index'])->name('data-sis
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified','rolemanager:user'])->name('dashboard');
+})->middleware(['auth', 'verified', 'rolemanager:user'])->name('dashboard');
 
-Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->middleware(['auth', 'verified','rolemanager:admin'])->name('admin');
+Route::get('/dashboard', [SiswaDashboardController::class, 'index'])->middleware(['auth', 'verified', 'rolemanager:user'])->name('dashboard');
+
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->middleware(['auth', 'verified', 'rolemanager:admin'])->name('admin');
 
 Route::get('guru/dashboard', function () {
     return view('guru');
-})->middleware(['auth', 'verified','rolemanager:guru'])->name('guru');
+})->middleware(['auth', 'verified', 'rolemanager:guru'])->name('guru');
+
+Route::get('/guru/dashboard', [GuruDashboardController::class, 'index'])->middleware(['auth', 'verified', 'rolemanager:guru'])->name('guru');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -95,4 +104,4 @@ Route::middleware('auth')->group(function () {
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
