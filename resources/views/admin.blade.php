@@ -31,40 +31,58 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                         <!-- Card 1 -->
                         <a href="{{ route('data-siswa') }}"
-                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            class="bg-gray-200 shadow-lg rounded-lg p-4 hover:bg-gray-300 transition flex flex-col items-center">
                             <h3 class="font-semibold text-lg">Jumlah Siswa</h3>
                             <p>{{ $jumlahSiswa }}</p>
+                            <div class="w-full bg-gray-300 p-2 mt-4 rounded-b-lg text-center">
+                                <span>Selengkapnya <i class="fas fa-chevron-right"></i></span>
+                            </div>
                         </a>
-
                         <!-- Card 2 -->
                         <a href="{{ route('learning.index') }}"
-                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            class="bg-gray-200 shadow-lg rounded-lg p-4 hover:bg-gray-300 transition flex flex-col items-center">
                             <h3 class="font-semibold text-lg">Learning</h3>
                             <p>{{ $jumlahLearning }}</p>
+                            <div class="w-full bg-gray-300 p-2 mt-4 rounded-b-lg text-center">
+                                <span>Selengkapnya <i class="fas fa-chevron-right"></i></span>
+                            </div>
                         </a>
                         <!-- Card 3 -->
                         <a href="{{ route('materi.index') }}"
-                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            class="bg-gray-200 shadow-lg rounded-lg p-4 hover:bg-gray-300 transition flex flex-col items-center">
                             <h3 class="font-semibold text-lg">Jumlah Materi</h3>
                             <p>{{ $jumlahMateri }}</p>
+                            <div class="w-full bg-gray-300 p-2 mt-4 rounded-b-lg text-center">
+                                <span>Selengkapnya <i class="fas fa-chevron-right"></i></span>
+                            </div>
                         </a>
 
                         <!-- Card 4 -->
                         <a href="{{ route('modul.index') }}"
-                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            class="bg-gray-200 shadow-lg rounded-lg p-4 hover:bg-gray-300 transition flex flex-col items-center">
                             <h3 class="font-semibold text-lg">Modul</h3>
                             <p>{{ $jumlahModul }}</p>
+                            <div class="w-full bg-gray-300 p-2 mt-4 rounded-b-lg text-center">
+                                <span>Selengkapnya <i class="fas fa-chevron-right"></i></span>
+                            </div>
                         </a>
 
                         <!-- Card 5 -->
                         <a href="{{ route('tugas.index') }}"
-                            class="bg-white shadow rounded-lg p-4 hover:bg-gray-100 transition">
+                            class="bg-gray-200 shadow-lg rounded-lg p-4 hover:bg-gray-300 transition flex flex-col items-center">
                             <h3 class="font-semibold text-lg">Tugas</h3>
                             <p>{{ $jumlahTugas }}</p>
+                            <div class="w-full bg-gray-300 p-2 mt-4 rounded-b-lg text-center">
+                                <span>Selengkapnya <i class="fas fa-chevron-right"></i></span>
+                            </div>
                         </a>
                     </div>
                 </div>
             </div>
+            <!-- Footer -->
+            <footer class="bg-dark-200 text-center p-4 mt-auto">
+                <p class="text-white-700">&copy; Learnify 2024</p>
+            </footer>
         </div>
     </div>
 </x-app-layout>
