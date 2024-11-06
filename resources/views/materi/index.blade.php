@@ -1,4 +1,3 @@
-<!-- resources/views/materi/index.blade.php -->
 <x-app-layout>
     <div class="flex">
         <!-- Sidebar -->
@@ -6,8 +5,8 @@
             <nav class="flex-1">
                 <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
                 <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
+                <a href="{{ route('learning.index') }}" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
+                <a href="{{ route('kuis-tugas.index') }}" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                 <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
                 @if (auth()->user()->role == '0' || auth()->user()->role == '1')
                     <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
@@ -99,6 +98,10 @@
                     </div>
                 </div>
             </div>
+            <!-- Footer -->
+            <footer class="bg-dark-200 text-center p-4 mt-auto">
+                <p class="text-white-700">&copy; Learnify 2024</p>
+            </footer>
         </div>
     </div>
 </x-app-layout>

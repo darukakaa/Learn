@@ -1,19 +1,23 @@
 <x-app-layout>
-    <div class="flex">
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <div class="w-64 h-screen bg-gray-800 text-white flex flex-col">
-            <nav class="flex-1">
-                <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
-                <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
-                <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
-                <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
+        <div class="w-64 h-full bg-gray-200">
+            <nav class="flex flex-col p-4 space-y-4">
+                <a href="{{ route('dashboard') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Dashboard</a>
+                <a href="{{ route('materi.index') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Materi</a>
+                <a href="{{ route('learning.index') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Learning</a>
+                <a href="{{ route('kuis-tugas.index') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Kuis/Tugas</a>
+                <a href="{{ route('data-siswa') }}" class="block text-center py-3 rounded bg-gray-300 text-black">Data
+                    Siswa</a>
+                <a href="{{ route('modul.index') }}"
+                    class="block text-center py-3 rounded bg-gray-300 text-black">Modul</a>
             </nav>
         </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 p-6 bg-gray-100">
+        <div class="flex-1">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h1 class="text-2xl font-bold mb-4">Data Siswa (Total: {{ $users->count() }})</h1>
