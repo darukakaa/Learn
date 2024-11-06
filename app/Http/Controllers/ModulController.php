@@ -10,7 +10,7 @@ class ModulController extends Controller
 {
     public function index()
     {
-        $moduls = Modul::all();
+        $moduls = Modul::orderBy('created_at', 'desc')->get();
         return view('modul.index', compact('moduls'));
     }
 
@@ -65,6 +65,3 @@ class ModulController extends Controller
         return redirect()->route('modul.index')->with('success', 'Modul deleted successfully!');
     }
 }
-
-
-

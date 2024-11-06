@@ -12,12 +12,11 @@ class DataSiswaController extends Controller
      */
     public function index()
     {
-
-        // $studentCount = User::where('role', 2)->count();
-        // Fetch only users with the role '2'
-        $users = User::where('role', 2)->get();
+        // Fetch only users with the role '2' and order by the latest created_at
+        $users = User::where('role', 2)
+            ->orderBy('created_at', 'desc') // Ordering by created_at in descending order
+            ->get();
 
         return view('data-siswa', compact('users'));
     }
 }
-

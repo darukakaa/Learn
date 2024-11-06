@@ -10,10 +10,9 @@ class MateriController extends Controller
     // Display a list of all materi
     public function index()
     {
-        // Fetch all materi records from the database
-        $materis = Materi::all();
+        // Fetch Materi records ordered by the latest created at
+        $materis = Materi::orderBy('created_at', 'desc')->get();
 
-        // Pass the data to the view
         return view('materi.index', compact('materis'));
     }
 

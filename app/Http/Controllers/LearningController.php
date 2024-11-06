@@ -11,7 +11,7 @@ class LearningController extends Controller
     public function index()
     {
         // Retrieve all learning items from the database
-        $learnings = Learning::all();
+        $learnings = Learning::orderBy('created_at', 'desc')->get();
 
         // Return the view with the list of learnings
         return view('learning.index', compact('learnings'));
