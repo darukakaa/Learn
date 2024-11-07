@@ -7,7 +7,7 @@ use App\Models\Kuis;
 use App\Models\Question;
 use App\Models\Option;
 
-class QuestionsController extends Controller
+class QuestionController extends Controller
 {
     public function store(Request $request, $kuisId)
     {
@@ -34,6 +34,7 @@ class QuestionsController extends Controller
                 'is_correct' => $index == $request->input('correct_option'), // True if it’s the correct option
             ]);
         }
+
 
         return redirect()->route('kuis.show', $kuisId)->with('success', 'Question added successfully');
     }

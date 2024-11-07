@@ -8,11 +8,13 @@ use App\Http\Controllers\MateriController;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\KuisTugasController;
 use App\Http\Controllers\KuisController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\DataSiswaController;
 use App\Http\Controllers\ModulController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get('/', function () {
     return view('landing');
@@ -63,6 +65,14 @@ Route::get('/kuis/{id}', [KuisController::class, 'show'])->name('kuis.show');
 Route::get('kuis/{id}', [KuisController::class, 'show'])->name('kuis.show');
 Route::get('/kuis', [KuisController::class, 'index'])->name('kuis.index');
 Route::post('kuis/{id}/questions', [QuestionsController::class, 'store'])->name('questions.store');
+
+
+// route kuis
+Route::post('/questions/{kuis}', [QuestionController::class, 'store'])->name('questions.store');
+Route::post('/questions/submit', [QuestionsController::class, 'submit'])->name('questions.submit');
+Route::get('/kuis/{kuis}', [KuisController::class, 'show'])->name('kuis.show');
+Route::post('/kuis/{kuis}/submit', [KuisController::class, 'submitAnswers'])->name('questions.submit');
+
 
 
 Route::get('/tugas', [TugasController::class, 'index'])->name('tugas.index');

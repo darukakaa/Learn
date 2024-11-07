@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Question extends Model
 {
     // Add the necessary properties for mass assignment
-    protected $fillable = ['kuis_id', 'question'];
+    protected $fillable = ['question', 'kuis_id'];
 
     /**
      * Get the kuis that owns the question.
@@ -17,14 +17,12 @@ class Question extends Model
         return $this->belongsTo(Kuis::class);
     }
 
-    /**
-     * Get the options for the question.
-     */
     public function options()
     {
         return $this->hasMany(Option::class);
     }
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+    }
 }
-
-
-

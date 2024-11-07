@@ -8,8 +8,8 @@
                 <a href="#" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
                 <a href="{{ route('kuis-tugas.index') }}" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                 <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
-                @if(auth()->user()->role == '0' || auth()->user()->role == '1')
-                <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
+                @if (auth()->user()->role == '0' || auth()->user()->role == '1')
+                    <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
                 @endif
             </nav>
         </div>
@@ -48,30 +48,49 @@
                 </div>
             </div>
 
-            <!-- Display Added Kuis as Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($kuis as $item)
-                <div class="bg-white shadow-md rounded-lg p-6 flex flex-col">
-                    <h3 class="text-xl font-semibold mb-2">{{ $item->nama_kuis }}</h3>
-                    <a href="{{ route('kuis.show', $item->id) }}" class="block w-full h-full">
-                        <div
-                            class="card-container bg-white rounded-lg shadow-md w-full h-full flex justify-center items-center hover:bg-gray-100 transition">
-                            <h1 class="text-4xl font-bold text-gray-800">{{ $item->nama_kuis }}</h1>
-                        </div>
-                    </a>
-
-                    <p class="text-gray-600 mb-4">Tanggal Ditambahkan: {{ $item->tanggal_ditambahkan }}</p>
-                    <div class="mt-auto flex space-x-4">
-                        <a href="#" class="text-blue-500 hover:underline">Edit</a>
-                        <form action="{{ route('kuis.destroy', $item->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:underline">Delete</button>
-                        </form>
-                    </div>
-                </div>
-                @endforeach
+            <!-- Display Added Kuis as Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white rounded-lg shadow-md">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nama Kuis</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Tanggal Ditambahkan</th>
+                            <th
+                                class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach ($kuis as $item)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <a href="{{ route('kuis.show', $item->id) }}" class="text-blue-500 hover:underline">
+                                        {{ $item->nama_kuis }}
+                                    </a>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{ $item->tanggal_ditambahkan }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <div class="flex justify-center space-x-4">
+                                        <a href="{{ route('kuis.show', $item->id) }}"
+                                            class="text-green-500 hover:underline">Ikuti Kuis</a>
+                                        <a href="#" class="text-blue-500 hover:underline">Edit</a>
+                                        <form action="{{ route('kuis.destroy', $item->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
+
         </div>
     </div>
 </x-app-layout>
