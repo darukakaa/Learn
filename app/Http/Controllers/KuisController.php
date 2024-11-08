@@ -16,8 +16,22 @@ class KuisController extends Controller
 
     public function show($id)
     {
+        $kuis = Kuis::findOrFail($id);
+
+        // Get the students (role 2) who have answered questions
+        $students = User::where('role', 2)
+            ->withCount(['answers as correct_answers_count' => function ($query) use ($kuis) {
+                $query->whereHas('question', function ($q) use ($kuis) {
+                    $q->where('kuis_id', $kuis->id); // Ensure it's related to the specific Kuis
+                })
+                    ->where('correct', true); // Assuming 'correct' column in answers table
+            }])
+            ->get();
+
+        // Debug the $students variable
+        dd($students);
         $kuis = Kuis::with('questions.options')->findOrFail($id);
-        return view('kuis.show', compact('kuis'));
+        return view('kuis.show', compact('kuis', 'students'));
     }
 
     public function store(Request $request)
@@ -54,24 +68,5 @@ class KuisController extends Controller
 
         // Redirect to the quiz page or another page
         return redirect()->route('kuis.show', ['kuis' => $kuis->id])->with('status', 'Your answers have been submitted.');
-    }
-    public function showKuisResults($kuisId)
-    {
-        $kuis = Kuis::findOrFail($kuisId);
-
-        // Get the students (role 2) who have answered questions
-        $students = User::where('role', 2)
-            ->withCount(['answers as correct_answers_count' => function ($query) use ($kuis) {
-                $query->whereHas('question', function ($q) use ($kuis) {
-                    $q->where('kuis_id', $kuis->id); // Ensure it's related to the specific Kuis
-                })
-                    ->where('correct', true); // Assuming 'correct' column in answers table
-            }])
-            ->get();
-
-        // Debug the $students variable
-        dd($students);
-
-        return view('show', compact('kuis', 'students'));
     }
 }

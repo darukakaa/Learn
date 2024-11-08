@@ -17,13 +17,12 @@
         <!-- Main Content -->
         <div class="flex-1 p-6">
             <!-- Add Kuis Button -->
-            <button class="bg-blue-500 text-black px-4 py-2 rounded-lg mb-4"
-                onclick="document.getElementById('kuisModal').classList.remove('hidden');">
+            <button class="btn btn-primary" onclick="document.getElementById('kuisModal').classList.remove('hidden');">
                 Add Kuis
             </button>
 
             <!-- Kuis Modal -->
-            <div id="kuisModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
+            <div id="kuisModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
                 <div class="bg-white p-6 rounded-lg shadow-lg w-96">
                     <h2 class="text-2xl font-bold mb-4">Add Kuis</h2>
                     <form action="{{ route('kuis.store') }}" method="POST">

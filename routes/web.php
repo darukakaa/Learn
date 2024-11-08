@@ -8,6 +8,8 @@ use App\Http\Controllers\MateriController;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\KuisTugasController;
 use App\Http\Controllers\KuisController;
+use App\Http\Controllers\KuisV2Controller;
+use App\Http\Controllers\QuestionV2Controller;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\TugasController;
@@ -72,6 +74,18 @@ Route::post('/questions/{kuis}', [QuestionController::class, 'store'])->name('qu
 Route::post('/questions/submit', [QuestionsController::class, 'submit'])->name('questions.submit');
 Route::get('/kuis/{kuis}', [KuisController::class, 'show'])->name('kuis.show');
 Route::post('/kuis/{kuis}/submit', [KuisController::class, 'submitAnswers'])->name('questions.submit');
+
+
+//kuisv2
+Route::get('/kuisv2', [KuisV2Controller::class, 'index'])->name('kuisv2.index');
+Route::post('/kuisv2', [KuisV2Controller::class, 'store'])->name('kuisv2.store');
+Route::delete('/kuisv2/{id}', [KuisV2Controller::class, 'destroy'])->name('kuisv2.destroy');
+Route::put('kuisv2/{id}', [KuisV2Controller::class, 'update'])->name('kuisv2.update');
+Route::get('/kuisv2/{id}', [Kuisv2Controller::class, 'show'])->name('kuisv2.show');
+Route::get('/start-kuis/{id}', [Kuisv2Controller::class, 'start'])->name('start.quiz');
+Route::get('/kuisv2', [Kuisv2Controller::class, 'index'])->name('kuisv2.index');
+Route::post('/kuisv2/{kuis_id}/questions', [QuestionV2Controller::class, 'store'])->name('questions.store');
+
 
 
 

@@ -86,12 +86,10 @@
                             class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                     </div>
                     <div class="flex justify-end">
-                        <button type="button" onclick="closeAddModal()"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+                        <button type="button" onclick="closeAddModal()" class="btn btn-secondary">
                             Cancel
                         </button>
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
+                        <button type="submit" class="btn btn-success">
                             Save
                         </button>
                     </div>
@@ -118,12 +116,10 @@
                             class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                     </div>
                     <div class="flex justify-end">
-                        <button type="button" onclick="closeEditModal()"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+                        <button type="button" onclick="closeEditModal()" class="btn btn-secondary">
                             Cancel
                         </button>
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded">
+                        <button type="submit" class="btn btn-success">
                             Save
                         </button>
                     </div>

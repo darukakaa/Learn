@@ -16,19 +16,26 @@
 
         <!-- Main Content -->
         <div class="flex-1 p-6 text-gray-900 flex justify-center items-center space-x-6">
-            <!-- Kuis Card -->
+            {{-- <!-- Kuis Card -->
             <a href="{{ route('kuis.index') }}" class="block w-full h-full">
                 <div
                     class="card-container bg-white rounded-lg shadow-md w-full h-full flex justify-center items-center hover:bg-gray-100 transition">
                     <h1 class="text-4xl font-bold text-gray-800">Kuis</h1>
                 </div>
-            </a>
+            </a> --}}
 
             <!-- Tugas Card -->
             <a href="{{ route('tugas.index') }}" class="block w-full h-full">
                 <div
                     class="card-container bg-white rounded-lg shadow-md w-full h-full flex justify-center items-center hover:bg-gray-100 transition">
                     <h1 class="text-4xl font-bold text-gray-800">Tugas</h1>
+                </div>
+            </a>
+            <!-- Kuis v2 Card -->
+            <a href="{{ route('kuisv2.index') }}" class="block w-full h-full">
+                <div
+                    class="card-container bg-white rounded-lg shadow-md w-full h-full flex justify-center items-center hover:bg-gray-100 transition">
+                    <h1 class="text-4xl font-bold text-gray-800">Kuisv2</h1>
                 </div>
             </a>
         </div>
