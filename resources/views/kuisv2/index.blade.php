@@ -54,7 +54,8 @@
                                     <button type="submit" class="btn btn-danger">Hapus</button>
                                 </form>
                                 <!-- Masuk Kuis Button -->
-                                <a href="{{ route('kuisv2.show', $kuis->id) }}" class="btn btn-primary">Masuk Kuis</a>
+                                <a href="{{ route('questions.show', $kuis->id) }}" class="btn btn-primary">Masuk
+                                    Kuis</a>
                             </td>
                         </tr>
                     @endforeach

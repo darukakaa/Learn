@@ -44,6 +44,6 @@ class QuestionV2Controller extends Controller
             'correct_answer' => $request->correct_answer,
         ]);
 
-        return redirect()->route('kuisv2.show', $kuis_id)->with('success', 'Soal berhasil ditambahkan!');
+        return redirect()->route('questions.show', $kuis_id)->with('success', 'Soal berhasil ditambahkan!');
     }
 }

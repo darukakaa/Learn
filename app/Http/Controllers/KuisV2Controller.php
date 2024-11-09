@@ -8,13 +8,7 @@ use Illuminate\Http\Request;
 
 class KuisV2Controller extends Controller
 {
-    public function show($id)
-    {
-        $kuis = Kuisv2::findOrFail($id); // Find the quiz by ID
 
-        // Pass the quiz data to the view
-        return view('kuisv2.show', compact('kuis'));
-    }
     public function start($id)
     {
         $kuis = Kuisv2::findOrFail($id);
@@ -30,6 +24,13 @@ class KuisV2Controller extends Controller
 
         // Return a view and pass the data if necessary
         return view('kuisv2.index', compact('kuisv2'));
+    }
+    public function show($id)
+    {
+        $kuis = Kuisv2::findOrFail($id); // Find the quiz by ID
+
+        // Pass the quiz data to the view
+        return view('kuisv2.show', compact('kuis'));
     }
     public function store(Request $request)
     {

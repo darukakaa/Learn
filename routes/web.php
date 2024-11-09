@@ -85,6 +85,7 @@ Route::get('/kuisv2/{id}', [Kuisv2Controller::class, 'show'])->name('kuisv2.show
 Route::get('/start-kuis/{id}', [Kuisv2Controller::class, 'start'])->name('start.quiz');
 Route::get('/kuisv2', [Kuisv2Controller::class, 'index'])->name('kuisv2.index');
 Route::post('/kuisv2/{kuis_id}/questions', [QuestionV2Controller::class, 'store'])->name('questions.store');
+Route::get('/kuisv2/questions/{kuis_id}', [QuestionV2Controller::class, 'show'])->name('questions.show');
 
 
 
