@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AnswerV2Controller;
 use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\ProfileController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\DataSiswaController;
 use App\Http\Controllers\ModulController;
+use App\Http\Controllers\ResultsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -88,7 +90,20 @@ Route::post('/kuisv2/{kuis_id}/questions', [QuestionV2Controller::class, 'store'
 Route::get('/kuisv2/questions/{kuis_id}', [QuestionV2Controller::class, 'show'])->name('questions.show');
 
 
+Route::post('/answers', [AnswerV2Controller::class, 'store'])->name('answers_v2.store');
 
+//result
+Route::get('/results/{id}', [ResultsController::class, 'show'])->name('results.show');
+
+//score
+Route::post('/answers_v2/score', [AnswerV2Controller::class, 'score'])->name('answers_v2.score');
+
+
+
+
+
+Route::post('/kuisv2/submit-jawaban', [AnswerV2Controller::class, 'store'])->name('answers_v2.store');
+Route::post('/kuisv2/score', [AnswerV2Controller::class, 'score'])->name('answers_v2.score');
 
 Route::get('/tugas', [TugasController::class, 'index'])->name('tugas.index');
 Route::post('/tugas', [TugasController::class, 'store'])->name('tugas.store');

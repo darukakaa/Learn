@@ -39,28 +39,33 @@
                             <td class="py-2 px-4 border-b">{{ $kuis->tanggal_kuis }}</td>
                             <td class="py-2 px-4 border-b">{{ $kuis->nama_kuis }}</td>
                             <td class="py-2 px-4 border-b flex justify-center space-x-2">
-                                <!-- Edit Button -->
-                                <button
-                                    onclick="openEditModal({{ $kuis->id }}, '{{ $kuis->nama_kuis }}', '{{ $kuis->tanggal_kuis }}')"
-                                    class="btn btn-warning">
-                                    Edit
-                                </button>
+                                @if (auth()->user()->role == '0' || auth()->user()->role == '1')
+                                    <!-- Edit Button -->
+                                    <button
+                                        onclick="openEditModal({{ $kuis->id }}, '{{ $kuis->nama_kuis }}', '{{ $kuis->tanggal_kuis }}')"
+                                        class="btn btn-warning">
+                                        Edit
+                                    </button>
 
-                                <!-- Delete Form -->
-                                <form action="{{ route('kuisv2.destroy', $kuis->id) }}" method="POST"
-                                    onsubmit="return confirm('Are you sure you want to delete this quiz?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Hapus</button>
-                                </form>
-                                <!-- Masuk Kuis Button -->
+                                    <!-- Delete Form -->
+                                    <form action="{{ route('kuisv2.destroy', $kuis->id) }}" method="POST"
+                                        onsubmit="return confirm('Are you sure you want to delete this quiz?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Hapus</button>
+                                    </form>
+                                @endif
                                 <a href="{{ route('questions.show', $kuis->id) }}" class="btn btn-primary">Masuk
                                     Kuis</a>
+                                <a href="{{ route('results.show', $kuis->id) }}" class="btn btn-info">Hasil</a>
+                                <!-- Tambahkan tombol ini -->
                             </td>
+
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+
 
             <!-- Add Kuis Modal -->
             <div id="kuisv2Modal"

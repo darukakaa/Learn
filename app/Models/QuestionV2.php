@@ -20,11 +20,16 @@ class QuestionV2 extends Model
         'option_d',
         'option_e',
         'correct_answer',
+        'image',
     ];
 
     // Define the relationship between a question and its quiz
     public function kuis()
     {
         return $this->belongsTo(Kuisv2::class, 'kuis_id');
+    }
+    public function answers()
+    {
+        return $this->hasMany(AnswerV2::class);
     }
 }

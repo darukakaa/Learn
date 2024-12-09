@@ -20,6 +20,7 @@ class QuestionV2Controller extends Controller
         return view('kuisv2.show', compact('kuis', 'questions'));
     }
 
+
     public function store(Request $request, $kuis_id)
     {
         $request->validate([
@@ -30,9 +31,23 @@ class QuestionV2Controller extends Controller
             'option_d' => 'required|string|max:255',
             'option_e' => 'required|string|max:255',
             'correct_answer' => 'required|in:A,B,C,D,E',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validate the image
         ]);
 
-        // Save the question and options
+        // Handle image upload if provided
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            // Upload file ke storage public/questions_images
+            $imagePath = $request->file('image')->store('questions_images', 'public');
+            \Log::info('File uploaded to: ' . $imagePath);
+
+            // Simpan path gambar ke database
+            $questionData['image'] = $imagePath;
+        } else {
+            $questionData['image'] = null; // Jika tidak ada gambar, default ke null
+            \Log::info('No file uploaded');
+        }
+        // Save the question and options along with the image path
         QuestionV2::create([
             'kuis_id' => $kuis_id,
             'question' => $request->question,
@@ -42,6 +57,7 @@ class QuestionV2Controller extends Controller
             'option_d' => $request->option_d,
             'option_e' => $request->option_e,
             'correct_answer' => $request->correct_answer,
+            'image' => $imagePath, // Store the image path
         ]);
 
         return redirect()->route('questions.show', $kuis_id)->with('success', 'Soal berhasil ditambahkan!');

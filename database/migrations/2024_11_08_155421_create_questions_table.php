@@ -13,17 +13,19 @@ return new class extends Migration
     {
         Schema::create('questionsv2', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kuis_id')->constrained('kuisv2')->onDelete('cascade'); // Foreign key to Kuis
+            $table->foreignId('kuis_id')->constrained('kuisv2')->onDelete('cascade');
             $table->text('question');
             $table->string('option_a');
             $table->string('option_b');
             $table->string('option_c');
             $table->string('option_d');
             $table->string('option_e');
-            $table->char('correct_answer', 1); // A, B, C, D, E
+            $table->char('correct_answer', 1);
+            $table->string('image')->nullable(); // Add this field for storing image file path
             $table->timestamps();
         });
     }
+
 
     public function down()
     {

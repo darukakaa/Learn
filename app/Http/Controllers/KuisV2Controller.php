@@ -19,10 +19,9 @@ class KuisV2Controller extends Controller
 
     public function index()
     {
-        // Fetch all Kuisv2 entries if you want to display them
-        $kuisv2 = Kuisv2::all();
+        // Mengambil data kuisv2 dan mengurutkannya berdasarkan kolom 'created_at' secara descending
+        $kuisv2 = Kuisv2::orderBy('created_at', 'desc')->get();
 
-        // Return a view and pass the data if necessary
         return view('kuisv2.index', compact('kuisv2'));
     }
     public function show($id)

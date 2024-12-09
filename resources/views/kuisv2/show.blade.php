@@ -21,7 +21,8 @@
                 @if (auth()->user()->role == '0' || auth()->user()->role == '1')
                     <div class="bg-white p-6 rounded shadow-lg w-1/2">
                         <h2 class="text-xl font-bold mb-4">Tambah Soal Kuis</h2>
-                        <form action="{{ route('questions.store', $kuis->id) }}" method="POST">
+                        <form action="{{ route('questions.store', $kuis->id) }}" method="POST"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="mb-4">
                                 <label for="question" class="block text-gray-700">Soal</label>
@@ -29,6 +30,14 @@
                                     class="w-full border border-gray-300 p-2 rounded">
                             </div>
 
+                            <!-- New Image Upload Field -->
+                            <div class="mb-4">
+                                <label for="image" class="block text-gray-700">Gambar Soal (Optional)</label>
+                                <input type="file" id="image" name="image" accept="image/*"
+                                    class="w-full border border-gray-300 p-2 rounded">
+                            </div>
+
+                            <!-- Options and Correct Answer Fields... -->
                             <div class="mb-4">
                                 <label for="option_a" class="block text-gray-700">Pilihan A</label>
                                 <input type="text" id="option_a" name="option_a" required
@@ -81,27 +90,63 @@
                     </div>
                 @endif
 
-                <!-- Questions List Section -->
-                <div class="bg-white p-6 rounded shadow-lg w-1/2">
-
-                    <a href="{{ route('kuisv2.index') }}" class="btn btn-primary">Kembali ke Daftar Kuis</a>
+                <!-- Questions List Section (for Users) -->
+                <div class="bg-white p-6 rounded shadow-lg w-full max-w-4xl">
+                    <a href="{{ route('kuisv2.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar Kuis</a>
                     <h2 class="text-xl font-bold mb-4">Soal Kuis yang Telah Ditambahkan</h2>
                     @if ($questions->count() > 0)
-                        <ul class="space-y-4">
-                            @foreach ($questions as $question)
-                                <li class="border-b pb-2">
-                                    <strong>{{ $question->question }}</strong>
-                                    <div class="text-sm text-gray-600">
-                                        <p><strong>A:</strong> {{ $question->option_a }}</p>
-                                        <p><strong>B:</strong> {{ $question->option_b }}</p>
-                                        <p><strong>C:</strong> {{ $question->option_c }}</p>
-                                        <p><strong>D:</strong> {{ $question->option_d }}</p>
-                                        <p><strong>E:</strong> {{ $question->option_e }}</p>
-                                        <p><strong>Jawaban Benar:</strong> {{ $question->correct_answer }}</p>
+                        <form action="{{ route('answers_v2.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="kuis_id" value="{{ $kuis->id }}">
+                            <!-- Daftar Soal -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                                @foreach ($questions as $question)
+                                    <div class="border p-4 rounded shadow">
+                                        <!-- Gambar dan Soal -->
+                                        @if ($question->image)
+                                            <img src="{{ asset('storage/' . $question->image) }}" alt="Gambar Soal"
+                                                class="w-full h-auto mb-4">
+                                        @endif
+                                        <strong class="block mb-2">{{ $question->question }}</strong>
+
+                                        <!-- Pilihan Jawaban -->
+                                        <div class="text-sm text-gray-600 space-y-2">
+                                            <label class="block">
+                                                <input type="radio" name="answers[{{ $question->id }}]"
+                                                    value="A" required>
+                                                <strong>A:</strong> {{ $question->option_a }}
+                                            </label>
+                                            <label class="block">
+                                                <input type="radio" name="answers[{{ $question->id }}]"
+                                                    value="B">
+                                                <strong>B:</strong> {{ $question->option_b }}
+                                            </label>
+                                            <label class="block">
+                                                <input type="radio" name="answers[{{ $question->id }}]"
+                                                    value="C">
+                                                <strong>C:</strong> {{ $question->option_c }}
+                                            </label>
+                                            <label class="block">
+                                                <input type="radio" name="answers[{{ $question->id }}]"
+                                                    value="D">
+                                                <strong>D:</strong> {{ $question->option_d }}
+                                            </label>
+                                            <label class="block">
+                                                <input type="radio" name="answers[{{ $question->id }}]"
+                                                    value="E">
+                                                <strong>E:</strong> {{ $question->option_e }}
+                                            </label>
+                                        </div>
                                     </div>
-                                </li>
-                            @endforeach
-                        </ul>
+                                @endforeach
+                            </div>
+
+                            @if (auth()->user()->role == '2')
+                                <div class="flex justify-end mt-4">
+                                    <button type="submit" class="btn btn-success">Submit Jawaban</button>
+                                </div>
+                            @endif
+                        </form>
                     @else
                         <p class="text-gray-600">Belum ada soal yang ditambahkan.</p>
                     @endif
