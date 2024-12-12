@@ -13,11 +13,11 @@ class Result extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function kuis()
     {
-        return $this->belongsTo(KuisV2::class);
+        return $this->belongsTo(Kuisv2::class, 'kuis_id');
     }
 }

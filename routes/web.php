@@ -98,7 +98,21 @@ Route::get('/results/{id}', [ResultsController::class, 'show'])->name('results.s
 //score
 Route::post('/answers_v2/score', [AnswerV2Controller::class, 'score'])->name('answers_v2.score');
 
+Route::get('/answers_v2/score/{id}', [AnswerV2Controller::class, 'showScore'])->name('answers_v2.score');
 
+
+Route::get('/kuisv2/score/{id}', [AnswerV2Controller::class, 'score'])->name('answers_v2.score');
+
+Route::get('/answers_v2/score/{quizId}', [AnswerV2Controller::class, 'showScore'])->name('answers_v2.showScore');
+
+
+
+// nilai
+Route::get('/kuisv2/nilai/{id}', function ($id) {
+    return view('nilai.index', ['kuisId' => $id]);
+})->name('kuisv2.nilai');
+
+Route::get('/kuisv2/nilai/{id}', [KuisV2Controller::class, 'showScore'])->name('kuisv2.nilai');
 
 
 

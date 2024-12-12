@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kuisv2;
+use App\Models\Result;
 use Illuminate\Http\Request;
 
 
@@ -65,15 +66,21 @@ class KuisV2Controller extends Controller
         // Redirect back with success message
         return redirect()->route('kuisv2.index')->with('success', 'Kuis berhasil diperbarui.');
     }
-    public function destroy($id)
+    public function showScore($id)
     {
-        // Find the quiz by its ID
-        $kuis = KuisV2::findOrFail($id);
+        // Ambil data score dari tabel results berdasarkan ID kuis
+        $result = Result::where('kuis_id', $id)
+            ->where('user_id', auth()->id()) // Opsional: Jika hanya untuk user tertentu
+            ->first();
 
-        // Delete the quiz
-        $kuis->delete();
+        // Jika data tidak ditemukan, redirect dengan pesan error
+        if (!$result) {
+            return redirect()->route('kuisv2.index')->with('error', 'Data score tidak ditemukan.');
+        }
 
-        // Redirect back with a success message
-        return redirect()->route('kuisv2.index')->with('success', 'Kuis berhasil dihapus.');
+        // Return view dengan data score
+        return view('nilai.index', [
+            'score' => $result->score,
+        ]);
     }
 }

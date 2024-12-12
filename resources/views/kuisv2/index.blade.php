@@ -54,11 +54,30 @@
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger">Hapus</button>
                                     </form>
+
+                                    <!-- Hasil Button -->
+                                    <a href="{{ route('results.show', $kuis->id) }}" class="btn btn-info">Hasil</a>
                                 @endif
+
+                                <!-- Tombol "Masuk Kuis" -->
                                 <a href="{{ route('questions.show', $kuis->id) }}" class="btn btn-primary">Masuk
                                     Kuis</a>
-                                <a href="{{ route('results.show', $kuis->id) }}" class="btn btn-info">Hasil</a>
-                                <!-- Tambahkan tombol ini -->
+
+                                @if (auth()->user()->role == '2')
+                                    {{-- <a href="{{ route('answers_v2.showScore', $kuis->id) }}"
+                                        class="btn btn-secondary">Nilai</a>
+                                    <!-- Tombol "Nilai V2" -->
+                                    <a href="{{ route('answers_v2.showScoreV2', $kuis->id) }}"
+                                        class="btn btn-success">Nilai V2</a> --}}
+
+                                    <a href="{{ route('kuisv2.nilai', $kuis->id) }}" class="btn btn-success">Nilai
+                                        V3</a>
+                                @endif
+
+
+
+
+
                             </td>
 
                         </tr>

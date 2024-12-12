@@ -19,6 +19,9 @@ class AnswerV2Controller extends Controller
         return view('questions.show', compact('questions'));
     }
 
+
+
+
     // Menyimpan jawaban user ke dalam tabel answers_v2 dan menghitung skor
     public function store(Request $request)
     {
