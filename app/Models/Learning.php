@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Learning extends Model
 {
-    use HasFactory;
+    protected $table = 'learnings';
 
-    // Allow mass assignment for the name attribute
-    protected $fillable = ['name'];
-
+    public function learningStage1()
+    {
+        return $this->hasMany(LearningStage1::class, 'learning_id');
+    }
 }

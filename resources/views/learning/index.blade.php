@@ -42,10 +42,11 @@
                                     <p class="text-gray-600">Learning Description or any extra content.</p>
                                 </div>
                                 <div class="bg-gray-200 text-center py-2 flex justify-around">
-                                    <span class="text-blue-500 hover:text-blue-700 font-bold">View Details</span>
                                     <!-- Delete Button -->
-                                    <button type="button" class="text-red-500 hover:text-red-700 font-bold"
-                                        onclick="event.preventDefault(); openDeleteModal({{ $learning->id }})">Hapus</button>
+                                    @if (auth()->user()->role == '0' || auth()->user()->role == '1')
+                                        <button type="button" class="btn btn-danger"
+                                            onclick="event.preventDefault(); openDeleteModal({{ $learning->id }})">Hapus</button>
+                                    @endif
                                 </div>
                             </a>
                         @endforeach

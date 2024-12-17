@@ -106,6 +106,18 @@ Route::get('/kuisv2/score/{id}', [AnswerV2Controller::class, 'score'])->name('an
 Route::get('/answers_v2/score/{quizId}', [AnswerV2Controller::class, 'showScore'])->name('answers_v2.showScore');
 
 
+//learning stage1
+// Route::post('/learning/store-stage1', [LearningController::class, 'storeStage1'])->name('learning.storeStage1');
+Route::post('/learning/{id}/stage1', [LearningController::class, 'storeStage1'])->name('learning.stage1.store');
+
+//stage1 result
+// Route::post('/learning/{learningStage1Id}/stage1/result', [LearningController::class, 'storeStage1Result'])
+//     ->name('learning.stage1.result.store');
+
+Route::post('learning/{learningStage1Id}/stage1/result', [LearningController::class, 'storeStage1Result'])->name('learning.stage1.result.store');
+
+
+
 
 // nilai
 Route::get('/kuisv2/nilai/{id}', function ($id) {
