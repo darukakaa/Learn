@@ -20,6 +20,7 @@ class LearningStage1 extends Model
     {
         return $this->belongsTo(Learning::class, 'learning_id');
     }
+
     public function learningStage1Results()
     {
         return $this->hasMany(LearningStage1Result::class);

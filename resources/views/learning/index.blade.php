@@ -35,18 +35,23 @@
                     <!-- Grid of Learning items as Cards -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach ($learnings as $learning)
-                            <a href="{{ route('learning.show', $learning->id) }}"
-                                class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
-                                <div class="p-6 text-center">
-                                    <h3 class="text-lg font-bold mb-2">{{ $learning->name }}</h3>
-                                    <p class="text-gray-600">Learning Description or any extra content.</p>
-                                </div>
-                                <div class="bg-gray-200 text-center py-2 flex justify-around">
-                                    <!-- Delete Button -->
-                                    @if (auth()->user()->role == '0' || auth()->user()->role == '1')
-                                        <button type="button" class="btn btn-danger"
-                                            onclick="event.preventDefault(); openDeleteModal({{ $learning->id }})">Hapus</button>
-                                    @endif
+                            <a href="{{ route('learning.show', ['learning' => $learning->id]) }}" class="card-link">
+
+
+
+                                <div
+                                    class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
+                                    <div class="p-6 text-center">
+                                        <h3 class="text-lg font-bold mb-2">{{ $learning->name }}</h3>
+                                        <p class="text-gray-600">Learning Description or any extra content.</p>
+                                    </div>
+                                    <div class="bg-gray-200 text-center py-2 flex justify-around">
+                                        <!-- Delete Button -->
+                                        @if (auth()->user()->role == '0' || auth()->user()->role == '1')
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="event.preventDefault(); openDeleteModal({{ $learning->id }})">Hapus</button>
+                                        @endif
+                                    </div>
                                 </div>
                             </a>
                         @endforeach

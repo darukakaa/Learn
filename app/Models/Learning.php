@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Learning extends Model
 {
     protected $table = 'learnings';
+    protected $fillable = [
+        'name',
+    ];
+    protected $primaryKey = 'id';
 
     public function learningStage1()
     {

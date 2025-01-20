@@ -6,7 +6,7 @@
                     <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
                     <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
                     <a href="{{ route('learning.index') }}" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
-                    <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
+                    <a href="{{ route('kuis-tugas.index') }}" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                     <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
                     @if (auth()->user()->role == '0' || auth()->user()->role == '1')
                         <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
@@ -23,7 +23,10 @@
                             <h1 class="text-2xl font-bold">{{ $learning->name }}</h1>
                             <p class="mt-4">Tahap 1 Pengidentifikasian Masalah</p>
                         </div>
+                        <a href="{{ route('learning.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar
+                            Learning</a>
                     </div>
+
 
                     <!-- Check if Learning Stage 1 data exists -->
                     @php
@@ -55,10 +58,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td class="px-4 py-2 border-b">{{ auth()->user()->name }}</td>
-                                                <td class="px-4 py-2 border-b">{{ $learningStage1->result }}</td>
-                                            </tr>
+                                            @foreach ($learningStage1->learningStage1Results as $result)
+                                                <tr>
+                                                    <td class="px-4 py-2 border-b">{{ $result->user->name }}</td>
+                                                    <td class="px-4 py-2 border-b">{{ $result->result }}</td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -114,12 +119,11 @@
 
                     <!-- Navigation Buttons (Back and Next) -->
                     <div class="flex justify-between mt-6">
-                        <!-- Next Stage Button -->
-                        <form method="get"
-                            action="{{ route('learning.show', ['learning' => $learning->id, 'stage' => 2]) }}">
-                            @csrf
+                        <form method="GET" action="{{ route('learning.stage2', ['learning' => $learning->id]) }}">
                             <button type="submit"
-                                class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">Selanjutnya</button>
+                                class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">
+                                Selanjutnya
+                            </button>
                         </form>
                     </div>
                 </div>
@@ -157,67 +161,66 @@
 
                     <!-- Flex Container for Left and Right -->
                     <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                        <form method="POST"
-                            action="{{ route('learning.stage1.result.store', ['learningStage1Id' => $learningStage1->id]) }}">
-                            @csrf
-                            <input type="hidden" name="learning_stage1_id" value="{{ $learningStage1->id }}">
-                            <div class="flex justify-between space-x-6">
-                                <!-- Left: Permasalahan -->
-                                <div class="w-1/2">
-                                    <!-- Permasalahan -->
-                                    <label for="problem"
-                                        class="block text-gray-700 font-semibold mb-2">Permasalahan</label>
-                                    <input class="form-control form-control-lg" type="text"
-                                        value="{{ $learningStage1->problem ?? '' }}"
-                                        aria-label=".form-control-lg example" readonly>
+                        <a href="{{ route('learning.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar
+                            Learning</a>
+                        @if (!$existingResult)
+                            <p>Anda telah menambahkan hasil identifikasi masalah.</p>
+                            <form method="POST"
+                                action="{{ route('learning.stage1.result.store', ['learningStage1Id' => $learningStage1->id]) }}">
+                                @csrf
+                                <input type="hidden" name="learning_stage1_id" value="{{ $learningStage1->id }}">
+                                <div class="flex justify-between space-x-6">
+                                    <!-- Left: Permasalahan -->
+                                    <div class="w-1/2">
+                                        <label for="problem"
+                                            class="block text-gray-700 font-semibold mb-2">Permasalahan</label>
+                                        <input class="form-control form-control-lg" type="text"
+                                            value="{{ $learningStage1->problem ?? '' }}" readonly>
 
-                                    <!-- Gambar -->
-                                    <label for="gambar"
-                                        class="block text-gray-700 font-semibold mb-2">Gambar</label>
-                                    <!-- Menampilkan gambar jika ada -->
-                                    @if ($learningStage1 && $learningStage1->file)
-                                        <img src="{{ asset('storage/' . $learningStage1->file) }}"
-                                            style="width: 400px; height: auto;" alt="Gambar">
-                                    @else
-                                        <p>No image available</p>
-                                    @endif
-
+                                        <label for="gambar"
+                                            class="block text-gray-700 font-semibold mb-2">Gambar</label>
+                                        @if ($learningStage1 && $learningStage1->file)
+                                            <img src="{{ asset('storage/' . $learningStage1->file) }}"
+                                                style="width: 400px; height: auto;" alt="Gambar">
+                                        @else
+                                            <p>No image available</p>
+                                        @endif
+                                    </div>
+                                    <!-- Right: Hasil Identifikasi Masalah -->
+                                    <div class="w-1/2">
+                                        <label for="result" class="block text-gray-700 font-semibold mb-2">Hasil
+                                            Identifikasi Masalah</label>
+                                        <textarea name="result" id="result" rows="8"
+                                            class="w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-gray-200"></textarea>
+                                    </div>
                                 </div>
-                                <!-- Right: Hasil Identifikasi Masalah -->
-                                <div class="w-1/2">
-                                    <label for="result" class="block text-gray-700 font-semibold mb-2">Hasil
-                                        Identifikasi Masalah</label>
-                                    <textarea name="result" id="result" rows="8"
-                                        class="w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-gray-200"></textarea>
+                                <div class="flex justify-center mt-6">
+                                    <button type="submit"
+                                        class="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">
+                                        Tambah
+                                    </button>
                                 </div>
-                            </div>
-
-                            <!-- Submit Button -->
-                            <div class="flex justify-center mt-6">
-                                <button type="submit"
-                                    class="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">
-                                    Tambah
-                                </button>
-                            </div>
-                        </form>
-                        @if (session('success'))
-                            <div id="success-notification" class="bg-green-100 text-green-800 p-4 mb-4 rounded">
-                                {{ session('success') }}
+                            </form>
+                        @else
+                            <p class="text-red-500">Anda telah menambahkan hasil identifikasi masalah.</p>
+                        @endif
+                        @if (session('error'))
+                            <div id="error-notification" class="bg-red-100 text-red-800 p-4 mb-4 rounded">
+                                {{ session('error') }}
                             </div>
 
                             <script>
                                 setTimeout(function() {
-                                    document.getElementById('success-notification').style.display = 'none';
+                                    document.getElementById('error-notification').style.display = 'none';
                                 }, 1000); // 1000ms = 1 detik
                             </script>
                         @endif
+
                     </div>
 
                     <!-- Navigation Buttons -->
                     <div class="flex justify-between mt-6">
-                        <form method="get"
-                            action="{{ route('learning.show', ['learning' => $learning->id, 'stage' => 2]) }}">
-                            @csrf
+                        <form method="GET" action="{{ route('learning.stage2', ['learning' => $learning->id]) }}">
                             <button type="submit"
                                 class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">
                                 Selanjutnya

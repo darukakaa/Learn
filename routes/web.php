@@ -7,6 +7,7 @@ use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\LearningController;
+use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\KuisTugasController;
 use App\Http\Controllers\KuisController;
 use App\Http\Controllers\KuisV2Controller;
@@ -106,6 +107,16 @@ Route::get('/kuisv2/score/{id}', [AnswerV2Controller::class, 'score'])->name('an
 Route::get('/answers_v2/score/{quizId}', [AnswerV2Controller::class, 'showScore'])->name('answers_v2.showScore');
 
 
+// Rute untuk menampilkan halaman belajar
+Route::get('/learning/{learning}', [LearningController::class, 'show'])->name('learning.show');
+
+Route::get('learning/{learning}', [LearningController::class, 'show'])->name('learning.show');
+
+
+
+
+
+
 //learning stage1
 // Route::post('/learning/store-stage1', [LearningController::class, 'storeStage1'])->name('learning.storeStage1');
 Route::post('/learning/{id}/stage1', [LearningController::class, 'storeStage1'])->name('learning.stage1.store');
@@ -115,6 +126,34 @@ Route::post('/learning/{id}/stage1', [LearningController::class, 'storeStage1'])
 //     ->name('learning.stage1.result.store');
 
 Route::post('learning/{learningStage1Id}/stage1/result', [LearningController::class, 'storeStage1Result'])->name('learning.stage1.result.store');
+
+
+
+
+//learning stage2
+
+Route::get('/learning/{learning}/stage/2', [LearningController::class, 'showStage2'])->name('learning.stage2');
+//kelompok
+Route::get('/kelompok/create', [KelompokController::class, 'create'])->name('kelompok.create');
+Route::post('/learning/{learningId}/stage/{stageId}/kelompok', [KelompokController::class, 'store'])->name('kelompok.store');
+
+
+
+Route::get('/learning/{learningId}/stage/{stageId}', [LearningController::class, 'show'])->name('learning.show');
+Route::post('/learning/{learningId}/stage/{stageId}/kelompok', [KelompokController::class, 'store'])->name('kelompok.store');
+
+Route::get('/learning/{learningId}/stage/{stageId}', [KelompokController::class, 'show'])->name('kelompok.show');
+
+// Route::get('/learning/{learningId}/{stageId}', [LearningController::class, 'showLearning'])->name('learning.show');
+
+Route::post('learning/{learningId}/stage/{stageId}/kelompok', [KelompokController::class, 'store'])->name('kelompok.store');
+
+Route::get('/kelompok/{learningId}/{stageId}', [KelompokController::class, 'showForm'])->name('kelompok.show');
+
+Route::get('/learning/{learningId}/stage/{stageId}', [LearningController::class, 'showStage'])->name('learning.stage');
+
+
+
 
 
 

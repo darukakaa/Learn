@@ -17,14 +17,13 @@ class LearningStage1Result extends Model
     ];
 
     // Relasi dengan model LearningStage1
-    public function learningStage1()
-    {
-        return $this->belongsTo(LearningStage1::class);
-    }
-
-    // Relasi dengan model User
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function learningStage1()
+    {
+        return $this->belongsTo(LearningStage1::class);
     }
 }
