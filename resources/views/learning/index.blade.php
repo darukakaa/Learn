@@ -12,8 +12,6 @@
                     class="block text-center py-3 rounded bg-gray-300 text-black">Learning</a>
                 <a href="{{ route('kuis-tugas.index') }}"
                     class="block text-center py-3 rounded bg-gray-300 text-black">Kuis/Tugas</a>
-                <a href="{{ route('data-siswa') }}" class="block text-center py-3 rounded bg-gray-300 text-black">Data
-                    Siswa</a>
                 <a href="{{ route('modul.index') }}"
                     class="block text-center py-3 rounded bg-gray-300 text-black">Modul</a>
             </nav>

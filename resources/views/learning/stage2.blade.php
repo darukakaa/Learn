@@ -99,9 +99,6 @@
                     <a href="{{ route('learning.index') }}" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
                     <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                     <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
-                    @if (auth()->user()->role == '0' || auth()->user()->role == '1')
-                        <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
-                    @endif
                 </nav>
             </div>
             <!-- Main Content -->
