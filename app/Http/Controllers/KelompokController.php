@@ -19,6 +19,17 @@ class KelompokController extends Controller
         return view('kelompok.show', compact('kelompok', 'learningId', 'stageId'));
     }
 
+    // Method untuk menghapus kelompok
+    public function destroy($id)
+    {
+        $kelompok = Kelompok::findOrFail($id);
+        $kelompok->delete();
+
+        return redirect()->back()->with('success', 'Kelompok berhasil dihapus!');
+    }
+
+
+
 
     public function store(Request $request, $learningId, $stageId)
     {

@@ -36,9 +36,6 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach ($learnings as $learning)
                             <a href="{{ route('learning.show', ['learning' => $learning->id]) }}" class="card-link">
-
-
-
                                 <div
                                     class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
                                     <div class="p-6 text-center">

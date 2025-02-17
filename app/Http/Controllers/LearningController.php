@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Learning;
 use App\Models\LearningStage1;
 use App\Models\LearningStage1Result;
+use App\Models\Kelompok;
 use Illuminate\Http\Request;
 
 class LearningController extends Controller
@@ -44,7 +45,7 @@ class LearningController extends Controller
     {
         $learning = Learning::findOrFail($id);
 
-        // Retrieve the learning stage data
+        // Retrieve the learning stage data (you can adjust as needed)
         $learningStage1 = LearningStage1::with('learningStage1Results.user')
             ->where('learning_id', $id)
             ->first();
@@ -119,6 +120,31 @@ class LearningController extends Controller
     public function showStage2($learningId)
     {
         $learning = Learning::findOrFail($learningId);
-        return view('learning.stage2', compact('learning'));
+
+        // Ambil semua kelompok yang terkait dengan learning_id dan urutkan berdasarkan created_at
+        $kelompok = Kelompok::where('learning_id', $learningId)
+            ->orderBy('created_at', 'desc')  // Paling baru di atas
+            ->get();
+
+        return view('learning.stage2', compact('learning', 'kelompok'));
+    }
+
+
+
+    // Store a new group (Kelompok)
+    public function storeKelompok(Request $request, $learningId)
+    {
+        $request->validate([
+            'nama_kelompok' => 'required|string|max:255',
+            'jumlah_kelompok' => 'required|integer|min:1',
+        ]);
+
+        Kelompok::create([
+            'learning_id' => $learningId,
+            'nama_kelompok' => $request->nama_kelompok,
+            'jumlah_kelompok' => $request->jumlah_kelompok,
+        ]);
+
+        return redirect()->route('learning.stage2', $learningId)->with('success', 'Kelompok berhasil ditambahkan!');
     }
 }

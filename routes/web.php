@@ -152,7 +152,16 @@ Route::get('/kelompok/{learningId}/{stageId}', [KelompokController::class, 'show
 
 Route::get('/learning/{learningId}/stage/{stageId}', [LearningController::class, 'showStage'])->name('learning.stage');
 
+// Route untuk menampilkan Stage 2
+Route::get('/learning/{learningId}/stage2', [LearningController::class, 'showStage2'])->name('learning.stage2');
 
+// Route untuk menyimpan kelompok
+Route::post('/learning/{learningId}/kelompok', [LearningController::class, 'storeKelompok'])->name('kelompok.store');
+
+Route::post('/kelompok/store/{learningId}/{stageId}', [KelompokController::class, 'store'])->name('kelompok.store');
+Route::get('/learning/{learningId}/stage2', [LearningController::class, 'showStage2'])->name('learning.stage2');
+
+Route::delete('/kelompok/{id}', [KelompokController::class, 'destroy'])->name('kelompok.destroy');
 
 
 

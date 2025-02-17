@@ -119,7 +119,7 @@
 
                     <!-- Navigation Buttons (Back and Next) -->
                     <div class="flex justify-between mt-6">
-                        <form method="GET" action="{{ route('learning.stage2', ['learning' => $learning->id]) }}">
+                        <form method="GET" action="{{ route('learning.stage2', ['learningId' => $learning->id]) }}">
                             <button type="submit"
                                 class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">
                                 Selanjutnya
@@ -220,7 +220,8 @@
 
                     <!-- Navigation Buttons -->
                     <div class="flex justify-between mt-6">
-                        <form method="GET" action="{{ route('learning.stage2', ['learning' => $learning->id]) }}">
+                        <form method="GET"
+                            action="{{ route('learning.stage2', ['learningId' => $learning->id]) }}">
                             <button type="submit"
                                 class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">
                                 Selanjutnya
