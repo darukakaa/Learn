@@ -24,6 +24,14 @@ class Kelompok extends Model
         return $this->belongsTo(Learning::class, 'learning_id');
     }
 
+    public function anggota()
+    {
+        return $this->hasMany(UserKelompokLearning::class, 'kelompok_id');
+    }
+
+
+
+
     // Mengatur nilai default untuk 'stage_id' saat membuat data
     protected static function boot()
     {

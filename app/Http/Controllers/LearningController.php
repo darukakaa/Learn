@@ -129,6 +129,15 @@ class LearningController extends Controller
         return view('learning.stage2', compact('learning', 'kelompok'));
     }
 
+    public function showInStage2($learningId, $id)
+    {
+        $kelompok = Kelompok::findOrFail($id);
+        $learning = Learning::findOrFail($learningId);
+
+        return view('kelompok.show', compact('kelompok', 'learning'));
+    }
+
+
 
 
     // Store a new group (Kelompok)

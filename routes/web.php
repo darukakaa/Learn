@@ -15,6 +15,7 @@ use App\Http\Controllers\QuestionV2Controller;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\TugasController;
+use App\Http\Controllers\UserKelompokLearningController;
 use App\Http\Controllers\DataSiswaController;
 use App\Http\Controllers\ModulController;
 use App\Http\Controllers\ResultsController;
@@ -163,8 +164,22 @@ Route::get('/learning/{learningId}/stage2', [LearningController::class, 'showSta
 
 Route::delete('/kelompok/{id}', [KelompokController::class, 'destroy'])->name('kelompok.destroy');
 
+//masuk card kelompok
+Route::get('/kelompok/{id}', [KelompokController::class, 'show'])->name('kelompok.show');
 
+Route::get('/learning/{learning}/stage2/kelompok/{id}', [KelompokController::class, 'showInStage2'])->name('kelompok.stage2.show');
 
+Route::post('/kelompok/{kelompokId}/pilih', [KelompokController::class, 'pilihKelompok'])->name('kelompok.pilih');
+Route::post('/kelompok/{kelompok}/pilih', [KelompokController::class, 'pilihKelompok'])->name('kelompok.pilih');
+
+Route::post('kelompok/{kelompokId}/gabung', [KelompokController::class, 'storeUser'])->name('kelompok.store.user');
+Route::post('/kelompok/{kelompokId}/gabung', [KelompokController::class, 'storeUser'])->name('kelompok.storeUser');
+Route::get('/learning/{learningId}/stage2/kelompok/{kelompokId}/manage', [KelompokController::class, 'manage'])
+    ->name('kelompok.manage');
+
+Route::post('/user-kelompok-learning/store', [UserKelompokLearningController::class, 'store'])->name('user_kelompok_learning.store');
+Route::post('/learning/{learningId}/kelompok/{kelompokId}/join', [UserKelompokLearningController::class, 'store'])->name('kelompok.store.user');
+Route::post('/kelompok/{kelompokId}/storeUser', [KelompokController::class, 'storeUser'])->name('kelompok.storeUser');
 
 
 // nilai
