@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Kelompok::class, 'kelompok_id');
     }
+
+    public function penugasans()
+    {
+        return $this->hasMany(PenugasanUser::class);
+    }
 }

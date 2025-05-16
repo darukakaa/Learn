@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Kelompok;
 use App\Models\Learning;
 use App\Models\UserKelompokLearning;
+use App\Models\PenugasanUser;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -32,38 +34,50 @@ class KelompokController extends Controller
     }
 
     // Menampilkan detail kelompok
-    public function show($id)
+    public function show($learningId, $kelompokId)
     {
-        $kelompok = Kelompok::with('anggota')->findOrFail($id);
-        $learning = Learning::findOrFail($kelompok->learning_id); // ambil learning dari kelompok
+        $learning = Learning::findOrFail($learningId);
+        $kelompok = Kelompok::with(['anggota.user'])->findOrFail($kelompokId);
 
-        return view('kelompok.show', compact('kelompok', 'learning'));
+        // Ambil semua penugasan untuk kelompok ini
+        $penugasans = PenugasanUser::where('learning_id', $learningId)
+            ->where('kelompok_id', $kelompokId)
+            ->get();
+
+        // dd($penugasans); // Hapus ini jika sudah tidak perlu
+
+        return view('kelompok.show', compact('learning', 'kelompok', 'penugasans'));
     }
+
+
 
 
     // Menampilkan halaman kelompok di stage 2 dan memeriksa apakah user sudah bergabung
     public function showInStage2($learningId, $id)
     {
-        $kelompok = Kelompok::findOrFail($id);
+        $kelompok = Kelompok::with('anggota')->findOrFail($id);
         $learning = Learning::findOrFail($learningId);
         $user = auth()->user();
 
-        // Cek apakah user sudah tergabung dalam kelompok pada learning ini
         if ($user->role == 2) {
             $existing = UserKelompokLearning::where('user_id', $user->id)
                 ->where('learning_id', $learning->id)
                 ->first();
 
-            // Jika sudah tergabung tapi bukan kelompok ini, redirect ke kelompok yang benar
             if ($existing && $existing->kelompok_id != $kelompok->id) {
                 return redirect()->route('kelompok.stage2.show', [
-                    'learning' => $learning->id, // <- disesuaikan dari 'learningId' ke 'learning'
+                    'learning' => $learning->id,
                     'id' => $existing->kelompok_id
                 ])->with('error', 'Anda hanya dapat mengakses satu kelompok di learning ini.');
             }
         }
 
-        return view('kelompok.show', compact('kelompok', 'learning'));
+        $penugasans = PenugasanUser::with('user')
+            ->where('learning_id', $learningId)
+            ->where('kelompok_id', $id)
+            ->get();
+
+        return view('kelompok.show', compact('kelompok', 'learning', 'penugasans'));
     }
 
 
@@ -99,36 +113,37 @@ class KelompokController extends Controller
     public function storeUser(Request $request, $kelompokId)
     {
         $kelompok = Kelompok::findOrFail($kelompokId);
-        $user = auth()->user();  // Mendapatkan user yang sedang login
+        $user = auth()->user();
 
-        // Cek jika user sudah tergabung dalam kelompok ini
         $sudahGabung = UserKelompokLearning::where('user_id', $user->id)
             ->where('kelompok_id', $kelompokId)
             ->exists();
 
         if ($sudahGabung) {
-            return redirect()->route('kelompok.show', ['id' => $kelompokId])
-                ->with('info', 'Anda sudah tergabung dalam kelompok ini.');
+            return redirect()->route('kelompok.stage2.show', [
+                'learning' => $request->learning_id,
+                'id' => $kelompokId
+            ])->with('success', 'Berhasil bergabung!');
         }
 
-        // Cek jika jumlah anggota sudah penuh
         if ($kelompok->anggota->count() >= $kelompok->jumlah_kelompok) {
             return redirect()->back()->with('error', 'Kelompok ini sudah penuh.');
         }
 
-        // Menambahkan user ke kelompok (menggunakan tabel pivot)
         UserKelompokLearning::create([
             'user_id' => $user->id,
             'kelompok_id' => $kelompokId,
             'learning_id' => $request->learning_id,
         ]);
 
-        // Update kolom terisi
         $kelompok->increment('terisi');
 
-        return redirect()->route('kelompok.show', ['id' => $kelompokId])
-            ->with('success', 'Anda berhasil bergabung dengan kelompok!');
+        return redirect()->route('kelompok.stage2.show', [
+            'learningId' => $request->learning_id,
+            'kelompokId' => $kelompokId,
+        ])->with('success', 'Anda berhasil bergabung di kelompok.');
     }
+
 
 
 
@@ -158,5 +173,32 @@ class KelompokController extends Controller
         return redirect()->route('learning.stage', ['learningId' => $learningId, 'stageId' => $stageId])
             ->with('success', 'Kelompok berhasil ditambahkan')
             ->with(compact('kelompok', 'learningId', 'stageId')); // Menambahkan $kelompok di sini
+    }
+
+    // Menyimpan penugasan
+    public function storePenugasan(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'penugasan' => 'required|string|max:255',
+            'file' => 'required|file|mimes:pdf,ppt,pptx|max:10240', // Sesuaikan ekstensi file
+        ]);
+
+        // Simpan file
+        $filePath = $request->file('file')->store('penugasans', 'public');
+
+        // Simpan data penugasan
+        PenugasanUser::create([
+            'user_id' => auth()->id(),
+            'learning_id' => $request->learning_id,
+            'kelompok_id' => $request->kelompok_id,
+            'penugasan' => $request->penugasan,
+            'file' => $filePath,
+        ]);
+
+        return redirect()->route('kelompok.stage2.show', [
+            'learning' => $request->learning_id,
+            'id' => $request->kelompok_id
+        ])->with('success', 'Penugasan berhasil diunggah!');
     }
 }

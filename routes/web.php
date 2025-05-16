@@ -11,6 +11,7 @@ use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\KuisTugasController;
 use App\Http\Controllers\KuisController;
 use App\Http\Controllers\KuisV2Controller;
+use App\Http\Controllers\PenugasanUserController;
 use App\Http\Controllers\QuestionV2Controller;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionsController;
@@ -182,15 +183,34 @@ Route::post('/learning/{learningId}/kelompok/{kelompokId}/join', [UserKelompokLe
 Route::post('/kelompok/{kelompokId}/storeUser', [KelompokController::class, 'storeUser'])->name('kelompok.storeUser');
 
 
+// Routing untuk PenugasanUserController
+Route::get('/penugasan', [PenugasanUserController::class, 'index'])->name('penugasan.index');
+Route::get('/penugasan/{learningId}/{kelompokId}', [PenugasanUserController::class, 'show'])->name('penugasan.show');
+
+
+Route::post('/penugasan/store', [PenugasanUserController::class, 'store'])->name('penugasan.store');
+
+Route::post('/kelompok/{kelompokId}/penugasan/store', [KelompokController::class, 'storePenugasan'])->name('kelompok.penugasan.store');
+
+Route::get('/tes-penugasan', function () {
+    $penugasans = App\Models\PenugasanUser::all();
+    return view('tes-penugasan', compact('penugasans'));
+});
+
+
+Route::get('/learning/{learning}/stage2/kelompok/{id}', [KelompokController::class, 'showInStage2'])->name('kelompok.stage2.show');
+
+
+//STAGE 3
+Route::get('/learning/{learningId}/stage3', [LearningController::class, 'stage3'])->name('learning.stage3');
+
+
+
 // nilai
 Route::get('/kuisv2/nilai/{id}', function ($id) {
     return view('nilai.index', ['kuisId' => $id]);
 })->name('kuisv2.nilai');
-
 Route::get('/kuisv2/nilai/{id}', [KuisV2Controller::class, 'showScore'])->name('kuisv2.nilai');
-
-
-
 Route::post('/kuisv2/submit-jawaban', [AnswerV2Controller::class, 'store'])->name('answers_v2.store');
 Route::post('/kuisv2/score', [AnswerV2Controller::class, 'score'])->name('answers_v2.score');
 
@@ -203,9 +223,6 @@ Route::delete('/tugas/{id}', [TugasController::class, 'destroy'])->name('tugas.d
 
 Route::post('/tugas/validate/{id}', [TugasController::class, 'validate'])->name('tugas.validate');
 Route::post('/tugas/unvalidate/{id}', [TugasController::class, 'unvalidate'])->name('tugas.unvalidate');
-
-
-
 
 
 

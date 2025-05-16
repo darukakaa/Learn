@@ -17,4 +17,9 @@ class Learning extends Model
     {
         return $this->hasMany(LearningStage1::class, 'learning_id');
     }
+
+    public function penugasans()
+    {
+        return $this->hasMany(PenugasanUser::class);
+    }
 }

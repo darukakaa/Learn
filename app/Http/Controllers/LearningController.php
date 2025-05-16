@@ -45,6 +45,7 @@ class LearningController extends Controller
     {
         $learning = Learning::findOrFail($id);
 
+
         // Retrieve the learning stage data (you can adjust as needed)
         $learningStage1 = LearningStage1::with('learningStage1Results.user')
             ->where('learning_id', $id)
@@ -155,5 +156,10 @@ class LearningController extends Controller
         ]);
 
         return redirect()->route('learning.stage2', $learningId)->with('success', 'Kelompok berhasil ditambahkan!');
+    }
+    public function stage3($learningId)
+    {
+        $learning = Learning::findOrFail($learningId);
+        return view('learning.stage3', compact('learning'));
     }
 }

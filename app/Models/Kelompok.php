@@ -29,6 +29,11 @@ class Kelompok extends Model
         return $this->hasMany(UserKelompokLearning::class, 'kelompok_id');
     }
 
+    public function penugasans()
+    {
+        return $this->hasMany(PenugasanUser::class);
+    }
+
 
 
 
