@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AnswerV2Controller;
+use App\Http\Controllers\CatatanController;
 use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\ProfileController;
@@ -203,6 +204,15 @@ Route::get('/learning/{learning}/stage2/kelompok/{id}', [KelompokController::cla
 
 //STAGE 3
 Route::get('/learning/{learningId}/stage3', [LearningController::class, 'stage3'])->name('learning.stage3');
+
+Route::get('/learning/{learningId}/stage3', [LearningController::class, 'stage3'])->name('learning.stage3');
+Route::post('/catatan/store', [CatatanController::class, 'store'])->name('catatan.store');
+Route::get('/catatan', [CatatanController::class, 'index'])->name('catatan.index');
+Route::get('learning/{learningId}/stage3', [LearningController::class, 'stage3'])->name('learning.stage3');
+Route::put('/catatan/{id}', [CatatanController::class, 'update'])->name('catatan.update');
+
+
+
 
 
 

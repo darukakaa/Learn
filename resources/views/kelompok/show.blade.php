@@ -91,6 +91,7 @@
                     class="btn btn-secondary mt-4 inline-block ml-2">
                     Kembali ke Daftar Kelompok
                 </a>
+
             </div>
         </div>
 
@@ -178,12 +179,10 @@
                 </tbody>
             </table>
             <div class="flex justify-between mt-6">
-                <form method="GET" action="{{ route('learning.stage3', ['learningId' => $learning->id]) }}">
-                    <button type="submit"
-                        class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">
-                        Selanjutnya
-                    </button>
-                </form>
+                <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
+                    class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600 inline-block">
+                    Selanjutnya
+                </a>
             </div>
 
 

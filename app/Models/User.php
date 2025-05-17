@@ -62,4 +62,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(PenugasanUser::class);
     }
+    public function kelompokBelajar()
+    {
+        return $this->belongsToMany(Kelompok::class, 'user_kelompok_learning', 'user_id', 'kelompok_id')
+            ->withPivot('learning_id')
+            ->withTimestamps();
+    }
 }

@@ -26,6 +26,13 @@
                         </div>
                         <a href="{{ route('learning.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar
                             Learning</a>
+                        <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
+                            class="btn btn-primary mb-4">
+                            Lanjut Stage 3
+                        </a>
+
+
+
                     </div>
 
                     <!-- ✅ Success Message (Auto Hide After 1s) -->
@@ -125,6 +132,7 @@
                         </div>
                         <a href="{{ route('learning.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar
                             Learning</a>
+
                     </div>
 
                     <!-- Kelompok Cards (Menampilkan Kelompok yang sudah ditambahkan) -->

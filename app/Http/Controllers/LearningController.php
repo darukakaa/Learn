@@ -6,6 +6,8 @@ use App\Models\Learning;
 use App\Models\LearningStage1;
 use App\Models\LearningStage1Result;
 use App\Models\Kelompok;
+use App\Models\Catatan;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class LearningController extends Controller
@@ -157,9 +159,14 @@ class LearningController extends Controller
 
         return redirect()->route('learning.stage2', $learningId)->with('success', 'Kelompok berhasil ditambahkan!');
     }
-    public function stage3($learningId)
+    public function stage3($id)
     {
-        $learning = Learning::findOrFail($learningId);
-        return view('learning.stage3', compact('learning'));
+        $learning = Learning::findOrFail($id);
+        $kelompok = Auth::user()->kelompokBelajar()->wherePivot('learning_id', $id)->first();
+
+
+        $catatanList = Catatan::where('learning_id', $id)->with('user')->get();
+
+        return view('learning.stage3', compact('learning', 'kelompok', 'catatanList'));
     }
 }

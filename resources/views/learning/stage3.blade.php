@@ -34,8 +34,44 @@
 
                             <body>
                                 <h1>Pembimbingan Siswa</h1>
-
+                                {{-- Tombol Kembali --}}
+                                <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
+                                    class="btn btn-secondary mt-4 inline-block ml-2">
+                                    Kembali ke Daftar Kelompok
+                                </a>
                             </body>
+
+                            <table class="min-w-full bg-white border border-gray-300 mt-6">
+                                <thead>
+                                    <tr class="bg-gray-100 text-left">
+                                        <th class="px-4 py-2 border">No</th>
+                                        <th class="px-4 py-2 border">Nama</th>
+                                        <th class="px-4 py-2 border">Kelompok</th>
+                                        <th class="px-4 py-2 border">Isi Catatan</th>
+                                        <th class="px-4 py-2 border">Bukti Code/File</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($catatanList as $index => $catatan)
+                                        <tr>
+                                            <td class="px-4 py-2 border">{{ $index + 1 }}</td>
+                                            <td class="px-4 py-2 border">{{ $catatan->user->name }}</td>
+                                            <td class="px-4 py-2 border">{{ $catatan->kelompok->nama_kelompok }}</td>
+                                            <td class="px-4 py-2 border">{{ $catatan->isi_catatan }}</td>
+                                            <td class="px-4 py-2 border">
+                                                @if ($catatan->file_catatan)
+                                                    <a href="{{ asset('storage/' . $catatan->file_catatan) }}"
+                                                        target="_blank" class="text-blue-500 underline">Lihat File</a>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -61,6 +97,23 @@
 
             <!-- Main Content -->
             <div class="py-12 flex-1">
+
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+                @if (session('success'))
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil',
+                                text: '{{ session('success') }}',
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        });
+                    </script>
+                @endif
+
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <!-- Learning Title and Stage Info -->
                     <div class="bg-white shadow-sm sm:rounded-lg mb-6">
@@ -83,18 +136,156 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Kontainer -->
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white shadow-sm sm:rounded-lg mb-6">
                         <div class="p-6 bg-white border-b border-gray-200">
+                            <h1 class="text-xl font-bold mb-4">Catatan</h1>
 
-                            <body>
-                                <h1>Catatan</h1>
+                            <!-- Tombol Tambahkan Catatan -->
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#modalCatatan"
+                                class="btn btn-primary">
+                                Tambahkan Catatan
+                            </button>
 
-                            </body>
+                            <!-- Modal Form Tambah Catatan -->
+                            <div class="modal fade" id="modalCatatan" tabindex="-1" aria-labelledby="modalCatatanLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ route('catatan.store') }}" method="POST"
+                                            enctype="multipart/form-data">
+                                            @csrf
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modalPenugasanLabel">Tambah Catatan</h5>
+                                                <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <!-- Modal Body -->
+                                            <div class="modal-body">
+                                                <div class="mb-4">
+                                                    <label for="isi_catatan" class="block font-medium mb-1">Isi
+                                                        Catatan</label>
+                                                    <textarea name="isi_catatan" id="isi_catatan" rows="4" class="w-full border rounded px-3 py-2" required></textarea>
+                                                </div>
+                                                <div class="mb-4">
+                                                    <label for="file_catatan" class="block font-medium mb-1">Upload
+                                                        File
+                                                        (Opsional)</label>
+                                                    <input type="file" name="file_catatan" id="file_catatan"
+                                                        class="w-full border rounded px-3 py-2" required>
+                                                </div>
+                                                <input type="hidden" name="learning_id"
+                                                    value="{{ $learning->id ?? '' }}">
+                                                <input type="hidden" name="kelompok_id"
+                                                    value="{{ $kelompok->id ?? '' }}">
+                                                <input type="hidden" name="user_id"
+                                                    value="{{ auth()->user()->id }}">
+                                            </div>
+                                            <!-- Modal Footer -->
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Kirim</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                            <table class="min-w-full bg-white border border-gray-300 mt-6">
+                                <thead>
+                                    <tr class="bg-gray-100 text-left">
+                                        <th class="px-4 py-2 border">No</th>
+                                        <th class="px-4 py-2 border">Isi Catatan</th>
+                                        <th class="px-4 py-2 border">Bukti Code/File</th>
+                                        <th class="px-4 py-2 border">Aksi</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($catatanList as $index => $catatan)
+                                        <tr>
+                                            <td class="px-4 py-2 border">{{ $index + 1 }}</td>
+                                            <td class="px-4 py-2 border">{{ $catatan->isi_catatan }}</td>
+                                            <td class="px-4 py-2 border">
+                                                @if ($catatan->file_catatan)
+                                                    <a href="{{ asset('storage/' . $catatan->file_catatan) }}"
+                                                        target="_blank" class="text-blue-500 underline">Lihat
+                                                        File</a>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+                                            <td class="px-4 py-2 border">
+                                                <button type="button" class="btn btn-sm btn-warning"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editModal{{ $catatan->id }}">
+                                                    Edit
+                                                </button>
+                                            </td>
+
+                                        </tr>
+                                        <!-- Modal Edit Catatan -->
+                                        <div class="modal fade" id="editModal{{ $catatan->id }}" tabindex="-1"
+                                            aria-labelledby="editModalLabel{{ $catatan->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="{{ route('catatan.update', $catatan->id) }}"
+                                                        method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="editModalLabel{{ $catatan->id }}">Edit Catatan
+                                                            </h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-4">
+                                                                <label for="isi_catatan"
+                                                                    class="block font-medium mb-1">Isi Catatan</label>
+                                                                <textarea name="isi_catatan" rows="4" class="w-full border rounded px-3 py-2" required>{{ $catatan->isi_catatan }}</textarea>
+                                                            </div>
+                                                            <div class="mb-4">
+                                                                <label for="file_catatan"
+                                                                    class="block font-medium mb-1">Ganti File
+                                                                    (Opsional)
+                                                                </label>
+                                                                <input type="file" name="file_catatan"
+                                                                    class="w-full border rounded px-3 py-2">
+                                                                @if ($catatan->file_catatan)
+                                                                    <small class="text-gray-500">File saat ini: <a
+                                                                            href="{{ asset('storage/' . $catatan->file_catatan) }}"
+                                                                            target="_blank"
+                                                                            class="text-blue-500 underline">Lihat
+                                                                            File</a></small>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-primary">Simpan
+                                                                Perubahan</button>
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Batal</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     @endif
 </x-app-layout>
