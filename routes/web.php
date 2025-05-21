@@ -12,6 +12,7 @@ use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\KuisTugasController;
 use App\Http\Controllers\KuisController;
 use App\Http\Controllers\KuisV2Controller;
+use App\Http\Controllers\LaporanKelompokController;
 use App\Http\Controllers\PenugasanUserController;
 use App\Http\Controllers\QuestionV2Controller;
 use App\Http\Controllers\QuestionController;
@@ -203,16 +204,25 @@ Route::get('/learning/{learning}/stage2/kelompok/{id}', [KelompokController::cla
 
 
 //STAGE 3
-Route::get('/learning/{learningId}/stage3', [LearningController::class, 'stage3'])->name('learning.stage3');
 
 Route::get('/learning/{learningId}/stage3', [LearningController::class, 'stage3'])->name('learning.stage3');
 Route::post('/catatan/store', [CatatanController::class, 'store'])->name('catatan.store');
 Route::get('/catatan', [CatatanController::class, 'index'])->name('catatan.index');
 Route::get('learning/{learningId}/stage3', [LearningController::class, 'stage3'])->name('learning.stage3');
 Route::put('/catatan/{id}', [CatatanController::class, 'update'])->name('catatan.update');
+Route::get('/learning/{id}/catatan', [CatatanController::class, 'index'])->name('catatan.index');
+Route::post('/catatan/{id}/toggle-validate', [CatatanController::class, 'toggleValidate'])->name('catatan.toggleValidate');
+
+
+//STAGE 4
+Route::get('/learning/{id}/stage4', [LearningController::class, 'stage4'])->name('learning.stage4');
+Route::post('/laporan-kelompok', [LaporanKelompokController::class, 'store'])->name('laporan_kelompok.store');
+Route::patch('/laporan/{id}/validasi', [\App\Http\Controllers\LaporanKelompokController::class, 'validasi'])->name('laporan.validasi');
 
 
 
+//STAGE 5
+Route::get('/learning/{id}/stage5', [LearningController::class, 'stage5'])->name('learning.stage5');
 
 
 

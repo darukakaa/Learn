@@ -68,4 +68,13 @@ class User extends Authenticatable
             ->withPivot('learning_id')
             ->withTimestamps();
     }
+    public function isAdmin()
+    {
+        return $this->role === 0;
+    }
+
+    public function isGuru()
+    {
+        return $this->role === 1;
+    }
 }

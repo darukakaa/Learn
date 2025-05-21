@@ -7,7 +7,7 @@
                     <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
                     <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
                     <a href="{{ route('learning.index') }}" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
-                    <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
+                    <a href="{{ route('kuis-tugas.index') }}" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                     <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
                     @if (auth()->user()->role == '0' || auth()->user()->role == '1')
                         <a href="{{ route('data-siswa') }}" class="block px-4 py-2 hover:bg-gray-700">Data Siswa</a>
@@ -41,6 +41,7 @@
                                 </a>
                             </body>
 
+
                             <table class="min-w-full bg-white border border-gray-300 mt-6">
                                 <thead>
                                     <tr class="bg-gray-100 text-left">
@@ -49,9 +50,10 @@
                                         <th class="px-4 py-2 border">Kelompok</th>
                                         <th class="px-4 py-2 border">Isi Catatan</th>
                                         <th class="px-4 py-2 border">Bukti Code/File</th>
-
+                                        <th class="px-4 py-2 border">Validasi</th> <!-- Kolom baru -->
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     @foreach ($catatanList as $index => $catatan)
                                         <tr>
@@ -67,15 +69,31 @@
                                                     -
                                                 @endif
                                             </td>
+                                            <td class="px-4 py-2 border">
+                                                <form action="{{ route('catatan.toggleValidate', $catatan->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    <button type="submit"
+                                                        class="btn btn-sm {{ $catatan->is_validated ? 'btn-danger' : 'btn-primary' }}">
+                                                        {{ $catatan->is_validated ? 'Batalkan Validasi' : 'Validasi' }}
+                                                    </button>
+                                                </form>
+                                            </td>
 
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                            <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}" class="btn btn-primary">
+                                Lanjut ke Tahap 4
+                            </a>
+
                         </div>
                     </div>
                 </div>
             </div>
+
+        </div>
         </div>
 
         </div>
@@ -90,7 +108,7 @@
                     <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
                     <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
                     <a href="{{ route('learning.index') }}" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
-                    <a href="#" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
+                    <a href="{{ route('kuis-tugas.index') }}" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                     <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
                 </nav>
             </div>
@@ -203,10 +221,10 @@
                                         <th class="px-4 py-2 border">Isi Catatan</th>
                                         <th class="px-4 py-2 border">Bukti Code/File</th>
                                         <th class="px-4 py-2 border">Aksi</th>
-
-
+                                        <th class="px-4 py-2 border">Status Validasi</th> {{-- Kolom baru --}}
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     @foreach ($catatanList as $index => $catatan)
                                         <tr>
@@ -215,72 +233,98 @@
                                             <td class="px-4 py-2 border">
                                                 @if ($catatan->file_catatan)
                                                     <a href="{{ asset('storage/' . $catatan->file_catatan) }}"
-                                                        target="_blank" class="text-blue-500 underline">Lihat
-                                                        File</a>
+                                                        target="_blank" class="text-blue-500 underline">Lihat File</a>
                                                 @else
                                                     -
                                                 @endif
                                             </td>
                                             <td class="px-4 py-2 border">
-                                                <button type="button" class="btn btn-sm btn-warning"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editModal{{ $catatan->id }}">
-                                                    Edit
-                                                </button>
+                                                @if (!$catatan->is_validated)
+                                                    <button type="button" class="btn btn-sm btn-warning"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editModal{{ $catatan->id }}">
+                                                        Edit
+                                                    </button>
+                                                @else
+                                                    <span class="text-gray-400 italic">Terkunci</span>
+                                                @endif
                                             </td>
-
+                                            <td class="px-4 py-2 border">
+                                                @if ($catatan->is_validated)
+                                                    <span class="text-green-600 font-semibold">Tervalidasi</span>
+                                                @else
+                                                    <span class="text-red-600 font-semibold">Belum Validasi</span>
+                                                @endif
+                                            </td>
                                         </tr>
-                                        <!-- Modal Edit Catatan -->
-                                        <div class="modal fade" id="editModal{{ $catatan->id }}" tabindex="-1"
-                                            aria-labelledby="editModalLabel{{ $catatan->id }}" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <form action="{{ route('catatan.update', $catatan->id) }}"
-                                                        method="POST" enctype="multipart/form-data">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"
-                                                                id="editModalLabel{{ $catatan->id }}">Edit Catatan
-                                                            </h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="mb-4">
-                                                                <label for="isi_catatan"
-                                                                    class="block font-medium mb-1">Isi Catatan</label>
-                                                                <textarea name="isi_catatan" rows="4" class="w-full border rounded px-3 py-2" required>{{ $catatan->isi_catatan }}</textarea>
+                                        @if (!$catatan->is_validated)
+                                            <!-- Modal Edit Catatan -->
+                                            <div class="modal fade" id="editModal{{ $catatan->id }}" tabindex="-1"
+                                                aria-labelledby="editModalLabel{{ $catatan->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form action="{{ route('catatan.update', $catatan->id) }}"
+                                                            method="POST" enctype="multipart/form-data">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="editModalLabel{{ $catatan->id }}">Edit
+                                                                    Catatan
+                                                                </h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal"></button>
                                                             </div>
-                                                            <div class="mb-4">
-                                                                <label for="file_catatan"
-                                                                    class="block font-medium mb-1">Ganti File
-                                                                    (Opsional)
-                                                                </label>
-                                                                <input type="file" name="file_catatan"
-                                                                    class="w-full border rounded px-3 py-2">
-                                                                @if ($catatan->file_catatan)
-                                                                    <small class="text-gray-500">File saat ini: <a
-                                                                            href="{{ asset('storage/' . $catatan->file_catatan) }}"
-                                                                            target="_blank"
-                                                                            class="text-blue-500 underline">Lihat
-                                                                            File</a></small>
-                                                                @endif
+                                                            <div class="modal-body">
+                                                                <div class="mb-4">
+                                                                    <label for="isi_catatan"
+                                                                        class="block font-medium mb-1">Isi
+                                                                        Catatan</label>
+                                                                    <textarea name="isi_catatan" rows="4" class="w-full border rounded px-3 py-2" required>{{ $catatan->isi_catatan }}</textarea>
+                                                                </div>
+                                                                <div class="mb-4">
+                                                                    <label for="file_catatan"
+                                                                        class="block font-medium mb-1">Ganti File
+                                                                        (Opsional)
+                                                                    </label>
+                                                                    <input type="file" name="file_catatan"
+                                                                        class="w-full border rounded px-3 py-2">
+                                                                    @if ($catatan->file_catatan)
+                                                                        <small class="text-gray-500">File saat ini: <a
+                                                                                href="{{ asset('storage/' . $catatan->file_catatan) }}"
+                                                                                target="_blank"
+                                                                                class="text-blue-500 underline">Lihat
+                                                                                File</a></small>
+                                                                    @endif
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="submit" class="btn btn-primary">Simpan
-                                                                Perubahan</button>
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Batal</button>
-                                                        </div>
-                                                    </form>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary">Simpan
+                                                                    Perubahan</button>
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Batal</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     @endforeach
+
                                 </tbody>
                             </table>
+                            @php
+                                $isValidated = $catatanList->where('is_validated', true)->count() > 0;
+                            @endphp
+
+                            @if (auth()->user()->role == 2 && $isValidated)
+                                <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}"
+                                    class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600 inline-block mt-4">
+                                    Lanjut ke Tahap 4
+                                </a>
+                            @endif
+
                         </div>
                     </div>
                 </div>

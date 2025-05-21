@@ -33,6 +33,16 @@ class Kelompok extends Model
     {
         return $this->hasMany(PenugasanUser::class);
     }
+    public function catatan()
+    {
+        return $this->hasMany(Catatan::class, 'kelompok_id');
+    }
+    public function laporanKelompok()
+    {
+        return $this->hasMany(LaporanKelompok::class, 'kelompok_id');
+    }
+
+
 
 
 

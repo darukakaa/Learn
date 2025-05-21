@@ -13,14 +13,20 @@ class CatatanController extends Controller
     public function index($learningId)
     {
         $learning = Learning::findOrFail($learningId);
+
         $kelompok = Kelompok::where('user_id', Auth::id())
             ->where('learning_id', $learningId)
             ->first();
 
-        $catatanList = Catatan::where('learning_id', $learningId)->with('user')->get();
+        $catatanList = Catatan::where('learning_id', $learningId)
+            ->with(['user', 'kelompok'])
+            ->get();
+
 
         return view('learning.stage3', compact('learning', 'kelompok', 'catatanList'));
     }
+
+
 
     public function store(Request $request)
     {
@@ -64,5 +70,21 @@ class CatatanController extends Controller
         $catatan->save();
 
         return redirect()->back()->with('success', 'Catatan berhasil diperbarui.');
+    }
+
+    public function toggleValidate($id)
+    {
+        // Pastikan user yang mengakses adalah admin atau guru
+        if (!in_array(auth()->user()->role, [0, 1])) {
+            abort(403, 'Unauthorized');
+        }
+
+        $catatan = Catatan::findOrFail($id);
+        $catatan->is_validated = !$catatan->is_validated; // toggle status
+        $catatan->save();
+
+        $message = $catatan->is_validated ? 'Catatan berhasil divalidasi.' : 'Validasi catatan dibatalkan.';
+
+        return redirect()->back()->with('success', $message);
     }
 }

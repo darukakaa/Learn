@@ -17,6 +17,7 @@ class Catatan extends Model
         'learning_id',
         'kelompok_id',
         'user_id',
+        'is_validated',
     ];
 
     // Relasi
@@ -32,6 +33,6 @@ class Catatan extends Model
 
     public function kelompok()
     {
-        return $this->belongsTo(Kelompok::class);
+        return $this->belongsTo(Kelompok::class, 'kelompok_id');
     }
 }

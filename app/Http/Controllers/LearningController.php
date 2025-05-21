@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Learning;
 use App\Models\LearningStage1;
 use App\Models\LearningStage1Result;
+use App\Models\LaporanKelompok;
 use App\Models\Kelompok;
 use App\Models\Catatan;
 use Illuminate\Support\Facades\Auth;
@@ -162,11 +163,76 @@ class LearningController extends Controller
     public function stage3($id)
     {
         $learning = Learning::findOrFail($id);
-        $kelompok = Auth::user()->kelompokBelajar()->wherePivot('learning_id', $id)->first();
 
+        $userRole = Auth::user()->role;
 
-        $catatanList = Catatan::where('learning_id', $id)->with('user')->get();
+        if ($userRole === 0 || $userRole === 1) {
+            // Admin atau guru, tampilkan semua catatan
+            $catatanList = Catatan::where('learning_id', $id)
+                ->with(['user', 'kelompok'])
+                ->get();
+
+            $kelompok = null; // Admin dan guru mungkin gak perlu kelompok spesifik
+        } else {
+            // User biasa, tampilkan catatan sesuai kelompok dan user
+            $kelompok = Auth::user()->kelompokBelajar()->wherePivot('learning_id', $id)->first();
+
+            $catatanList = Catatan::where('learning_id', $id)
+                ->where('user_id', Auth::id())
+                ->when($kelompok, function ($query) use ($kelompok) {
+                    return $query->where('kelompok_id', $kelompok->id);
+                })
+                ->with('user')
+                ->get();
+        }
 
         return view('learning.stage3', compact('learning', 'kelompok', 'catatanList'));
+    }
+
+    public function stage4($id)
+    {
+        $user = auth()->user();
+
+        // Ambil learning
+        $learning = Learning::findOrFail($id);
+
+        $kelompok = null;
+        $laporan = collect(); // Default kosong
+
+        if ($user->role === 0 || $user->role === 1) {
+            // Admin atau Guru: ambil semua laporan dari seluruh kelompok dalam learning ini
+            $laporan = \App\Models\LaporanKelompok::whereIn('kelompok_id', function ($query) use ($id) {
+                $query->select('id')
+                    ->from('kelompok')
+                    ->where('learning_id', $id);
+            })->with(['kelompok', 'uploader'])->get();
+        } else {
+            // User biasa: ambil hanya laporan dari kelompoknya
+            $userKelompok = \App\Models\UserKelompokLearning::where('user_id', $user->id)
+                ->where('learning_id', $learning->id)
+                ->first();
+
+            if ($userKelompok) {
+                $kelompok = \App\Models\Kelompok::with(['catatan.user'])
+                    ->find($userKelompok->kelompok_id);
+
+                $laporan = \App\Models\LaporanKelompok::where('kelompok_id', $userKelompok->kelompok_id)
+                    ->with(['kelompok', 'uploader'])
+                    ->get();
+            }
+        }
+
+        return view('learning.stage4', compact('learning', 'kelompok', 'laporan'));
+    }
+
+
+
+
+    public function stage5($id)
+    {
+        $learning = Learning::findOrFail($id);
+        // Tambahkan logika lain jika dibutuhkan
+
+        return view('learning.stage5', compact('learning'));
     }
 }
