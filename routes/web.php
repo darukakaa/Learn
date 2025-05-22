@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AnswerV2Controller;
 use App\Http\Controllers\CatatanController;
+use App\Http\Controllers\EvaluasiController;
 use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\ProfileController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\PenugasanUserController;
 use App\Http\Controllers\QuestionV2Controller;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionsController;
+use App\Http\Controllers\RefleksiUserController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\UserKelompokLearningController;
 use App\Http\Controllers\DataSiswaController;
@@ -218,11 +220,16 @@ Route::post('/catatan/{id}/toggle-validate', [CatatanController::class, 'toggleV
 Route::get('/learning/{id}/stage4', [LearningController::class, 'stage4'])->name('learning.stage4');
 Route::post('/laporan-kelompok', [LaporanKelompokController::class, 'store'])->name('laporan_kelompok.store');
 Route::patch('/laporan/{id}/validasi', [\App\Http\Controllers\LaporanKelompokController::class, 'validasi'])->name('laporan.validasi');
+Route::patch('/laporan/{id}/nilai', [LaporanKelompokController::class, 'beriNilai'])->name('laporan.nilai');
 
 
 
 //STAGE 5
-Route::get('/learning/{id}/stage5', [LearningController::class, 'stage5'])->name('learning.stage5');
+// Route::get('/learning/{id}/stage5', [LearningController::class, 'stage5'])->name('learning.stage5');
+Route::post('/refleksi', [RefleksiUserController::class, 'store'])->name('refleksi.store');
+Route::get('/learning/{id}/stage5', [LearningController::class, 'showStage5'])->name('learning.stage5');
+Route::post('/evaluasi', [EvaluasiController::class, 'store'])->name('evaluasi.store');
+Route::get('/learning/{id}/stage5', [LearningController::class, 'showStage5'])->name('learning.stage5');
 
 
 

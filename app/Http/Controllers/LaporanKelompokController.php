@@ -46,4 +46,59 @@ class LaporanKelompokController extends Controller
 
         return back()->with('success', 'Status validasi berhasil diperbarui.');
     }
+    public function beriNilai(Request $request, $id)
+    {
+        $request->validate([
+            'nilai' => 'required|integer|min:0|max:100',
+        ]);
+
+        $laporan = LaporanKelompok::findOrFail($id);
+        $nilai = $request->nilai;
+
+        // Hitung kriteria
+        if ($nilai <= 20) {
+            $kriteria = 'Kurang Sekali';
+        } elseif ($nilai <= 40) {
+            $kriteria = 'Kurang';
+        } elseif ($nilai <= 60) {
+            $kriteria = 'Sedang';
+        } elseif ($nilai <= 80) {
+            $kriteria = 'Baik';
+        } else {
+            $kriteria = 'Sangat Baik';
+        }
+
+        $laporan->update([
+            'nilai' => $nilai,
+            'kriteria' => $kriteria,
+        ]);
+
+        return redirect()->back()->with('success', 'Nilai berhasil disimpan.');
+    }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'file_laporan' => 'required|file|mimes:pdf,docx,pptx|max:20480',
+        ]);
+
+        $laporan = LaporanKelompok::findOrFail($id);
+
+        if ($laporan->is_validated) {
+            return redirect()->back()->with('error', 'Laporan yang sudah divalidasi tidak dapat diubah.');
+        }
+        // Hapus file lama jika ada
+        if ($laporan->file_path && \Storage::exists('public/' . $laporan->file_path)) {
+            \Storage::delete('public/' . $laporan->file_path);
+        }
+
+        // Simpan file baru
+        $path = $request->file('file_laporan')->store('laporan_kelompok', 'public');
+
+        // Update data
+        $laporan->update([
+            'file_path' => $path,
+        ]);
+
+        return redirect()->back()->with('success', 'File laporan berhasil diperbarui.');
+    }
 }

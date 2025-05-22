@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Learning;
+use App\Models\Evaluasi;
 use App\Models\LearningStage1;
 use App\Models\LearningStage1Result;
 use App\Models\LaporanKelompok;
+use App\Models\RefleksiUser;
 use App\Models\Kelompok;
 use App\Models\Catatan;
 use Illuminate\Support\Facades\Auth;
@@ -227,12 +229,41 @@ class LearningController extends Controller
 
 
 
-
-    public function stage5($id)
+    public function showStage5($id)
     {
         $learning = Learning::findOrFail($id);
-        // Tambahkan logika lain jika dibutuhkan
 
-        return view('learning.stage5', compact('learning'));
+        // Ambil refleksi seperti sebelumnya
+        $existingRefleksi = RefleksiUser::where('user_id', auth()->id())
+            ->where('learning_id', $learning->id)
+            ->first();
+
+        $semuaRefleksi = RefleksiUser::where('learning_id', $learning->id)->with('user')->get();
+
+        // Ambil role user login
+        $userRole = auth()->user()->role;
+
+        if (in_array($userRole, [0, 1])) {
+            // Jika admin (0) atau guru (1), ambil semua kelompok di learning
+            $kelompok = Kelompok::where('learning_id', $learning->id)
+                ->with('anggota.user')
+                ->get();
+        } else {
+            // Jika user biasa, ambil kelompok yang user itu anggotanya
+            $kelompok = Kelompok::where('learning_id', $learning->id)
+                ->whereHas('anggota', function ($query) {
+                    $query->where('user_id', auth()->id());
+                })
+                ->with('anggota.user')
+                ->get();
+        }
+
+        // Ambil evaluasi untuk kelompok-kelompok tersebut
+        $evaluasi = Evaluasi::where('learning_id', $learning->id)
+            ->whereIn('kelompok_id', $kelompok->pluck('id'))
+            ->get()
+            ->groupBy('kelompok_id');
+
+        return view('learning.stage5', compact('learning', 'existingRefleksi', 'semuaRefleksi', 'kelompok', 'evaluasi'));
     }
 }

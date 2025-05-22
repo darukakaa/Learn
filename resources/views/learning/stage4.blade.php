@@ -29,6 +29,12 @@
                     <div class="bg-white shadow-sm sm:rounded-lg mb-6">
                         @if (Auth::user()->role === 0 || Auth::user()->role === 1)
                             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
+                                @push('scripts')
+                                    <link rel="stylesheet"
+                                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+                                @endpush
+
+
                                 <div class="bg-white shadow-sm sm:rounded-lg p-4">
                                     <h2 class="text-xl font-semibold mb-4">Laporan Kelompok</h2>
                                     <table class="table-auto w-full border">
@@ -37,29 +43,35 @@
                                                 <th class="border px-4 py-2">Kelompok</th>
                                                 <th class="border px-4 py-2">Diupload Oleh</th>
                                                 <th class="border px-4 py-2">File</th>
-                                                <th class="border px-4 py-2">Status Validasi</th>
                                                 <th class="border px-4 py-2">Tanggal Upload</th>
+                                                <th class="border px-4 py-2">Nilai</th>
+                                                <th class="border px-4 py-2">Kriteria</th>
                                                 <th class="border px-4 py-2">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+
                                             @foreach ($laporan as $item)
                                                 <tr>
                                                     <td class="border px-4 py-2">
                                                         {{ $item->kelompok->nama_kelompok ?? '-' }}</td>
                                                     <td class="border px-4 py-2">{{ $item->user->name ?? '-' }}</td>
+
+                                                    <!-- ✅ Tombol lihat file dalam kolom -->
+                                                    <td class="border px-4 py-2 text-center">
+                                                        <button
+                                                            onclick="document.getElementById('viewModal-{{ $item->id }}').classList.remove('hidden')"
+                                                            class="text-blue-600 hover:text-blue-800">
+                                                            <i class="fa-solid fa-file fa-lg"></i> Lihat
+                                                        </button>
                                                     </td>
+
                                                     <td class="border px-4 py-2">
-                                                        <a href="{{ asset('storage/' . $item->file_path) }}"
-                                                            class="text-blue-600 underline" target="_blank">Lihat
-                                                            File</a>
-                                                    </td>
-                                                    <td class="border px-4 py-2">
-                                                        {{ $item->is_validated ? 'Tervalidasi' : 'Belum Divalidasi' }}
-                                                    </td>
-                                                    <td class="border px-4 py-2">
-                                                        {{ $item->created_at->format('d M Y H:i') }}</td>
-                                                    <td class="border px-4 py-2">
+                                                        {{ $item->created_at->format('d M Y') }}</td>
+                                                    <td class="border px-4 py-2">{{ $item->nilai ?? '-' }}</td>
+                                                    <td class="border px-4 py-2">{{ $item->kriteria ?? '-' }}</td>
+                                                    <td class="border px-4 py-2 space-y-2">
+                                                        <!-- Validasi -->
                                                         <form action="{{ route('laporan.validasi', $item->id) }}"
                                                             method="POST">
                                                             @csrf
@@ -68,25 +80,88 @@
                                                                 class="btn {{ $item->is_validated ? 'btn-danger' : 'btn-primary' }}">
                                                                 {{ $item->is_validated ? 'Unvalidasi' : 'Validasi' }}
                                                             </button>
-
-
                                                         </form>
+
+                                                        <!-- Tombol nilai -->
+                                                        <button
+                                                            onclick="openModal({{ $item->id }}, {{ $item->nilai ?? 'null' }})"
+                                                            class="btn btn-secondary w-full">
+                                                            Nilai
+                                                        </button>
                                                     </td>
                                                 </tr>
+
+                                                <!-- Modal View File -->
+                                                <div id="viewModal-{{ $item->id }}"
+                                                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                                                    <div
+                                                        class="bg-white rounded-lg shadow-lg w-full max-w-4xl h-4/5 flex flex-col relative overflow-hidden">
+
+                                                        <!-- Header -->
+                                                        <div class="flex justify-between items-center p-4 border-b">
+                                                            <h2 class="text-lg font-semibold">Preview Laporan</h2>
+                                                            <button
+                                                                onclick="document.getElementById('viewModal-{{ $item->id }}').classList.add('hidden')"
+                                                                class="text-gray-500 hover:text-red-600 text-xl font-bold">&times;</button>
+                                                        </div>
+
+                                                        <!-- Konten Scrollable -->
+                                                        <div class="flex-grow overflow-y-auto p-4">
+                                                            <iframe src="{{ asset('storage/' . $item->file_path) }}"
+                                                                class="w-full h-full border rounded"
+                                                                frameborder="0"></iframe>
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
                                             @endforeach
                                         </tbody>
+                                        <!-- Modal -->
+                                        <div id="modal-nilai"
+                                            class="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 hidden justify-center items-center">
+                                            <div class="bg-white p-6 rounded shadow-md w-96">
+                                                <h2 class="text-lg font-bold mb-4">Beri Nilai</h2>
+                                                <form id="form-nilai" method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="laporan_id" id="laporan_id">
+                                                    <label for="nilai" class="block mb-2">Nilai (0 - 100):</label>
+                                                    <input type="number" min="0" max="100" id="nilai"
+                                                        name="nilai" class="w-full border px-3 py-2 rounded mb-4"
+                                                        required>
+                                                    <div class="flex justify-end gap-2">
+                                                        <button type="button" onclick="closeModal()"
+                                                            class="btn btn-danger">Batal</button>
+                                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                            function openModal(id, nilai = '') {
+                                                document.getElementById('modal-nilai').classList.remove('hidden');
+                                                document.getElementById('laporan_id').value = id;
+                                                document.getElementById('nilai').value = nilai ?? '';
+                                                document.getElementById('form-nilai').action = '/laporan/' + id + '/nilai';
+                                            }
+
+                                            function closeModal() {
+                                                document.getElementById('modal-nilai').classList.add('hidden');
+                                            }
+                                        </script>
                                     </table>
+
+
                                 </div>
                             </div>
+                            <a href="{{ route('learning.stage5', ['id' => $learning->id]) }}" class="btn btn-primary">
+                                Lanjut ke Tahap 5
+                            </a>
                         @endif
 
-
-
-
-
-                        <a href="{{ route('learning.stage5', ['id' => $learning->id]) }}" class="btn btn-primary">
-                            Lanjut ke Tahap 5
-                        </a>
                     </div>
                 </div>
             </div>
@@ -251,8 +326,10 @@
 
                                                 <th class="border px-4 py-2">Diupload Oleh</th>
                                                 <th class="border px-4 py-2">File</th>
-                                                <th class="border px-4 py-2">Status Validasi</th>
                                                 <th class="border px-4 py-2">Tanggal Upload</th>
+                                                <th class="border px-4 py-2">Status Validasi</th>
+                                                <th class="border px-4 py-2">Nilai</th>
+                                                <th class="border px-4 py-2">Kriteria</th>
 
                                             </tr>
                                         </thead>
@@ -264,32 +341,59 @@
                                                     </td>
                                                     <td class="border px-4 py-2">
                                                         <a href="{{ asset('storage/' . $item->file_path) }}"
-                                                            class="text-blue-600 underline" target="_blank">Lihat
-                                                            File</a>
+                                                            class="text-blue-600 underline" target="_blank">
+                                                            Lihat File
+                                                        </a>
+                                                        <br>
+                                                        @if (!$item->is_validated)
+                                                            <button
+                                                                onclick="document.getElementById('editModal-{{ $item->id }}').classList.remove('hidden')"
+                                                                class="btn btn-primary">Edit</button>
+                                                        @endif
+                                                    </td>
+
+                                                    <td class="border px-4 py-2">
+                                                        {{ $item->created_at->format('d M Y') }}
                                                     </td>
                                                     <td class="border px-4 py-2">
                                                         {{ $item->is_validated ? 'Tervalidasi' : 'Belum Divalidasi' }}
                                                     </td>
-                                                    <td class="border px-4 py-2">
-                                                        {{ $item->created_at->format('d M Y H:i') }}
-                                                    </td>
-
+                                                    <td class="border px-4 py-2">{{ $item->nilai ?? '-' }}</td>
+                                                    <td class="border px-4 py-2">{{ $item->kriteria ?? '-' }}</td>
                                                 </tr>
+                                                <!-- Modal Edit File -->
+                                                <div id="editModal-{{ $item->id }}"
+                                                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+                                                    <div class="bg-white p-6 rounded shadow w-full max-w-md relative">
+                                                        <h2 class="text-lg font-semibold mb-4">Edit File Laporan</h2>
+                                                        <form
+                                                            action="{{ route('laporan_kelompok.update', $item->id) }}"
+                                                            method="POST" enctype="multipart/form-data">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <input type="file" name="file_laporan" required>
+                                                            <button type="submit"
+                                                                class="btn btn-primary mt-3">Update</button>
+                                                            <button type="button" class="btn btn-secondary mt-3"
+                                                                onclick="document.getElementById('editModal-{{ $item->id }}').classList.add('hidden')">
+                                                                Batal
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
+                        @if ($laporan->contains('is_validated', true))
+                            <a href="{{ route('learning.stage5', ['id' => $learning->id]) }}"
+                                class="btn btn-primary rounded-full">
+                                Lanjut ke Tahap 5
+                            </a>
+                        @endif
                     </div>
-
-
-                    @if ($laporan->contains('is_validated', true))
-                        <a href="{{ route('learning.stage5', ['id' => $learning->id]) }}"
-                            class="btn btn-primary rounded-full">
-                            Lanjut ke Tahap 5
-                        </a>
-                    @endif
 
                 </div>
             </div>

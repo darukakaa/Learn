@@ -88,7 +88,7 @@
                                 class="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
                                 <h2 class="text-lg font-semibold">{{ $k->nama_kelompok }}</h2>
                                 <p class="text-sm mt-2">Jumlah Kelompok: {{ $k->jumlah_kelompok }}</p>
-                                <p class="text-sm mt-2">Tahap: {{ $k->stage_id }}</p>
+
                                 <p class="text-sm mt-2">Anggota yang Bergabung: {{ $k->anggota->count() }} /
                                     {{ $k->jumlah_kelompok }}</p>
                                 <!-- Delete Button -->

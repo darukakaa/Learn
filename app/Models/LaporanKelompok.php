@@ -11,7 +11,16 @@ class LaporanKelompok extends Model
 
     protected $table = 'laporan_kelompok';
 
-    protected $fillable = ['kelompok_id', 'uploaded_by', 'file_path', 'is_validated', 'user_id', 'learning_id'];
+    protected $fillable = [
+        'kelompok_id',
+        'uploaded_by',
+        'file_path',
+        'is_validated',
+        'user_id',
+        'learning_id',
+        'nilai',
+        'kriteria',
+    ];
 
 
     public function kelompok()
