@@ -33,6 +33,7 @@
                         <th class="py-2 px-4 border-b text-center">Aksi</th>
                     </tr>
                 </thead>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
                 <tbody>
                     @foreach ($kuisv2 as $kuis)
                         <tr>
@@ -60,23 +61,107 @@
                                 @endif
 
                                 <!-- Tombol "Masuk Kuis" -->
-                                <a href="{{ route('questions.show', $kuis->id) }}" class="btn btn-primary">Masuk
-                                    Kuis</a>
+                                @if (in_array(auth()->user()->role, ['0', '1', '2']))
+                                    @if (auth()->user()->role == '2' && $submittedKuisIds->contains($kuis->id))
+                                        <span class="text-green-600 font-semibold">Anda sudah menyelesaikan kuis
+                                            ini</span>
 
-                                @if (auth()->user()->role == '2')
-                                    {{-- <a href="{{ route('answers_v2.showScore', $kuis->id) }}"
-                                        class="btn btn-secondary">Nilai</a>
-                                    <!-- Tombol "Nilai V2" -->
-                                    <a href="{{ route('answers_v2.showScoreV2', $kuis->id) }}"
-                                        class="btn btn-success">Nilai V2</a> --}}
+                                        <div class="mt-2 d-flex gap-2">
+                                            <a href="{{ route('kuisv2.nilai', $kuis->id) }}"
+                                                class="btn btn-success">Nilai V3</a>
 
-                                    <a href="{{ route('kuisv2.nilai', $kuis->id) }}" class="btn btn-success">Nilai
-                                        V3</a>
+                                            <button class="btn btn-info" data-bs-toggle="modal"
+                                                data-bs-target="#reviewModal{{ $kuis->id }}">
+                                                Review Soal
+                                            </button>
+                                        </div>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="reviewModal{{ $kuis->id }}" tabindex="-1"
+                                            aria-labelledby="reviewModalLabel{{ $kuis->id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title"
+                                                            id="reviewModalLabel{{ $kuis->id }}">
+                                                            Review Soal: {{ $kuis->nama_kuis }}
+                                                        </h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Tutup"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @foreach ($kuis->questionsV2 as $question)
+                                                            @php
+                                                                $isCorrect = false;
+                                                                if ($question->userAnswer) {
+                                                                    $isCorrect =
+                                                                        strtoupper(
+                                                                            $question->userAnswer->selected_answer,
+                                                                        ) === strtoupper($question->correct_answer);
+                                                                }
+                                                            @endphp
+
+                                                            <div class="mb-4">
+                                                                <strong>
+                                                                    Soal Nomor {{ $loop->iteration }}
+                                                                    @if ($question->userAnswer)
+                                                                        @if ($isCorrect)
+                                                                            <span style="color:green;">&#10003;</span>
+                                                                        @else
+                                                                            <span style="color:red;">&#10007;</span>
+                                                                        @endif
+                                                                    @endif
+                                                                </strong><br>
+
+                                                                <strong>Pertanyaan:</strong>
+                                                                {{ $question->question }}<br>
+
+                                                                <ul>
+                                                                    <li>A. {{ $question->option_a }}</li>
+                                                                    <li>B. {{ $question->option_b }}</li>
+                                                                    <li>C. {{ $question->option_c }}</li>
+                                                                    <li>D. {{ $question->option_d }}</li>
+                                                                    @if ($question->option_e)
+                                                                        <li>E. {{ $question->option_e }}</li>
+                                                                    @endif
+                                                                </ul>
+
+                                                                <strong>Jawaban Benar:</strong>
+                                                                <span
+                                                                    class="text-success">{{ strtoupper($question->correct_answer) }}</span><br>
+
+                                                                <strong>Jawaban Anda:</strong>
+                                                                @if ($question->userAnswer)
+                                                                    <span
+                                                                        class="{{ $isCorrect ? 'text-success' : 'text-danger' }}">
+                                                                        {{ strtoupper($question->userAnswer->selected_answer) }}
+                                                                        @if ($isCorrect)
+                                                                            &#10003;
+                                                                        @else
+                                                                            &#10007;
+                                                                        @endif
+                                                                    </span>
+                                                                @else
+                                                                    <span class="text-danger">Belum dijawab</span>
+                                                                @endif
+
+                                                                <hr>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Tutup</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <a href="{{ route('questions.show', $kuis->id) }}"
+                                            class="btn btn-primary">Masuk Kuis</a>
+                                    @endif
                                 @endif
-
-
-
-
 
                             </td>
 
@@ -146,7 +231,7 @@
             </div>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Function to open the Edit Modal with the data of the selected quiz
         function openEditModal(id, nama, tanggal) {

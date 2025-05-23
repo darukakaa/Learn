@@ -144,7 +144,7 @@
                                 <p class="text-sm mt-2">Jumlah Kelompok: {{ $k->jumlah_kelompok }}</p>
                                 <p class="text-sm mt-2">Anggota yang Bergabung: {{ $k->anggota->count() }} /
                                     {{ $k->jumlah_kelompok }}</p>
-                                <p class="text-sm mt-2">Tahap: {{ $k->stage_id }}</p>
+
                             </a>
                         @endforeach
                     </div>

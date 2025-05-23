@@ -16,9 +16,9 @@ class Kelompok extends Model
         'jumlah_kelompok',
         'learning_id',
         'stage_id',
+        'terisi', // agar bisa diisi mass assignment
     ];
 
-    // Definisikan relasi ke tabel Learning (one to many)
     public function learning()
     {
         return $this->belongsTo(Learning::class, 'learning_id');
@@ -29,32 +29,41 @@ class Kelompok extends Model
         return $this->hasMany(UserKelompokLearning::class, 'kelompok_id');
     }
 
+
     public function penugasans()
     {
         return $this->hasMany(PenugasanUser::class);
     }
+
     public function catatan()
     {
         return $this->hasMany(Catatan::class, 'kelompok_id');
     }
+
     public function laporanKelompok()
     {
         return $this->hasMany(LaporanKelompok::class, 'kelompok_id');
     }
 
+    // Hitung jumlah anggota langsung dari database
+    public function countAnggota()
+    {
+        return UserKelompokLearning::where('kelompok_id', $this->id)->count();
+    }
 
 
-
-
-
-    // Mengatur nilai default untuk 'stage_id' saat membuat data
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
             if (is_null($model->stage_id)) {
-                $model->stage_id = 2; // Set default 'stage_id' ke 2 jika tidak ada
+                $model->stage_id = 2;
+            }
+
+            // Set default terisi 0 kalau belum ada nilainya
+            if (is_null($model->terisi)) {
+                $model->terisi = 0;
             }
         });
     }

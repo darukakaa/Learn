@@ -150,7 +150,6 @@ Route::post('/learning/{learningId}/stage/{stageId}/kelompok', [KelompokControll
 
 Route::get('/learning/{learningId}/stage/{stageId}', [KelompokController::class, 'show'])->name('kelompok.show');
 
-// Route::get('/learning/{learningId}/{stageId}', [LearningController::class, 'showLearning'])->name('learning.show');
 
 Route::post('learning/{learningId}/stage/{stageId}/kelompok', [KelompokController::class, 'store'])->name('kelompok.store');
 
@@ -169,22 +168,26 @@ Route::get('/learning/{learningId}/stage2', [LearningController::class, 'showSta
 
 Route::delete('/kelompok/{id}', [KelompokController::class, 'destroy'])->name('kelompok.destroy');
 
-//masuk card kelompok
-Route::get('/kelompok/{id}', [KelompokController::class, 'show'])->name('kelompok.show');
+// Show kelompok detail
+Route::get('/kelompok/{kelompok}', [KelompokController::class, 'show'])->name('kelompok.show');
 
-Route::get('/learning/{learning}/stage2/kelompok/{id}', [KelompokController::class, 'showInStage2'])->name('kelompok.stage2.show');
+// Show kelompok detail di stage2
+Route::get('/learning/{learning}/stage2/kelompok/{kelompok}', [KelompokController::class, 'showInStage2'])->name('kelompok.stage2.show');
 
-Route::post('/kelompok/{kelompokId}/pilih', [KelompokController::class, 'pilihKelompok'])->name('kelompok.pilih');
+// Pilih kelompok (gunakan satu parameter konsisten)
 Route::post('/kelompok/{kelompok}/pilih', [KelompokController::class, 'pilihKelompok'])->name('kelompok.pilih');
 
-Route::post('kelompok/{kelompokId}/gabung', [KelompokController::class, 'storeUser'])->name('kelompok.store.user');
+// Gabung kelompok
 Route::post('/kelompok/{kelompokId}/gabung', [KelompokController::class, 'storeUser'])->name('kelompok.storeUser');
-Route::get('/learning/{learningId}/stage2/kelompok/{kelompokId}/manage', [KelompokController::class, 'manage'])
-    ->name('kelompok.manage');
 
+// Manage anggota kelompok di stage2
+Route::get('/learning/{learning}/stage2/kelompok/{kelompok}/manage', [KelompokController::class, 'manage'])->name('kelompok.manage');
+
+// Store user_kelompok_learning, bisa pakai route ini untuk gabung kelompok dengan data lengkap
 Route::post('/user-kelompok-learning/store', [UserKelompokLearningController::class, 'store'])->name('user_kelompok_learning.store');
-Route::post('/learning/{learningId}/kelompok/{kelompokId}/join', [UserKelompokLearningController::class, 'store'])->name('kelompok.store.user');
-Route::post('/kelompok/{kelompokId}/storeUser', [KelompokController::class, 'storeUser'])->name('kelompok.storeUser');
+
+// Jika ingin pakai join lewat learning + kelompok
+Route::post('/learning/{learning}/kelompok/{kelompok}/join', [UserKelompokLearningController::class, 'store'])->name('user_kelompok_learning.join');
 
 
 // Routing untuk PenugasanUserController
@@ -214,6 +217,7 @@ Route::get('learning/{learningId}/stage3', [LearningController::class, 'stage3']
 Route::put('/catatan/{id}', [CatatanController::class, 'update'])->name('catatan.update');
 Route::get('/learning/{id}/catatan', [CatatanController::class, 'index'])->name('catatan.index');
 Route::post('/catatan/{id}/toggle-validate', [CatatanController::class, 'toggleValidate'])->name('catatan.toggleValidate');
+Route::put('/laporan_kelompok/{id}', [LaporanKelompokController::class, 'update'])->name('laporan_kelompok.update');
 
 
 //STAGE 4

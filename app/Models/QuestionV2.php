@@ -32,4 +32,9 @@ class QuestionV2 extends Model
     {
         return $this->hasMany(AnswerV2::class);
     }
+    public function userAnswer()
+    {
+        return $this->hasOne(AnswerV2::class, 'question_id')
+            ->where('user_id', auth()->id());
+    }
 }

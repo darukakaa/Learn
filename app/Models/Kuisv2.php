@@ -19,4 +19,8 @@ class Kuisv2 extends Model
     {
         return $this->hasMany(Result::class);
     }
+    public function questionsV2()
+    {
+        return $this->hasMany(QuestionV2::class, 'kuis_id');
+    }
 }

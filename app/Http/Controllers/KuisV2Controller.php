@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Kuisv2;
 use App\Models\Result;
+use App\Models\AnswerV2;
+use App\Models\QuestionV2;
 use Illuminate\Http\Request;
 
 
@@ -20,11 +22,16 @@ class KuisV2Controller extends Controller
 
     public function index()
     {
-        // Mengambil data kuisv2 dan mengurutkannya berdasarkan kolom 'created_at' secara descending
         $kuisv2 = Kuisv2::orderBy('created_at', 'desc')->get();
 
-        return view('kuisv2.index', compact('kuisv2'));
+        $submittedKuisIds = AnswerV2::where('user_id', auth()->id())
+            ->join('questionsv2', 'answers_v2.question_id', '=', 'questionsv2.id')
+            ->pluck('questionsv2.kuis_id')
+            ->unique();
+
+        return view('kuisv2.index', compact('kuisv2', 'submittedKuisIds'));
     }
+
     public function show($id)
     {
         $kuis = Kuisv2::findOrFail($id); // Find the quiz by ID
@@ -68,19 +75,20 @@ class KuisV2Controller extends Controller
     }
     public function showScore($id)
     {
-        // Ambil data score dari tabel results berdasarkan ID kuis
+        // Ambil data kuis beserta pertanyaan dan jawaban user yang login
+        $kuis = Kuisv2::with(['questionsV2.userAnswer'])->findOrFail($id);
+
         $result = Result::where('kuis_id', $id)
-            ->where('user_id', auth()->id()) // Opsional: Jika hanya untuk user tertentu
+            ->where('user_id', auth()->id())
             ->first();
 
-        // Jika data tidak ditemukan, redirect dengan pesan error
         if (!$result) {
             return redirect()->route('kuisv2.index')->with('error', 'Data score tidak ditemukan.');
         }
 
-        // Return view dengan data score
         return view('nilai.index', [
             'score' => $result->score,
+            'kuis' => $kuis, // <-- penting untuk ditampilkan di view
         ]);
     }
 }

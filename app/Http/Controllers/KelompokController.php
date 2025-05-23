@@ -126,23 +126,29 @@ class KelompokController extends Controller
             ])->with('success', 'Berhasil bergabung!');
         }
 
-        if ($kelompok->anggota->count() >= $kelompok->jumlah_kelompok) {
+        // Hitung anggota real-time langsung dari DB
+        $jumlahAnggota = UserKelompokLearning::where('kelompok_id', $kelompokId)->count();
+
+        if ($kelompok->countAnggota() >= $kelompok->jumlah_kelompok) {
             return redirect()->back()->with('error', 'Kelompok ini sudah penuh.');
         }
+
 
         UserKelompokLearning::create([
             'user_id' => $user->id,
             'kelompok_id' => $kelompokId,
             'learning_id' => $request->learning_id,
         ]);
-
+        // Increment terisi di kelompok
         $kelompok->increment('terisi');
 
+
         return redirect()->route('kelompok.stage2.show', [
-            'learningId' => $request->learning_id,
-            'kelompokId' => $kelompokId,
+            'learning' => $request->learning_id,
+            'id' => $kelompokId,
         ])->with('success', 'Anda berhasil bergabung di kelompok.');
     }
+
 
 
 
