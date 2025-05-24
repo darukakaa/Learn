@@ -22,6 +22,34 @@
                         <div class="p-6 bg-white border-b border-gray-200">
                             <h1 class="text-2xl font-bold">{{ $learning->name }}</h1>
                             <p class="mt-4">Tahap 4 Pengembangan dan Penyajian</p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div class="bg-white shadow-sm sm:rounded-lg mb-6">
+                        <div class="p-6 bg-white border-b border-gray-200">
+                            <p class="mt-4">STAGE</p>
+                            <a href="{{ route('learning.index') }}"
+                                class="btn btn-secondary mt-4 inline-block ml-2">Kembali
+                                ke Daftar
+                                Learning</a>
+                            <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
+                                class="btn btn-secondary mt-4 inline-block ml-2">
+                                Kembali ke Tahap 1
+                            </a>
+                            <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
+                                class="btn btn-secondary mt-4 inline-block ml-2">
+                                Kembali ke Tahap 2
+                            </a>
+                            <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
+                                class="btn btn-secondary mt-4 inline-block ml-2">
+                                Kembali ke Tahap 3
+                            </a>
+                            <a href="{{ route('learning.stage5', ['id' => $learning->id]) }}"
+                                class="btn btn-primary  mt-4 inline-block ml-2">
+                                Lanjut ke Tahap 5
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -157,9 +185,7 @@
 
                                 </div>
                             </div>
-                            <a href="{{ route('learning.stage5', ['id' => $learning->id]) }}" class="btn btn-primary">
-                                Lanjut ke Tahap 5
-                            </a>
+
                         @endif
 
                     </div>
@@ -180,7 +206,8 @@
                     <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-gray-700">Dashboard</a>
                     <a href="{{ route('materi.index') }}" class="block px-4 py-2 hover:bg-gray-700">Materi</a>
                     <a href="{{ route('learning.index') }}" class="block px-4 py-2 hover:bg-gray-700">Learning</a>
-                    <a href="{{ route('kuis-tugas.index') }}" class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
+                    <a href="{{ route('kuis-tugas.index') }}"
+                        class="block px-4 py-2 hover:bg-gray-700">Kuis/Tugas</a>
                     <a href="{{ route('modul.index') }}" class="block px-4 py-2 hover:bg-gray-700">Modul</a>
                 </nav>
             </div>

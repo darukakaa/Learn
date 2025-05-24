@@ -266,4 +266,15 @@ class LearningController extends Controller
 
         return view('learning.stage5', compact('learning', 'existingRefleksi', 'semuaRefleksi', 'kelompok', 'evaluasi'));
     }
+    public function selesaikan($learningId)
+    {
+        $learning = Learning::findOrFail($learningId);
+
+        // Logic menyelesaikan learning, misal update status, dsb
+        Learning::where('is_completed', true)->get();
+        $learning->save();
+
+        return redirect()->route('learning.index', $learningId)
+            ->with('learning_completed', true);
+    }
 }

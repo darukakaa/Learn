@@ -80,30 +80,34 @@
 
                 {{-- Tombol Kelola Anggota untuk Admin / Guru --}}
                 @if (auth()->user()->role == '0' || auth()->user()->role == '1')
-                    <a href="{{ route('kelompok.manage', ['learningId' => $learning->id, 'kelompokId' => $kelompok->id]) }}"
+                    <a href="{{ route('kelompok.manage', ['learning' => $learning->id, 'kelompok' => $kelompok->id]) }}"
                         class="btn btn-primary mt-4 inline-block">
                         Kelola Anggota
                     </a>
+
+                    {{-- Tombol Kembali --}}
+                    <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
+                        class="btn btn-secondary mt-4 inline-block ml-2">
+                        Kembali ke Daftar Kelompok
+                    </a>
                 @endif
-
-                {{-- Tombol Kembali --}}
-                <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
-                    class="btn btn-secondary mt-4 inline-block ml-2">
-                    Kembali ke Daftar Kelompok
-                </a>
-
             </div>
         </div>
 
         {{-- Card Penugasan --}}
         <div class="bg-white shadow-sm rounded-lg p-6 w-full md:max-w-md">
-            <h1 class="mt-2">Card Tambahan</h1>
-            @if (auth()->user()->role == '2')
+            @php
+                $user = auth()->user();
+                $isUserInKelompok = $kelompok->anggota->contains('user_id', $user->id);
+            @endphp
+
+            @if ($user->role == 2 && $isUserInKelompok)
                 <!-- Tombol untuk membuka modal -->
                 <button type="button" data-bs-toggle="modal" data-bs-target="#modalPenugasan" class="btn btn-primary">
                     Tambah Penugasan
                 </button>
             @endif
+
             <!-- Modal -->
             <div class="modal fade" id="modalPenugasan" tabindex="-1" aria-labelledby="modalPenugasanLabel"
                 aria-hidden="true">
@@ -149,7 +153,14 @@
                 </div>
             </div>
 
-            <h2 class="mt-4 font-bold text-lg">Daftar Penugasan Anda</h2>
+            @php
+                $role = Auth::user()->role;
+            @endphp
+
+            <h2 class="mt-4 font-bold text-lg">
+                Daftar Penugasan{{ $role == 2 ? ' Anda' : '' }}
+            </h2>
+
             <table class="table table-bordered mt-2">
                 <thead class="bg-gray-100">
                     <tr>
@@ -172,10 +183,9 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center">Tidak ada penugasan untuk Anda.</td>
+                            <td colspan="5" class="text-center">Tidak ada penugasan untuk Anda.</td>
                         </tr>
                     @endforelse
-
                 </tbody>
             </table>
             <div class="flex justify-between mt-6">
@@ -184,6 +194,6 @@
                     Selanjutnya
                 </a>
             </div>
-
         </div>
+    </div>
 </x-app-layout>

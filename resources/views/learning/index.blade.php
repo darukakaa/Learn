@@ -39,6 +39,12 @@
                                     <div class="p-6 text-center">
                                         <h3 class="text-lg font-bold mb-2">{{ $learning->name }}</h3>
                                         <p class="text-gray-600">Learning Description or any extra content.</p>
+                                        @if ($learning->is_completed)
+                                            <span
+                                                class="inline-block mt-2 px-3 py-1 bg-green-200 text-green-800 text-sm font-semibold rounded-full">
+                                                Selesai
+                                            </span>
+                                        @endif
                                     </div>
                                     <div class="bg-gray-200 text-center py-2 flex justify-around">
                                         <!-- Delete Button -->

@@ -23,8 +23,21 @@
                             <h1 class="text-2xl font-bold">{{ $learning->name }}</h1>
                             <p class="mt-4">Tahap 1 Pengidentifikasian Masalah</p>
                         </div>
-                        <a href="{{ route('learning.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar
-                            Learning</a>
+
+                        <!-- Navigation Buttons -->
+                        <div class="flex">
+                            <a href="{{ route('learning.index') }}"
+                                class="btn btn-secondary mt-4 inline-block ml-2">Kembali
+                                ke Daftar
+                                Learning</a>
+
+                            <form method="GET"
+                                action="{{ route('learning.stage2', ['learningId' => $learning->id]) }}">
+                                <button type="submit" class="btn btn-primary mt-4 inline-block ml-2">
+                                    Lanjut Tahap 2
+                                </button>
+                            </form>
+                        </div>
                     </div>
 
 

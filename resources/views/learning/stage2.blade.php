@@ -24,11 +24,18 @@
                             <h1 class="text-2xl font-bold">{{ $learning->name }}</h1>
                             <p class="mt-4">Tahap 2 Pengorganisasian Siswa</p>
                         </div>
-                        <a href="{{ route('learning.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar
+
+                        <a href="{{ route('learning.index') }}" class="btn btn-secondary mt-4 inline-block ml-2">Kembali
+                            ke Daftar
                             Learning</a>
+                        <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
+                            class="btn btn-secondary mt-4 inline-block ml-2">
+                            Kembali ke Tahap 1
+                        </a>
+
                         <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
-                            class="btn btn-primary mb-4">
-                            Lanjut Stage 3
+                            class="btn btn-primary mt-4 inline-block ml-2">
+                            Lanjut Tahap 3
                         </a>
 
 

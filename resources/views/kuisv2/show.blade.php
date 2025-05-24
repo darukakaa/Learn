@@ -95,13 +95,15 @@
                     <a href="{{ route('kuisv2.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar Kuis</a>
                     <h2 class="text-xl font-bold mb-4">Soal Kuis yang Telah Ditambahkan</h2>
                     @if ($questions->count() > 0)
-                        <form action="{{ route('answers_v2.store') }}" method="POST">
+                        <form id="answerForm" action="{{ route('answers_v2.store') }}" method="POST">
                             @csrf
                             <input type="hidden" name="kuis_id" value="{{ $kuis->id }}">
                             <!-- Daftar Soal -->
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                                 @foreach ($questions as $question)
                                     <div class="border p-4 rounded shadow">
+                                        <!-- Keterangan Nomor Soal -->
+                                        <strong class="block mb-2">Soal nomor {{ $loop->iteration }}</strong>
                                         <!-- Gambar dan Soal -->
                                         @if ($question->image)
                                             <img src="{{ asset('storage/' . $question->image) }}" alt="Gambar Soal"
@@ -143,15 +145,37 @@
 
                             @if (auth()->user()->role == '2')
                                 <div class="flex justify-end mt-4">
-                                    <button type="submit" class="btn btn-success">Submit Jawaban</button>
+                                    <button type="button" id="confirmSubmit" class="btn btn-success">Submit
+                                        Jawaban</button>
                                 </div>
                             @endif
                         </form>
+
+                        <!-- SweetAlert2 CDN + Script Konfirmasi Submit -->
+                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                        <script>
+                            document.getElementById('confirmSubmit')?.addEventListener('click', function() {
+                                Swal.fire({
+                                    title: 'Yakin ingin submit jawaban?',
+                                    text: "Jawaban kamu akan disimpan dan tidak bisa diubah.",
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Ya, submit!',
+                                    cancelButtonText: 'Batal'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        document.getElementById('answerForm').submit();
+                                    }
+                                });
+                            });
+                        </script>
                     @else
                         <p class="text-gray-600">Belum ada soal yang ditambahkan.</p>
                     @endif
                 </div>
+
             </div>
         </div>
-    </div>
 </x-app-layout>

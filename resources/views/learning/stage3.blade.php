@@ -26,6 +26,29 @@
                         </div>
                     </div>
                 </div>
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <div class="bg-white shadow-sm sm:rounded-lg mb-6">
+                        <div class="p-6 bg-white border-b border-gray-200">
+                            <p class="mt-4">STAGE</p>
+                            <a href="{{ route('learning.index') }}"
+                                class="btn btn-secondary mt-4 inline-block ml-2">Kembali
+                                ke Daftar
+                                Learning</a>
+                            <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
+                                class="btn btn-secondary mt-4 inline-block ml-2">
+                                Kembali ke Tahap 1
+                            </a>
+                            <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
+                                class="btn btn-secondary mt-4 inline-block ml-2">
+                                Kembali ke Tahap 2
+                            </a>
+                            <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}"
+                                class="btn btn-primary mt-4 inline-block ml-2">
+                                Lanjut ke Tahap 4
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
 
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -34,11 +57,6 @@
 
                             <body>
                                 <h1>Pembimbingan Siswa</h1>
-                                {{-- Tombol Kembali --}}
-                                <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
-                                    class="btn btn-secondary mt-4 inline-block ml-2">
-                                    Kembali ke Daftar Kelompok
-                                </a>
                             </body>
 
 
@@ -84,17 +102,14 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}" class="btn btn-primary">
-                                Lanjut ke Tahap 4
-                            </a>
-
                         </div>
+
                     </div>
                 </div>
             </div>
 
         </div>
-        </div>
+
 
         </div>
     @endif

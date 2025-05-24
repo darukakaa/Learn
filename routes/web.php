@@ -236,6 +236,9 @@ Route::post('/evaluasi', [EvaluasiController::class, 'store'])->name('evaluasi.s
 Route::get('/learning/{id}/stage5', [LearningController::class, 'showStage5'])->name('learning.stage5');
 
 
+Route::get('/learning/{learning}/selesaikan', [LearningController::class, 'selesaikan'])->name('learning.selesaikan');
+
+
 
 // nilai
 Route::get('/kuisv2/nilai/{id}', function ($id) {
