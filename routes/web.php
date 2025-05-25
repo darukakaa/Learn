@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AktivitasSiswaController;
 use App\Http\Controllers\AnswerV2Controller;
 use App\Http\Controllers\CatatanController;
 use App\Http\Controllers\EvaluasiController;
@@ -132,6 +133,9 @@ Route::post('/learning/{id}/stage1', [LearningController::class, 'storeStage1'])
 //     ->name('learning.stage1.result.store');
 
 Route::post('learning/{learningStage1Id}/stage1/result', [LearningController::class, 'storeStage1Result'])->name('learning.stage1.result.store');
+Route::patch('/identifikasi/{id}/toggle', [LearningController::class, 'toggleValidation'])->name('identifikasi.toggleValidation');
+Route::patch('/learning/{learningStage1}/validate-all', [LearningController::class, 'validateAllResults'])->name('learning.validateAllResults');
+
 
 
 
@@ -238,6 +242,9 @@ Route::get('/learning/{id}/stage5', [LearningController::class, 'showStage5'])->
 
 Route::get('/learning/{learning}/selesaikan', [LearningController::class, 'selesaikan'])->name('learning.selesaikan');
 
+
+//aktivitas
+Route::get('/learning/{learningId}/aktivitas', [AktivitasSiswaController::class, 'index'])->name('learning.activity');
 
 
 // nilai

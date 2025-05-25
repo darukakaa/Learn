@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\AktivitasSiswa;
 use App\Models\Catatan;
 use App\Models\Learning;
 use App\Models\Kelompok;
@@ -49,7 +51,15 @@ class CatatanController extends Controller
         }
 
         $catatan->save();
-
+        // Simpan aktivitas siswa tahap 3 - menambahkan catatan
+        AktivitasSiswa::create([
+            'user_id' => Auth::id(),
+            'learning_id' => $request->learning_id,
+            'tahap' => '3',
+            'jenis_aktivitas' => 'Menambahkan Catatan',
+            'deskripsi' => 'Catatan: ' . substr($request->isi_catatan, 0, 50), // potong deskripsi agar ringkas
+            'waktu_aktivitas' => now(),
+        ]);
         return redirect()->back()->with('success', 'Catatan berhasil ditambahkan.');
     }
     public function update(Request $request, $id)
@@ -68,6 +78,7 @@ class CatatanController extends Controller
         }
 
         $catatan->save();
+
 
         return redirect()->back()->with('success', 'Catatan berhasil diperbarui.');
     }

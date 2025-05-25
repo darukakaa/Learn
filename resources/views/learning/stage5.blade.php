@@ -56,12 +56,21 @@
                             @if (session('learning_completed'))
                                 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                                 <script>
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Learning Telah Diselesaikan',
-                                        text: 'Anda berhasil menyelesaikan learning ini.',
-                                        confirmButtonText: 'OK'
-                                    });
+                                    function confirmSelesaikanLearning(id, namaLearning) {
+                                        Swal.fire({
+                                            title: 'Apakah Anda yakin?',
+                                            text: "Learning '" + namaLearning + "' akan diselesaikan.",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Ya, Selesaikan!',
+                                            cancelButtonText: 'Batal'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // Redirect ke route penyelesaian
+                                                window.location.href = `/learnings/${id}/selesaikan`;
+                                            }
+                                        });
+                                    }
                                 </script>
                             @endif
 

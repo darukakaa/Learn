@@ -37,8 +37,16 @@
                                     Lanjut Tahap 2
                                 </button>
                             </form>
+                            <a href="{{ route('learning.activity', ['learningId' => $learning->id]) }}"
+                                class="btn btn-primary mt-4 inline-block ml-2">
+                                Aktivitas Siswa
+                            </a>
+
                         </div>
                     </div>
+
+
+
 
 
                     <!-- Check if Learning Stage 1 data exists -->
@@ -63,11 +71,24 @@
                                 <!-- Tabel untuk Menampilkan Data Nama dan Hasil Identifikasi Masalah -->
                                 <div class="w-1/2 ml-6">
                                     <h3 class="text-lg font-semibold mb-4">Hasil Identifikasi Masalah</h3>
+                                    <div class="mb-4 flex space-x-4 items-center">
+                                        <form action="{{ route('learning.validateAllResults', $learningStage1->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn-primary text-white px-3 py-1 rounded">
+                                                Validasi Semua
+                                            </button>
+                                        </form>
+
+
+                                    </div>
                                     <table class="min-w-full border-collapse">
                                         <thead>
                                             <tr>
                                                 <th class="px-4 py-2 border-b text-left">Nama</th>
                                                 <th class="px-4 py-2 border-b text-left">Hasil Identifikasi Masalah</th>
+                                                <th class="px-4 py-2 border-b text-left">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -75,11 +96,24 @@
                                                 <tr>
                                                     <td class="px-4 py-2 border-b">{{ $result->user->name }}</td>
                                                     <td class="px-4 py-2 border-b">{{ $result->result }}</td>
+                                                    <td class="px-4 py-2 border-b">
+                                                        <form
+                                                            action="{{ route('identifikasi.toggleValidation', $result->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit"
+                                                                class="{{ $result->is_validated ? 'btn-danger' : 'btn-primary' }} text-white px-3 py-1 rounded">
+                                                                {{ $result->is_validated ? 'Unvalidasi' : 'Validasi' }}
+                                                            </button>
+                                                        </form>
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
+
                             </div>
                         </div>
                     @else
@@ -174,8 +208,45 @@
                     <div class="bg-white shadow-sm sm:rounded-lg p-6">
                         <a href="{{ route('learning.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar
                             Learning</a>
-                        @if (!$existingResult)
-                            <p>Anda telah menambahkan hasil identifikasi masalah.</p>
+
+                        @if ($existingResult && is_object($existingResult))
+                            <p class="text-green-600 font-semibold mb-4">Anda telah menambahkan hasil identifikasi
+                                masalah.</p>
+                            <div class="mb-6">
+                                <h2 class="text-lg font-semibold text-gray-700 mb-2">Hasil Identifikasi Masalah</h2>
+                                <table class="min-w-full bg-white border border-gray-300 rounded-md">
+                                    <thead class="bg-gray-100">
+                                        <tr>
+                                            <th class="px-4 py-2 text-left border-b">No</th>
+                                            <th class="px-4 py-2 text-left border-b">Isi Hasil Identifikasi</th>
+                                            <th class="px-4 py-2 text-left border-b">Tanggal Dibuat</th>
+                                            <th class="px-4 py-2 text-left border-b">Status Validasi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="px-4 py-2 border-b">1</td>
+                                            <td class="px-4 py-2 border-b">{{ $existingResult->result }}</td>
+                                            <td class="px-4 py-2 border-b">
+                                                {{ $existingResult->created_at->format('d M Y H:i') }}
+                                            </td>
+                                            <td class="px-4 py-2 border-b">
+                                                @if ($existingResult->is_validated)
+                                                    <span class="text-green-600 font-semibold">Tervalidasi</span>
+                                                @else
+                                                    <span class="text-red-600 font-semibold">Belum Divalidasi</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+
+
+
+                        @if (is_null($existingResult))
+                            <!-- Form tambah hasil identifikasi masalah -->
                             <form method="POST"
                                 action="{{ route('learning.stage1.result.store', ['learningStage1Id' => $learningStage1->id]) }}">
                                 @csrf
@@ -197,6 +268,7 @@
                                             <p>No image available</p>
                                         @endif
                                     </div>
+
                                     <!-- Right: Hasil Identifikasi Masalah -->
                                     <div class="w-1/2">
                                         <label for="result" class="block text-gray-700 font-semibold mb-2">Hasil
@@ -205,6 +277,7 @@
                                             class="w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-gray-200"></textarea>
                                     </div>
                                 </div>
+
                                 <div class="flex justify-center mt-6">
                                     <button type="submit"
                                         class="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">
@@ -212,9 +285,8 @@
                                     </button>
                                 </div>
                             </form>
-                        @else
-                            <p class="text-red-500">Anda telah menambahkan hasil identifikasi masalah.</p>
                         @endif
+
                         @if (session('error'))
                             <div id="error-notification" class="bg-red-100 text-red-800 p-4 mb-4 rounded">
                                 {{ session('error') }}
@@ -223,22 +295,25 @@
                             <script>
                                 setTimeout(function() {
                                     document.getElementById('error-notification').style.display = 'none';
-                                }, 1000); // 1000ms = 1 detik
+                                }, 1000);
                             </script>
                         @endif
-
                     </div>
 
                     <!-- Navigation Buttons -->
-                    <div class="flex justify-between mt-6">
-                        <form method="GET"
-                            action="{{ route('learning.stage2', ['learningId' => $learning->id]) }}">
-                            <button type="submit"
-                                class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">
-                                Selanjutnya
-                            </button>
-                        </form>
-                    </div>
+                    @if ($existingResult && is_object($existingResult) && $existingResult->is_validated)
+                        <div class="flex justify-between mt-6">
+                            <form method="GET"
+                                action="{{ route('learning.stage2', ['learningId' => $learning->id]) }}">
+                                <button type="submit"
+                                    class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">
+                                    Selanjutnya
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+
+
                 </div>
             </div>
         </div>

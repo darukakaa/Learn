@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\AktivitasSiswa;
 use App\Models\PenugasanUser;
 use App\Models\Kelompok;
 use App\Models\Learning;
@@ -73,6 +74,15 @@ class PenugasanUserController extends Controller
 
         // Simpan penugasan ke database
         $penugasan->save();
+        // Simpan aktivitas siswa untuk tahap 2 menambah penugasan
+        AktivitasSiswa::create([
+            'user_id' => auth()->id(),
+            'learning_id' => $request->learning_id,
+            'tahap' => '2',
+            'jenis_aktivitas' => 'Menambahkan Penugasan',
+            'deskripsi' => 'Penugasan: ' . $request->nama_penugasan,
+            'waktu_aktivitas' => now(),
+        ]);
 
         return redirect()->back()->with('success', 'Penugasan berhasil ditambahkan!');
     }

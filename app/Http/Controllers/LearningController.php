@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AktivitasSiswa;
 use App\Models\Learning;
 use App\Models\Evaluasi;
 use App\Models\LearningStage1;
@@ -59,7 +60,8 @@ class LearningController extends Controller
         // Check if the user has already added a result
         $existingResult = $learningStage1 ? LearningStage1Result::where('learning_stage1_id', $learningStage1->id)
             ->where('user_id', auth()->id())
-            ->exists() : false;
+            ->first() : null;
+
 
         return view('learning.show', compact('learning', 'learningStage1', 'existingResult'));
     }
@@ -103,9 +105,10 @@ class LearningController extends Controller
                 ->with('error', 'Learning Stage 1 tidak ditemukan.');
         }
 
-        $existingResult = LearningStage1Result::where('learning_stage1_id', $learningStage1Id)
+        $existingResult = LearningStage1Result::where('learning_stage1_id', $learningStage1->id)
             ->where('user_id', auth()->id())
             ->first();
+
 
         if ($existingResult) {
             return redirect()->route('learning.show', ['learning' => $learningStage1->learning_id])
@@ -116,11 +119,41 @@ class LearningController extends Controller
             'learning_stage1_id' => $learningStage1Id,
             'user_id' => auth()->user()->id,
             'result' => $request->result,
+            'is_validated' => false,
         ]);
+
+        // Simpan aktivitas siswa
+        AktivitasSiswa::create([
+            'user_id' => auth()->id(),
+            'learning_id' => $learningStage1->learning_id,
+            'tahap' => '1',
+            'jenis_aktivitas' => 'Hasil Identifikasi Masalah',
+            'deskripsi' => $request->result,
+            'waktu_aktivitas' => now(), // bisa juga dihilangkan karena default CURRENT_TIMESTAMP
+        ]);
+
 
         return redirect()->route('learning.show', ['learning' => $learningStage1->learning_id])
             ->with('success', 'Hasil Identifikasi Masalah berhasil ditambahkan!');
     }
+
+    public function toggleValidation($id)
+    {
+        $result = LearningStage1Result::findOrFail($id);
+        $result->is_validated = !$result->is_validated;
+        $result->save();
+
+        return back()->with('success', 'Status validasi berhasil diperbarui.');
+    }
+
+    public function validateAllResults($learningStage1Id)
+    {
+        LearningStage1Result::where('learning_stage1_id', $learningStage1Id)
+            ->update(['is_validated' => true]);
+
+        return redirect()->back()->with('success', 'Semua hasil identifikasi telah divalidasi.');
+    }
+
 
     // Show Stage 2
     public function showStage2($learningId)
@@ -270,11 +303,17 @@ class LearningController extends Controller
     {
         $learning = Learning::findOrFail($learningId);
 
-        // Logic menyelesaikan learning, misal update status, dsb
-        Learning::where('is_completed', true)->get();
-        $learning->save();
+        $learning->is_completed = true;  // Ubah status jadi completed
+        $learning->save();               // Simpan perubahan
 
-        return redirect()->route('learning.index', $learningId)
+        return redirect()->route('learning.index')
             ->with('learning_completed', true);
+    }
+
+    public function activity($learningId)
+    {
+        $learning = Learning::findOrFail($learningId);
+        // bisa kirim data lain sesuai kebutuhan ke view aktivitas
+        return view('aktivitas', compact('learning'));
     }
 }

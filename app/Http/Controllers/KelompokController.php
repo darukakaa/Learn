@@ -6,6 +6,7 @@ use App\Models\Kelompok;
 use App\Models\Learning;
 use App\Models\UserKelompokLearning;
 use App\Models\PenugasanUser;
+use App\Models\AktivitasSiswa;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -139,6 +140,16 @@ class KelompokController extends Controller
             'kelompok_id' => $kelompokId,
             'learning_id' => $request->learning_id,
         ]);
+
+        // Simpan aktivitas siswa tahap 2 gabung kelompok
+        AktivitasSiswa::create([
+            'user_id' => $user->id,
+            'learning_id' => $kelompok->learning_id,
+            'tahap' => '2',
+            'jenis_aktivitas' => 'Gabung Kelompok',
+            'deskripsi' => 'User bergabung ke kelompok ' . $kelompok->nama_kelompok,
+            'waktu_aktivitas' => now(),
+        ]);
         // Increment terisi di kelompok
         $kelompok->increment('terisi');
 
@@ -201,6 +212,15 @@ class KelompokController extends Controller
             'penugasan' => $request->penugasan,
             'file' => $filePath,
         ]);
+        AktivitasSiswa::create([
+            'user_id' => auth()->id(),
+            'learning_id' => $request->learning_id,
+            'tahap' => '2',
+            'jenis_aktivitas' => 'Menambahkan Penugasan',
+            'deskripsi' => 'Menambahkan penugasan: ' . $request->penugasan,
+            'waktu_aktivitas' => now(),
+        ]);
+
 
         return redirect()->route('kelompok.stage2.show', [
             'learning' => $request->learning_id,

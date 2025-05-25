@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\AktivitasSiswa;
 use App\Models\LaporanKelompok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +34,17 @@ class LaporanKelompokController extends Controller
             'user_id' => auth()->id(),               // tambah user_id
             'learning_id' => $kelompok->learning_id, // tambah learning_id
         ]);
+
+        // Simpan aktivitas siswa
+        AktivitasSiswa::create([
+            'user_id' => auth()->id(),
+            'learning_id' => $kelompok->learning_id,
+            'tahap' => '4',
+            'jenis_aktivitas' => 'Mengunggah Laporan Kelompok',
+            'deskripsi' => 'Laporan kelompok telah diunggah.',
+            'waktu_aktivitas' => now(),
+        ]);
+
 
         return redirect()->back()->with('success', 'Laporan berhasil diupload.');
     }
