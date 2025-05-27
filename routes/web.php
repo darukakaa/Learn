@@ -246,6 +246,9 @@ Route::get('/learning/{learning}/selesaikan', [LearningController::class, 'seles
 //aktivitas
 Route::get('/learning/{learningId}/aktivitas', [AktivitasSiswaController::class, 'index'])->name('learning.activity');
 
+Route::get('/test-icon', function () {
+    return view('test-icon');
+});
 
 // nilai
 Route::get('/kuisv2/nilai/{id}', function ($id) {
