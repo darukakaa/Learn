@@ -266,4 +266,9 @@
                 });
             </script>
         </div>
+    </div>
+    <!-- Footer: di luar container flex-row, full width -->
+    <footer class="bg-customBlack text-center py-2 px-4 text-sm">
+        <p class="text-customGrayLight">&copy; Learnify 2024</p>
+    </footer>
 </x-app-layout>

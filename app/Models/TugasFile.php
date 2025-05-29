@@ -15,12 +15,16 @@ class TugasFile extends Model
     ];
 
     // Relationship to Tugas
-    public function tugas()
+    public function uploadedFiles()
     {
-        return $this->belongsTo(Tugas::class);
+        return $this->hasMany(TugasFile::class)->latest('uploaded_at');
     }
 
-    // Relationship to User
+    // Cek apakah tugas ini punya minimal satu file tervalidasi
+    public function hasValidatedFiles()
+    {
+        return $this->uploadedFiles()->where('is_validated', true)->exists();
+    }
     public function user()
     {
         return $this->belongsTo(User::class);

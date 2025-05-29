@@ -44,6 +44,7 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -103,11 +104,10 @@
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6 text-gray-900">
 
-                                <h1 class="text-2xl font-bold mb-4">Materi List</h1>
+                                <h1 class="text-2xl font-bold mb-4">List Materi</h1>
                                 <!-- Only show the "Add Materi" button to admin and guru roles -->
                                 @if (auth()->user()->role == '0' || auth()->user()->role == '1')
-                                    <a href="{{ route('materi.create') }}" class="btn btn-primary">Add
-                                        Materi</a>
+                                    <a href="{{ route('materi.create') }}" class="btn btn-primary">Tambah Materi</a>
                                 @endif
 
                                 <table
@@ -165,13 +165,18 @@
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                         <a href="{{ route('materi.edit', $materi->id) }}"
                                                             class="btn btn-warning">Edit</a> |
-                                                        <form action="{{ route('materi.destroy', $materi->id) }}"
-                                                            method="POST" class="inline-block">
+                                                        <form id="delete-form-{{ $materi->id }}"
+                                                            action="{{ route('materi.destroy', $materi->id) }}"
+                                                            method="POST" class="inline-block delete-form">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger"
-                                                                onclick="return confirm('Are you sure?')">Delete</button>
+                                                            <button type="button" class="btn btn-danger delete-button"
+                                                                data-id="{{ $materi->id }}">
+                                                                Delete
+                                                            </button>
                                                         </form>
+
+
                                                     </td>
                                                 @endif
                                             </tr>
@@ -185,6 +190,31 @@
 
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+
+                        Swal.fire({
+                            title: 'Yakin ingin menghapus?',
+                            text: "Data tidak bisa dikembalikan!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Ya, hapus!',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                document.getElementById('delete-form-' + id).submit();
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+
         <!-- Footer: di luar container flex-row, full width -->
         <footer class="bg-customBlack text-center py-2 px-4 text-sm">
             <p class="text-customGrayLight">&copy; Learnify 2024</p>

@@ -95,12 +95,27 @@
                     <span>Modul</span>
                 </a>
             </div>
+            <!-- Main Content -->
+            <div class="py-12 flex-1">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <!-- Learning Title and Stage Info -->
+                    <div class="bg-white shadow-sm sm:rounded-lg mb-6">
+                        <div class="p-6 bg-white border-b border-gray-200">
 
-            <a href="{{ route('kuisv2.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar Kuis</a>
-            <h1 class="text-2xl font-bold">Hasil Nilai Kuis</h1>
-            <div class="mt-4 p-4 bg-white shadow rounded">
-                <p class="text-lg">Score Anda: <span class="font-bold">{{ $score }}</span></p>
+
+                            <a href="{{ route('kuisv2.index') }}" class="btn btn-primary ">Kembali ke Daftar Kuis</a>
+                            <h1 class="text-2xl font-bold">Hasil Nilai Kuis</h1>
+                            <p class="text-lg">Score Anda: <span class="font-bold">{{ $score }}</span></p>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
-
         </div>
+    </div>
+    <!-- Footer: di luar container flex-row, full width -->
+    <footer class="bg-customBlack text-center py-2 px-4 text-sm">
+        <p class="text-customGrayLight">&copy; Learnify 2024</p>
+    </footer>
 </x-app-layout>

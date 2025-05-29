@@ -12,7 +12,7 @@ class Tugas extends Model
     protected $casts = [
         'tanggal_dibuat' => 'datetime',
     ];
-    
+
 
     protected $fillable = [
         'nama_tugas',
@@ -27,5 +27,8 @@ class Tugas extends Model
     {
         return $this->uploadedFiles()->where('is_validated', true)->exists();
     }
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -97,7 +97,8 @@
             </div>
 
 
-            <div class="flex justify-center items-start h-screen p-4 w-full">
+            <div class="flex justify-center items-start flex-grow p-4 w-full">
+
                 <div class="flex space-x-8 w-full">
 
                     <!-- Form Section (Only for Admin and Guru roles) -->
@@ -108,14 +109,14 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-4">
-                                    <label for="question" class="block text-gray-700">Soal</label>
+                                    <label for="question" class="block text-gray-700">Pertanyaan</label>
                                     <input type="text" id="question" name="question" required
                                         class="w-full border border-gray-300 p-2 rounded">
                                 </div>
 
                                 <!-- New Image Upload Field -->
                                 <div class="mb-4">
-                                    <label for="image" class="block text-gray-700">Gambar Soal (Optional)</label>
+                                    <label for="image" class="block text-gray-700">Gambar Soal (Opsional)</label>
                                     <input type="file" id="image" name="image" accept="image/*"
                                         class="w-full border border-gray-300 p-2 rounded">
                                 </div>
@@ -174,7 +175,7 @@
                     @endif
 
                     <!-- Questions List Section (for Users) -->
-                    <div class="bg-white p-6 rounded shadow-lg w-full max-w-4xl">
+                    <div class="bg-white p-6 rounded shadow-lg w-full max-w-14xl">
                         <a href="{{ route('kuisv2.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar Kuis</a>
                         <h2 class="text-xl font-bold mb-4">Soal Kuis yang Telah Ditambahkan</h2>
                         @if ($questions->count() > 0)
@@ -261,4 +262,10 @@
 
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Footer: di luar container flex-row, full width -->
+    <footer class="bg-customBlack text-center py-2 px-4 text-sm">
+        <p class="text-customGrayLight">&copy; Learnify 2024</p>
+    </footer>
 </x-app-layout>
