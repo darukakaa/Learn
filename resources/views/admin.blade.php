@@ -52,7 +52,7 @@
     </head>
 
     <!-- Container utama full height, flex column -->
-    <div class="min-h-screen flex flex-col bg-customGrayLight">
+    <div class="min-h-screen flex flex-col bg-customBlack">
         <!-- Bagian isi utama (sidebar + content) flex row dan flexible height -->
         <div class="flex flex-1 flex-col md:flex-row">
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\AktivitasSiswaController;
 use App\Http\Controllers\AnswerV2Controller;
 use App\Http\Controllers\CatatanController;
 use App\Http\Controllers\EvaluasiController;
+use App\Http\Controllers\Auth\FakePasswordResetController;
 use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\ProfileController;
@@ -241,6 +242,12 @@ Route::get('/learning/{id}/stage5', [LearningController::class, 'showStage5'])->
 
 
 Route::get('/learning/{learning}/selesaikan', [LearningController::class, 'selesaikan'])->name('learning.selesaikan');
+
+
+Route::post('/fake-password-email', [FakePasswordResetController::class, 'send'])->name('fake.password.email');
+Route::get('/reset-password/{token}', function (Request $request, $token) {
+    return view('auth.reset-password', ['request' => $request->merge(['token' => $token])]);
+})->name('password.reset');
 
 
 //aktivitas
