@@ -100,7 +100,7 @@
                 <div class="py-12 flex-1">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <!-- Learning Title and Stage Info -->
-                        <div class="bg-white shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
+                        <div class="bg-customold shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
                             <div class="text-center">
                                 <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
                                 <p class="mt-4 text-2xl font-semibold">Tahap 1 Pengidentifikasian Masalah</p>
@@ -141,7 +141,7 @@
                         @if ($learningStage1)
                             <!-- Display Data -->
                             <div class="bg-white shadow-sm sm:rounded-lg">
-                                <div class="p-6 bg-white shadow-sm sm:rounded-lg border-b border-gray-200 flex">
+                                <div class="p-6 bg-customold shadow-sm sm:rounded-lg border-b border-gray-200 flex">
                                     <!-- Gambar -->
                                     <div class="w-1/2">
                                         <h3 class="text-lg font-semibold">Permasalahan</h3>
@@ -155,6 +155,7 @@
                                     <!-- Tabel untuk Menampilkan Data Nama dan Hasil Identifikasi Masalah -->
                                     <div class="w-1/2 ml-6">
                                         <h3 class="text-lg font-semibold mb-4">Hasil Identifikasi Masalah</h3>
+
                                         <div class="mb-4 flex space-x-4 items-center">
                                             <form
                                                 action="{{ route('learning.validateAllResults', $learningStage1->id) }}"
@@ -166,40 +167,49 @@
                                                     Validasi Semua
                                                 </button>
                                             </form>
-
-
                                         </div>
-                                        <table class="min-w-full border-collapse">
-                                            <thead>
-                                                <tr>
-                                                    <th class="px-4 py-2 border-b text-left">Nama</th>
-                                                    <th class="px-4 py-2 border-b text-left">Hasil Identifikasi Masalah
-                                                    </th>
-                                                    <th class="px-4 py-2 border-b text-left">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($learningStage1->learningStage1Results as $result)
+
+                                        <!-- Scrollable table wrapper -->
+                                        <div class="max-h-[500px] overflow-y-auto border border-black rounded">
+                                            <table class="min-w-full border border-black">
+                                                <thead class="bg-custombone sticky top-0 z-10">
                                                     <tr>
-                                                        <td class="px-4 py-2 border-b">{{ $result->user->name }}</td>
-                                                        <td class="px-4 py-2 border-b">{{ $result->result }}</td>
-                                                        <td class="px-4 py-2 border-b">
-                                                            <form
-                                                                action="{{ route('identifikasi.toggleValidation', $result->id) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                @method('PATCH')
-                                                                <button type="submit"
-                                                                    class="{{ $result->is_validated ? 'btn btn-danger' : 'btn btn-primary' }} text-white px-3 py-1 rounded">
-                                                                    {{ $result->is_validated ? 'Unvalidasi' : 'Validasi' }}
-                                                                </button>
-                                                            </form>
-                                                        </td>
+                                                        <th class="px-4 py-2 border border-black text-left text-black">
+                                                            Nama</th>
+                                                        <th class="px-4 py-2 border border-black text-left text-black">
+                                                            Hasil Identifikasi Masalah</th>
+                                                        <th class="px-4 py-2 border border-black text-left text-black">
+                                                            Aksi</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($learningStage1->learningStage1Results as $result)
+                                                        <tr class="hover:bg-gray-100">
+                                                            <td class="px-4 py-2 border border-black">
+                                                                {{ $result->user->name }}</td>
+                                                            <td class="px-4 py-2 border border-black">
+                                                                {{ $result->result }}</td>
+                                                            <td class="px-4 py-2 border border-black">
+                                                                <form
+                                                                    action="{{ route('identifikasi.toggleValidation', $result->id) }}"
+                                                                    method="POST">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <button type="submit"
+                                                                        class="{{ $result->is_validated ? 'bg-red-500' : 'bg-blue-500' }} text-white px-3 py-1 rounded">
+                                                                        {{ $result->is_validated ? 'Unvalidasi' : 'Validasi' }}
+                                                                    </button>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+
                                     </div>
+
+
 
                                 </div>
                             </div>
@@ -351,20 +361,25 @@
                 <div class="py-12 flex-1">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <!-- Learning Title -->
-                        <div class="bg-white shadow-sm sm:rounded-lg mb-6">
-                            <div class="p-6 bg-white border-b border-gray-200">
-                                <h1 class="text-2xl font-bold">{{ $learning->name }}</h1>
-                                <p class="mt-4">Tahap 1 Pengidentifikasian Masalah</p>
+                        <div class="bg-customold shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
+                            <div class="text-center">
+                                <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
+                                <p class="mt-4 text-2xl font-semibold">Tahap 1 Pengidentifikasian Masalah</p>
+                                <!-- Navigation Buttons -->
+                                <div class="flex justify-center mt-3 space-x-2">
+                                    <a href="{{ route('learning.index') }}"
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Daftar Learning
+                                    </a>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Flex Container for Left and Right -->
-                        <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                            <a href="{{ route('learning.index') }}" class="btn btn-primary mb-4">Kembali ke Daftar
-                                Learning</a>
+                        <div class="bg-customold shadow-sm sm:rounded-lg p-6">
 
                             @if ($existingResult && is_object($existingResult))
-                                <p class="text-green-600 font-semibold mb-4">Anda telah menambahkan hasil identifikasi
+                                <p class="text-black-600 font-semibold mb-4">Anda telah menambahkan hasil identifikasi
                                     masalah.</p>
                                 <div class="mb-6">
                                     <h2 class="text-lg font-semibold text-gray-700 mb-2">Hasil Identifikasi Masalah
@@ -455,20 +470,21 @@
                                     }, 1000);
                                 </script>
                             @endif
+
+                            <!-- Navigation Buttons -->
+                            @if ($existingResult && is_object($existingResult) && $existingResult->is_validated)
+                                <div class="flex justify-between mt-6">
+                                    <form method="GET"
+                                        action="{{ route('learning.stage2', ['learningId' => $learning->id]) }}">
+                                        <button type="submit"
+                                            class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">
+                                            Selanjutnya
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
                         </div>
 
-                        <!-- Navigation Buttons -->
-                        @if ($existingResult && is_object($existingResult) && $existingResult->is_validated)
-                            <div class="flex justify-between mt-6">
-                                <form method="GET"
-                                    action="{{ route('learning.stage2', ['learningId' => $learning->id]) }}">
-                                    <button type="submit"
-                                        class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600">
-                                        Selanjutnya
-                                    </button>
-                                </form>
-                            </div>
-                        @endif
 
 
                     </div>

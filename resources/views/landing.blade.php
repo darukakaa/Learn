@@ -330,7 +330,7 @@
         }
 
         .bg2 {
-            background-image: url('{{ asset('storage/tes/2.jpg') }}');
+            background-image: url('{{ asset('storage/land/land2.png') }}');
             opacity: 0;
         }
     </style>

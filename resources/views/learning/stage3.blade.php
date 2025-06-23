@@ -95,7 +95,7 @@
                 <div class="py-12 flex-1">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <!-- Learning Title and Stage Info -->
-                        <div class="bg-white shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
+                        <div class="bg-customold shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
                             <div class="text-center">
                                 <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
                                 <p class="mt-4 text-2xl font-semibold">Tahap 3 Pembimbingan Penyelidikan</p>
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="bg-white shadow-sm rounded-lg mb-6 border border-gray-300 px-6 py-5">
+                        <div class="bg-customold shadow-sm rounded-lg mb-6 border border-gray-300 px-6 py-5">
                             <div class="p-6 bg-white border-b border-gray-200">
 
                                 <h2 class="text-xl font-bold mb-4">Catatan Siswa</h2>
@@ -296,17 +296,24 @@
 
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <!-- Learning Title and Stage Info -->
-                        <div class="bg-white shadow-sm sm:rounded-lg mb-6">
-                            <div class="p-6 bg-white border-b border-gray-200">
-                                <h1 class="text-2xl font-bold">{{ $learning->name }}</h1>
-                                <p class="mt-4">Tahap 3 Pembimbingan Penyelidikan</p>
+                        <div class="bg-customold shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
+                            <div class="text-center">
+                                <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
+                                <p class="mt-4 text-2xl font-semibold">Tahap 3 Pembimbingan dan Penyelidikan</p>
+                                <!-- Navigation Buttons -->
+                                <div class="flex justify-center mt-3 space-x-2">
+                                    <a href="{{ route('learning.index') }}"
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Daftar Learning
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-white shadow-sm sm:rounded-lg mb-6">
-                            <div class="p-6 bg-white border-b border-gray-200">
+                            <div class="p-6 bg-customold border-b border-gray-200">
 
                                 <body>
                                     <h1>Compiler</h1>
@@ -321,7 +328,7 @@
                     <!-- Kontainer -->
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-white shadow-sm sm:rounded-lg mb-6">
-                            <div class="p-6 bg-white border-b border-gray-200">
+                            <div class="p-6 bg-customold border-b border-gray-200">
                                 <h1 class="text-xl font-bold mb-4">Catatan</h1>
 
                                 <!-- Tombol Tambahkan Catatan -->

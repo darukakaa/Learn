@@ -18,15 +18,15 @@
             display: flex;
             width: 100%;
             max-width: 900px;
-            background: white;
+            background: #d8cfbc;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(11, 4, 4, 0.1);
             overflow: hidden;
         }
 
         .login-left {
             flex: 1;
-            background: #f0f4ff;
+            background: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -50,6 +50,7 @@
         .login-right {
             flex: 1;
             padding: 2.5rem;
+
         }
 
         .form-title {
@@ -57,24 +58,7 @@
             font-weight: bold;
             text-align: center;
             margin-bottom: 1.5rem;
-            color: #6b46c1;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-icons a {
-            font-size: 1.25rem;
-            color: #555;
-            transition: 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            color: #6b46c1;
+            color: #000000;
         }
     </style>
 
@@ -83,7 +67,7 @@
 
             <!-- Left Image & Text -->
             <div class="login-left">
-                <img src="{{ asset('storage/tes/1.jpg') }}" alt="Login Illustration">
+                <img src="{{ asset('storage/vec/vec.png') }}" alt="Login Illustration">
 
             </div>
 
@@ -134,15 +118,6 @@
                         </x-primary-button>
                     </div>
 
-                    <!-- Social Logins -->
-                    <div class="text-center mt-6">
-                        <span class="text-sm text-gray-500">OR</span>
-                        <div class="social-icons mt-2">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-google"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                        </div>
-                    </div>
 
                     <!-- Sign Up -->
                     <div class="text-center mt-4 text-sm text-gray-600">

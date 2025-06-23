@@ -102,7 +102,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                             @foreach ([['route' => 'learning.index', 'title' => 'Learning', 'count' => $jumlahLearning], ['route' => 'materi.index', 'title' => 'Jumlah Materi', 'count' => $jumlahMateri], ['route' => 'modul.index', 'title' => 'Modul', 'count' => $jumlahModul], ['route' => 'tugas.index', 'title' => 'Tugas', 'count' => $jumlahTugas], ['route' => 'data-siswa', 'title' => 'Jumlah Siswa', 'count' => $jumlahSiswa]] as $card)
                                 <a href="{{ route($card['route']) }}"
-                                    class="bg-customGrayLight shadow-lg rounded-lg p-4 hover:bg-customGrayMedium transition flex flex-col items-center">
+                                    class="bg-custombone shadow-lg rounded-lg p-4 hover:bg-customold transition flex flex-col items-center">
                                     <h3 class="font-semibold text-lg text-customBlack">{{ $card['title'] }}</h3>
                                     <p class="text-customBlack text-3xl mt-2">{{ $card['count'] }}</p>
                                     <div

@@ -114,10 +114,9 @@
                             @foreach ($learnings as $learning)
                                 <a href="{{ route('learning.show', ['learning' => $learning->id]) }}" class="card-link">
                                     <div
-                                        class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
+                                        class="block bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
                                         <div class="p-6 text-center">
                                             <h3 class="text-lg font-bold mb-2">{{ $learning->name }}</h3>
-                                            <p class="text-gray-600">Learning Description or any extra content.</p>
                                             @if ($learning->is_completed)
                                                 <span
                                                     class="inline-block mt-2 px-3 py-1 bg-green-200 text-green-800 text-sm font-semibold rounded-full">

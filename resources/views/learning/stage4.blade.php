@@ -367,16 +367,23 @@
                 <div class="py-12 flex-1">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <!-- Learning Title and Stage Info -->
-                        <div class="bg-white shadow-sm sm:rounded-lg mb-6">
-                            <div class="p-6 bg-white border-b border-gray-200">
-                                <h1 class="text-2xl font-bold">{{ $learning->name }}</h1>
-                                <p class="mt-4">Tahap 4 Pengembangan dan Penyajian</p>
+                        <div class="bg-customold shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
+                            <div class="text-center">
+                                <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
+                                <p class="mt-4 text-2xl font-semibold">Tahap 4 Pengembangan dan Penyajian</p>
+                                <!-- Navigation Buttons -->
+                                <div class="flex justify-center mt-3 space-x-2">
+                                    <a href="{{ route('learning.index') }}"
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Daftar Learning
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-white shadow-sm sm:rounded-lg mb-6">
-                            <div class="p-6 bg-white border-b border-gray-200">
+                            <div class="p-6 bg-customold shadow-sm rounded-lg border-b border-gray-200">
                                 @if ($kelompok)
                                     <h3 class="text-lg font-semibold mb-4">Catatan Anggota Kelompok</h3>
 
@@ -449,7 +456,7 @@
 
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-white shadow-sm sm:rounded-lg mb-6">
-                            <div class="p-6 bg-white border-b border-gray-200">
+                            <div class="p-6 bg-customold shadow-sm rounded-lg border-b border-gray-200">
                                 @if ($kelompok)
                                     @php
                                         $allCatatanValidated =
@@ -572,13 +579,14 @@
                                         </table>
                                     </div>
                                 </div>
+                                @if ($laporan->contains('is_validated', true))
+                                    <a href="{{ route('learning.stage5', ['id' => $learning->id]) }}"
+                                        class="btn btn-primary rounded-full">
+                                        Lanjut ke Tahap 5
+                                    </a>
+                                @endif
                             </div>
-                            @if ($laporan->contains('is_validated', true))
-                                <a href="{{ route('learning.stage5', ['id' => $learning->id]) }}"
-                                    class="btn btn-primary rounded-full">
-                                    Lanjut ke Tahap 5
-                                </a>
-                            @endif
+
                         </div>
 
                     </div>
