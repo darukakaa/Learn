@@ -96,7 +96,7 @@
                 <div class="py-12 flex-1">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <!-- Title -->
-                        <div class="bg-white shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
+                        <div class="bg-customold shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
                             <div class="text-center">
                                 <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
                                 <p class="mt-4 text-2xl font-semibold">Tahap 5 Pengevaluasian masalah dan Penyimpulan
@@ -179,12 +179,12 @@
                     </div>
                     <!-- Refleksi -->
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="bg-white shadow-sm sm:rounded-lg mb-6">
+                        <div class="bg-customold shadow-sm sm:rounded-lg mb-6">
                             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
-                                <div class="bg-white shadow-sm sm:rounded-lg p-4">
+                                <div class="bg-customold shadow-sm sm:rounded-lg p-4">
                                     <p class="font-semibold text-lg">RELEKSI</p>
                                     @if ($semuaRefleksi->isEmpty())
-                                        <p class="text-gray-500 mt-2">Belum ada refleksi yang ditambahkan.</p>
+                                        <p class="text-black-500 mt-2">Belum ada refleksi yang ditambahkan.</p>
                                     @else
                                         <table class="w-full mt-4 table-auto border border-collapse">
                                             <thead class="bg-gray-100">
@@ -249,9 +249,9 @@
                     @endphp
                     <!-- Refleksi -->
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="bg-white shadow-sm sm:rounded-lg mb-6">
+                        <div class="bg-customold shadow-sm sm:rounded-lg mb-6">
                             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
-                                <div class="bg-white shadow-sm sm:rounded-lg p-4">
+                                <div class="bg-customold shadow-sm sm:rounded-lg p-4">
                                     <p class="font-semibold text-lg">EVALUASI</p>
                                 </div>
 

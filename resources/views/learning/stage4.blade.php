@@ -94,7 +94,7 @@
                 <div class="py-12 flex-1">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <!-- Learning Title and Stage Info -->
-                        <div class="bg-white shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
+                        <div class="bg-customold shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
                             <div class="text-center">
                                 <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
                                 <p class="mt-4 text-2xl font-semibold">Tahap 4 Pengembangan dan Penyajian</p>
@@ -129,7 +129,7 @@
                     </div>
 
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="bg-white shadow-sm sm:rounded-lg mb-6">
+                        <div class="bg-customold shadow-sm sm:rounded-lg mb-6">
                             @if (Auth::user()->role === 0 || Auth::user()->role === 1)
                                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
                                     @push('scripts')
