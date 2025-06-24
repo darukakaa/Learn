@@ -90,7 +90,7 @@
                 </a>
             </div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white shadow-sm sm:rounded-lg p-6">
+                <div class="bg-customold shadow-sm sm:rounded-lg p-6">
                     <h1 class="text-2xl font-bold mb-4">Kelola Kelompok: {{ $kelompok->nama_kelompok }}</h1>
 
                     <p><strong>Jumlah Maksimal:</strong> {{ $kelompok->jumlah_kelompok }}</p>

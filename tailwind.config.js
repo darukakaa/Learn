@@ -19,7 +19,7 @@ export default {
                 customGrayDark: '#666666',
                 customGrayMedium: '#979797',
                 customGrayLight: 'white',
-                customBlue: '#565559',
+                customBlue: '#565449',
                 customwhite: '#daf1de',
                 custombone: '#d8cfbc',
                 customold: '#f7f8e5',

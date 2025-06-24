@@ -132,7 +132,7 @@
 
                                 <table class="min-w-full bg-white border border-gray-300 mt-6">
                                     <thead>
-                                        <tr class="bg-gray-100 text-left">
+                                        <tr class="bg-custombone text-left">
                                             <th class="px-4 py-2 border">No</th>
                                             <th class="px-4 py-2 border">Nama</th>
                                             <th class="px-4 py-2 border">Kelompok</th>
@@ -306,6 +306,15 @@
                                         class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Daftar Learning
                                     </a>
+                                    <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Tahap 2
+                                    </a>
+
+
+
+
+
                                 </div>
                             </div>
                         </div>

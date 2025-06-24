@@ -300,6 +300,10 @@
                                         class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Daftar Learning
                                     </a>
+                                    <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
+                                        class="btn btn-primary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Tahap 1
+                                    </a>
                                 </div>
                             </div>
                         </div>

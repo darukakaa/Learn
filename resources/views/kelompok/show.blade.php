@@ -100,7 +100,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
                     {{-- Kartu Informasi Kelompok --}}
-                    <div class="bg-white shadow-sm rounded-lg p-6 w-full h-fit col-span-1">
+                    <div class="bg-customold shadow-sm rounded-lg p-6 w-full h-fit col-span-1">
 
                         {{-- SweetAlert success message --}}
                         @if (session('success'))
@@ -181,7 +181,7 @@
                     </div>
 
                     {{-- Kartu Penugasan --}}
-                    <div class="bg-white shadow-sm rounded-lg p-6 w-full h-fit col-span-1 md:col-span-2">
+                    <div class="bg-customold shadow-sm rounded-lg p-6 w-full h-fit col-span-1 md:col-span-2">
 
                         @php
                             $user = auth()->user();
@@ -242,8 +242,8 @@
                             Daftar Penugasan{{ $user->role == 2 ? ' Anda' : '' }}
                         </h2>
 
-                        <table class="table table-bordered mt-2">
-                            <thead class="bg-gray-100">
+                        <table class="min-w-full bg-white border border-gray-300 rounded-md">
+                            <thead class="bg-custombone">
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Anggota</th>

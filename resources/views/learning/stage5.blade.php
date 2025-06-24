@@ -450,8 +450,24 @@
                                 <!-- Navigation Buttons -->
                                 <div class="flex justify-center mt-3 space-x-2">
                                     <a href="{{ route('learning.index') }}"
-                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        class="btn btn-secondary mt-4 inline-block ml-2">
                                         Kembali ke Daftar Learning
+                                    </a>
+                                    <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
+                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        Kembali ke Tahap 1
+                                    </a>
+                                    <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
+                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        Kembali ke Tahap 2
+                                    </a>
+                                    <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
+                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        Kembali ke Tahap 3
+                                    </a>
+                                    <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}"
+                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        Kembali ke Tahap 4
                                     </a>
                                 </div>
                             </div>
