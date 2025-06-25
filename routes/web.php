@@ -21,6 +21,7 @@ use App\Http\Controllers\QuestionV2Controller;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\RefleksiUserController;
+use App\Http\Controllers\TesSoalController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\UserKelompokLearningController;
 use App\Http\Controllers\DataSiswaController;
@@ -256,6 +257,13 @@ Route::get('/learning/{learningId}/aktivitas', [AktivitasSiswaController::class,
 Route::get('/test-icon', function () {
     return view('test-icon');
 });
+
+//tes soal (bobot nilai)
+Route::get('/tes-soal', [TesSoalController::class, 'index'])->name('tes_soal.index');
+
+Route::post('/tessoal', [TesSoalController::class, 'store'])->name('tessoal.store');
+Route::resource('tessoal', TesSoalController::class)->only(['store', 'index', 'update', 'destroy']);
+
 
 // nilai
 Route::get('/kuisv2/nilai/{id}', function ($id) {

@@ -73,6 +73,11 @@
                     <i class="fas fa-chalkboard-teacher w-6 text-center"></i>
                     <span>Learning</span>
                 </a>
+                <a href="{{ route('tes_soal.index') }}"
+                    class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
+                    <i class="fas fa-folder w-6 text-center"></i>
+                    <span>Tes Soal</span>
+                </a>
                 <a href="{{ route('kuis-tugas.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
                     <i class="fas fa-tasks w-6 text-center"></i>
