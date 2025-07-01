@@ -11,16 +11,19 @@ use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\LearningController;
+use App\Http\Controllers\JawabanController;
 use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\KuisTugasController;
 use App\Http\Controllers\KuisController;
 use App\Http\Controllers\KuisV2Controller;
 use App\Http\Controllers\LaporanKelompokController;
+use App\Http\Controllers\NilaiTesController;
 use App\Http\Controllers\PenugasanUserController;
 use App\Http\Controllers\QuestionV2Controller;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\RefleksiUserController;
+use App\Http\Controllers\SoalController;
 use App\Http\Controllers\TesSoalController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\UserKelompokLearningController;
@@ -263,6 +266,22 @@ Route::get('/tes-soal', [TesSoalController::class, 'index'])->name('tes_soal.ind
 
 Route::post('/tessoal', [TesSoalController::class, 'store'])->name('tessoal.store');
 Route::resource('tessoal', TesSoalController::class)->only(['store', 'index', 'update', 'destroy']);
+Route::resource('tes_soal', TesSoalController::class);
+
+Route::get('/tes-soal/{tesId}', [SoalController::class, 'index'])->name('soal.index');
+Route::post('/tes-soal/{tesId}/soal', [SoalController::class, 'store'])->name('soal.store');
+
+
+Route::post('/jawaban', [JawabanController::class, 'store'])->name('jawaban.store');
+
+//nilaites
+
+Route::get('/nilai-tes/{tesSoalId}/siswa', [NilaiTesController::class, 'siswa'])->name('nilai_tes.siswa');
+Route::get('/nilai-tes/{userId}/{tesSoalId}', [NilaiTesController::class, 'index'])->name('nilai_tes.index');
+
+
+
+
 
 
 // nilai

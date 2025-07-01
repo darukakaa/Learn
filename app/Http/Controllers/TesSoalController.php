@@ -3,15 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\TesSoal;
+use App\Models\Soal;
+use App\Models\Jawaban;
 
 
 class TesSoalController extends Controller
 {
     public function index()
     {
-        $tes = \App\Models\TesSoal::all();
+        $tes = TesSoal::all()->map(function ($item) {
+            $item->sudah_mengerjakan = Jawaban::where('tes_soal_id', $item->id)
+                ->where('user_id', Auth::id())
+                ->exists();
+            return $item;
+        });
+
         return view('tes_soal.index', compact('tes'));
+    }
+
+    public function show($id)
+    {
+        // Ambil data tes dan soal yang terkait
+        $tes = TesSoal::findOrFail($id);
+        $soals = Soal::where('tes_soals_id', $id)->get();
+        $waktuDalamDetik = 1800;
+        return view('tes_soal.show', compact('tes', 'soals', 'waktuDalamDetik'));
     }
 
     public function store(Request $request)
@@ -26,8 +44,9 @@ class TesSoalController extends Controller
             'tanggal_tes' => $request->tanggal_tes,
         ]);
 
-        return redirect()->route('tes_soal.index')->with('success', 'Tes berhasil ditambahkan!');
+        return redirect()->route('tes_soal.index')->with('success', 'Tes berhasil ditambahkan.');
     }
+
     public function update(Request $request, $id)
     {
         $request->validate([

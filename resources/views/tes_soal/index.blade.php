@@ -121,14 +121,39 @@
                                 <li class="p-4 bg-white rounded shadow">
                                     <strong>{{ $item->nama_tes }}</strong><br>
                                     <span class="text-sm text-gray-600">{{ $item->tanggal_tes }}</span>
+                                    <!-- Tombol Masuk Tes -->
+                                    @php
+                                        $user = auth()->user();
+                                        $sudahMengerjakan = \App\Models\Jawaban::where('user_id', $user->id)
+                                            ->whereIn(
+                                                'soal_id',
+                                                \App\Models\Soal::where('tes_soals_id', $item->id)->pluck('id'),
+                                            )
+                                            ->exists();
+                                    @endphp
 
+                                    @if ($user->role === 0 || $user->role === 1 || ($user->role === 2 && !$sudahMengerjakan))
+                                        <a href="{{ route('tes_soal.show', $item->id) }}" class="btn btn-primary">
+                                            Masuk Tes
+                                        </a>
+                                    @endif
+                                    @if ($user->role == 2)
+                                        <p>Role 2 terdeteksi</p>
+                                        @if ($sudahMengerjakan)
+                                            <a href="{{ route('nilai_tes.index', ['userId' => auth()->id(), 'tesSoalId' => $item->id]) }}"
+                                                class="btn btn-primary">
+                                                Nilai Anda
+                                            </a>
+                                        @else
+                                            <p>Belum mengerjakan</p>
+                                        @endif
+                                    @endif
                                     @if (auth()->user()->role === 0 || auth()->user()->role === 1)
                                         <div class="mt-2 flex gap-2">
                                             <!-- Tombol Edit -->
                                             <button
                                                 onclick="editTes({{ $item->id }}, '{{ $item->nama_tes }}', '{{ $item->tanggal_tes }}')"
                                                 class="btn btn-warning">
-
                                                 <span>Edit</span>
                                             </button>
 
@@ -139,13 +164,22 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">Hapus</button>
                                             </form>
+                                            <!-- Tombol Nilai Siswa -->
+                                            <a href="{{ route('nilai_tes.siswa', ['tesSoalId' => $item->id]) }}"
+                                                class="btn btn-info">
+                                                Nilai Siswa
+                                            </a>
+
+
+
+
+
                                         </div>
                                     @endif
+
                                 </li>
                             @endforeach
                         </ul>
-
-
                     </div>
                 </div>
 
