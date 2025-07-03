@@ -176,11 +176,13 @@
                             </div>
                         @endif
                         @if ($soals->count() > 0)
-                            <form id="answerForm" action="{{ route('jawaban.store') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="tes_id" value="{{ $tes->id }}">
 
-                                @if (auth()->user()->role == '2')
+                            @if (auth()->user()->role == '2')
+                                {{-- FORM UNTUK USER --}}
+                                <form id="answerForm" action="{{ route('jawaban.store') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="tes_id" value="{{ $tes->id }}">
+
                                     <div id="soal-container">
                                         @foreach ($soals as $index => $soal)
                                             <div class="soal-item border p-4 rounded shadow hidden"
@@ -189,7 +191,7 @@
 
                                                 @if ($soal->gambar)
                                                     <img src="{{ asset('storage/' . $soal->gambar) }}"
-                                                        alt="Gambar Soal" class="w-full h-32 object-cover rounded mb-2">
+                                                        alt="Gambar Soal" class="max-w-full h-auto rounded mb-2">
                                                 @endif
 
                                                 <strong class="block text-sm mb-2">{{ $soal->pertanyaan }}</strong>
@@ -217,7 +219,6 @@
                                                     onclick="showSoal({{ $index }})">Soal
                                                     {{ $loop->iteration }}</button>
                                             @endforeach
-
                                         </div>
                                         <div>
                                             <button type="button" onclick="nextSoal()"
@@ -226,46 +227,68 @@
                                                 Jawaban</button>
                                         </div>
                                     </div>
-                                @else
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-                                        @foreach ($soals as $soal)
-                                            <div
-                                                class="border p-4 rounded shadow min-h-[350px] h-full flex flex-col justify-between">
-                                                <strong class="block mb-2">
-                                                    Soal nomor {{ $loop->iteration }}
-                                                    @if (auth()->user()->role == 0 || auth()->user()->role == 1)
-                                                        <span class="text-sm text-gray-500 font-normal">(Bobot:
-                                                            {{ $soal->bobot_nilai }})</span>
-                                                    @endif
-                                                </strong>
+                                </form>
+                            @else
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                                    @foreach ($soals as $soal)
+                                        <div
+                                            class="border p-4 rounded shadow min-h-[350px] h-full flex flex-col justify-between">
+                                            <strong class="block mb-2">
+                                                Soal nomor {{ $loop->iteration }}
+                                                <span class="text-sm text-gray-500 font-normal">(Bobot:
+                                                    {{ $soal->bobot_nilai }})</span>
+                                            </strong>
 
-                                                @if ($soal->gambar)
-                                                    <img src="{{ asset('storage/' . $soal->gambar) }}"
-                                                        alt="Gambar Soal"
-                                                        class="w-full h-32 object-cover rounded mb-2">
-                                                @endif
+                                            <div class="flex justify-center space-x-2 mt-2">
+                                                <button type="button" onclick="openEditModal(this)"
+                                                    data-id="{{ $soal->id }}"
+                                                    data-pertanyaan="{{ $soal->pertanyaan }}"
+                                                    data-pilihan_a="{{ $soal->pilihan_a }}"
+                                                    data-pilihan_b="{{ $soal->pilihan_b }}"
+                                                    data-pilihan_c="{{ $soal->pilihan_c }}"
+                                                    data-pilihan_d="{{ $soal->pilihan_d }}"
+                                                    data-pilihan_e="{{ $soal->pilihan_e }}"
+                                                    data-jawaban_benar="{{ $soal->jawaban_benar }}"
+                                                    data-bobot_nilai="{{ $soal->bobot_nilai }}"
+                                                    class="btn btn-sm btn-warning">
+                                                    Edit
+                                                </button>
 
-                                                <strong
-                                                    class="block text-sm mb-2 line-clamp-2">{{ $soal->pertanyaan }}</strong>
-
-                                                <div class="text-sm text-gray-600 space-y-1 mt-auto">
-                                                    @foreach (['a', 'b', 'c', 'd', 'e'] as $opt)
-                                                        <label class="block">
-                                                            <input type="radio" name="jawaban[{{ $soal->id }}]"
-                                                                value="{{ strtoupper($opt) }}" required>
-                                                            <strong>{{ strtoupper($opt) }}:</strong>
-                                                            {{ $soal->{'pilihan_' . $opt} }}
-                                                        </label>
-                                                    @endforeach
-                                                </div>
+                                                <form id="delete-form-{{ $soal->id }}"
+                                                    action="{{ route('soal.destroy', $soal->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-sm btn-danger"
+                                                        onclick="confirmDelete({{ $soal->id }})">Hapus</button>
+                                                </form>
                                             </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </form>
+
+                                            @if ($soal->gambar)
+                                                <img src="{{ asset('storage/' . $soal->gambar) }}" alt="Gambar Soal"
+                                                    class="w-full h-32 object-cover rounded mb-2">
+                                            @endif
+
+                                            <strong
+                                                class="block text-sm mb-2 line-clamp-2">{{ $soal->pertanyaan }}</strong>
+
+                                            <div class="text-sm text-gray-600 space-y-1 mt-auto">
+                                                @foreach (['a', 'b', 'c', 'd', 'e'] as $opt)
+                                                    <label class="block">
+                                                        <input type="radio" disabled>
+                                                        <strong>{{ strtoupper($opt) }}:</strong>
+                                                        {{ $soal->{'pilihan_' . $opt} }}
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                            @endif
                         @else
                             <p class="text-gray-600">Belum ada soal yang ditambahkan.</p>
                         @endif
+
                     </div>
 
                 </div>
@@ -273,6 +296,57 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Edit -->
+    <div id="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 relative">
+            <button onclick="closeEditModal()"
+                class="absolute top-2 right-3 text-gray-600 hover:text-black text-xl font-bold">&times;</button>
+
+            <h2 class="text-xl font-semibold mb-4">Edit Soal</h2>
+            <form id="editForm" method="POST">
+                @csrf
+                @method('PUT')
+
+                <input type="hidden" name="id" id="edit_soal_id">
+
+                <div class="mb-4">
+                    <label class="block">Pertanyaan</label>
+                    <input type="text" id="edit_pertanyaan" name="pertanyaan" class="w-full border rounded p-2">
+                </div>
+
+                @foreach (['a', 'b', 'c', 'd', 'e'] as $opt)
+                    <div class="mb-4">
+                        <label class="block">Pilihan {{ strtoupper($opt) }}</label>
+                        <input type="text" id="edit_pilihan_{{ $opt }}"
+                            name="pilihan_{{ $opt }}" class="w-full border rounded p-2">
+                    </div>
+                @endforeach
+
+                <div class="mb-4">
+                    <label class="block">Jawaban Benar</label>
+                    <select id="edit_jawaban_benar" name="jawaban_benar" class="w-full border rounded p-2">
+                        @foreach (['A', 'B', 'C', 'D', 'E'] as $opt)
+                            <option value="{{ $opt }}">{{ $opt }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block">Bobot Nilai</label>
+                    <input type="number" id="edit_bobot_nilai" name="bobot_nilai" min="1" max="10"
+                        class="w-full border rounded p-2">
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
     <script>
         let currentSoal = 0;
         const totalSoal = {{ $soals->count() }};
@@ -326,6 +400,50 @@
             });
         });
     </script>
+    <script>
+        function openEditModal(button) {
+            const id = button.getAttribute('data-id');
+
+            document.getElementById('edit_soal_id').value = id;
+            document.getElementById('edit_pertanyaan').value = button.getAttribute('data-pertanyaan');
+            document.getElementById('edit_pilihan_a').value = button.getAttribute('data-pilihan_a');
+            document.getElementById('edit_pilihan_b').value = button.getAttribute('data-pilihan_b');
+            document.getElementById('edit_pilihan_c').value = button.getAttribute('data-pilihan_c');
+            document.getElementById('edit_pilihan_d').value = button.getAttribute('data-pilihan_d');
+            document.getElementById('edit_pilihan_e').value = button.getAttribute('data-pilihan_e');
+            document.getElementById('edit_jawaban_benar').value = button.getAttribute('data-jawaban_benar');
+            document.getElementById('edit_bobot_nilai').value = button.getAttribute('data-bobot_nilai');
+
+            // Set action URL
+            document.getElementById('editForm').action = `/soal/${id}`;
+
+            // Tampilkan modal
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        function confirmDelete(soalId) {
+            Swal.fire({
+                title: 'Yakin ingin menghapus soal ini?',
+                text: "Aksi ini tidak bisa dibatalkan.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + soalId).submit();
+                }
+            });
+        }
+    </script>
+
+
     @if (auth()->user()->role == 2)
         <script>
             let waktu = {{ $waktuDalamDetik }}; // waktu dari controller

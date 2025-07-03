@@ -118,6 +118,14 @@
                                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
                                                     Email
                                                 </th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+                                                    Role
+                                                </th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+                                                    Aksi
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
@@ -131,6 +139,7 @@
                                             @else
                                                 @foreach ($users as $user)
                                                     <tr>
+
                                                         <td
                                                             class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-b border-gray-300">
                                                             {{ $user->name }}
@@ -138,6 +147,24 @@
                                                         <td
                                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">
                                                             {{ $user->email }}
+                                                        </td>
+                                                        <td
+                                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b border-gray-300">
+                                                            @if ($user->role === 0)
+                                                                Admin
+                                                            @elseif ($user->role === 1)
+                                                                Guru
+                                                            @else
+                                                                Siswa
+                                                            @endif
+                                                        </td>
+                                                        <td
+                                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b border-gray-300">
+                                                            <button
+                                                                onclick="openRoleModal({{ $user->id }}, {{ $user->role }}, '{{ $user->name }}')"
+                                                                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                                                                Edit Role
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -149,6 +176,44 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Ubah Role -->
+    <div id="editRoleModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
+            <button onclick="closeRoleModal()" class="absolute top-2 right-3 text-gray-600 text-xl">&times;</button>
+            <h2 class="text-xl font-bold mb-4">Ubah Role untuk <span id="modalUserName"></span></h2>
+
+            <form id="editRoleForm" method="POST" action="{{ route('update-user-role') }}">
+                @csrf
+                <input type="hidden" name="user_id" id="modalUserId">
+                <label for="new_role" class="block text-sm font-medium text-gray-700 mb-1">Pilih Role Baru:</label>
+                <select name="new_role" id="modalUserRole" required
+                    class="w-full border border-gray-300 rounded p-2 mb-4">
+                    <option value="2">Siswa</option>
+                    <option value="1">Guru</option>
+                </select>
+                <div class="flex justify-end">
+                    <button type="submit"
+                        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function openRoleModal(userId, role, name) {
+            document.getElementById('modalUserId').value = userId;
+            document.getElementById('modalUserRole').value = role;
+            document.getElementById('modalUserName').textContent = name;
+            document.getElementById('editRoleModal').classList.remove('hidden');
+        }
+
+        function closeRoleModal() {
+            document.getElementById('editRoleModal').classList.add('hidden');
+        }
+    </script>
+
 </x-app-layout>
 
 <script>

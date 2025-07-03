@@ -59,4 +59,54 @@ class SoalController extends Controller
         }
         return redirect()->back()->with('success', 'Soal berhasil ditambahkan.');
     }
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'pertanyaan' => 'required|string',
+            'pilihan_a' => 'required|string',
+            'pilihan_b' => 'required|string',
+            'pilihan_c' => 'required|string',
+            'pilihan_d' => 'required|string',
+            'pilihan_e' => 'required|string',
+            'jawaban_benar' => 'required|in:A,B,C,D,E',
+            'bobot_nilai' => 'required|integer|min:1|max:10',
+        ]);
+
+        $soal = Soal::findOrFail($id);
+        $soal->pertanyaan = $request->pertanyaan;
+        $soal->pilihan_a = $request->pilihan_a;
+        $soal->pilihan_b = $request->pilihan_b;
+        $soal->pilihan_c = $request->pilihan_c;
+        $soal->pilihan_d = $request->pilihan_d;
+        $soal->pilihan_e = $request->pilihan_e;
+        $soal->jawaban_benar = $request->jawaban_benar;
+        $soal->bobot_nilai = $request->bobot_nilai;
+
+        $soal->save();
+
+        return redirect()->back()->with('success', 'Soal berhasil diperbarui.');
+    }
+    // Tampilkan form edit soal
+    public function edit($id)
+    {
+        $soal = Soal::findOrFail($id);
+        return view('soal.edit', compact('soal'));
+    }
+
+    // Hapus soal
+    public function destroy($id)
+    {
+        $soal = Soal::findOrFail($id);
+
+        // Hapus gambar jika ada
+        if ($soal->gambar) {
+            Storage::disk('public')->delete($soal->gambar);
+        }
+
+        // Hapus opsi terkait (jika kamu punya relasi)
+        $soal->opsi()->delete();
+
+        $soal->delete();
+        return back()->with('success', 'Soal berhasil dihapus.');
+    }
 }

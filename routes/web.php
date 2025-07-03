@@ -270,6 +270,8 @@ Route::resource('tes_soal', TesSoalController::class);
 
 Route::get('/tes-soal/{tesId}', [SoalController::class, 'index'])->name('soal.index');
 Route::post('/tes-soal/{tesId}/soal', [SoalController::class, 'store'])->name('soal.store');
+Route::delete('/soal/{id}', [SoalController::class, 'destroy'])->name('soal.destroy');
+Route::put('/soal/{id}', [SoalController::class, 'update'])->name('soal.update');
 
 
 Route::post('/jawaban', [JawabanController::class, 'store'])->name('jawaban.store');
@@ -283,7 +285,7 @@ Route::get('/nilai-tes/{userId}/{tesSoalId}', [NilaiTesController::class, 'index
 
 
 
-
+Route::post('/update-user-role', [\App\Http\Controllers\DataSiswaController::class, 'updateRole'])->name('update-user-role');
 // nilai
 Route::get('/kuisv2/nilai/{id}', function ($id) {
     return view('nilai.index', ['kuisId' => $id]);
