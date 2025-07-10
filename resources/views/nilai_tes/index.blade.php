@@ -94,11 +94,7 @@
                         <span>Data Siswa</span>
                     </a>
                 @endif
-                <a href="{{ route('modul.index') }}"
-                    class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
-                    <i class="fas fa-folder w-6 text-center"></i>
-                    <span>Modul</span>
-                </a>
+
             </div>
             <div class="flex-1 p-6">
                 <div class="bg-white p-6 rounded shadow w-full">

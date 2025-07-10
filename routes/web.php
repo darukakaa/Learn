@@ -10,6 +10,7 @@ use App\Http\Controllers\GuruDashboardController;
 use App\Http\Controllers\SiswaDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MateriController;
+use App\Http\Controllers\Materiv2Controller;
 use App\Http\Controllers\LearningController;
 use App\Http\Controllers\JawabanController;
 use App\Http\Controllers\KelompokController;
@@ -28,7 +29,6 @@ use App\Http\Controllers\TesSoalController;
 use App\Http\Controllers\TugasController;
 use App\Http\Controllers\UserKelompokLearningController;
 use App\Http\Controllers\DataSiswaController;
-use App\Http\Controllers\ModulController;
 use App\Http\Controllers\ResultsController;
 use Illuminate\Support\Facades\Route;
 
@@ -63,17 +63,7 @@ Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->midd
 Route::resource('learning', LearningController::class);
 
 
-// Route to list moduls and show the form to add a new modul
-Route::get('/modul', [ModulController::class, 'index'])->name('modul.index');
 
-// Route to handle the form submission for adding a new modul
-Route::post('/modul', [ModulController::class, 'store'])->name('modul.store');
-
-// Route to handle the form submission for updating an existing modul
-Route::put('/modul/{modul}', [ModulController::class, 'update'])->name('modul.update');
-
-// Route to handle the deletion of a modul
-Route::delete('/modul/{modul}', [ModulController::class, 'destroy'])->name('modul.destroy');
 
 // Route to handle kuis tugas
 Route::get('/kuis-tugas', [KuisTugasController::class, 'index'])->name('kuis-tugas.index');
@@ -280,6 +270,18 @@ Route::post('/jawaban', [JawabanController::class, 'store'])->name('jawaban.stor
 
 Route::get('/nilai-tes/{tesSoalId}/siswa', [NilaiTesController::class, 'siswa'])->name('nilai_tes.siswa');
 Route::get('/nilai-tes/{userId}/{tesSoalId}', [NilaiTesController::class, 'index'])->name('nilai_tes.index');
+
+
+
+//materiv2
+
+Route::get('/materiv2', [Materiv2Controller::class, 'index'])->name('materiv2.index');
+Route::post('/materiv2', [Materiv2Controller::class, 'store'])->name('materiv2.store');
+Route::get('/materiv2/{id}', [Materiv2Controller::class, 'show'])->name('materiv2.show');
+Route::post('/materiv2/{id}/update', [Materiv2Controller::class, 'update'])->name('materiv2.update');
+Route::post('/materiv2/upload', [App\Http\Controllers\Materiv2Controller::class, 'upload'])->name('materiv2.upload');
+Route::delete('/materiv2/{id}', [Materiv2Controller::class, 'destroy'])->name('materiv2.destroy');
+
 
 
 

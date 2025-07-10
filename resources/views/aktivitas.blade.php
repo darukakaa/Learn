@@ -84,11 +84,7 @@
                     <i class="fas fa-users w-6 text-center"></i>
                     <span>Data Siswa</span>
                 </a>
-                <a href="{{ route('modul.index') }}"
-                    class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
-                    <i class="fas fa-folder w-6 text-center"></i>
-                    <span>Modul</span>
-                </a>
+
             </div>
 
             <!-- Main Content -->

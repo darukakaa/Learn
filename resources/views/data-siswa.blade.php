@@ -65,9 +65,10 @@
                     <i class="fa-solid fa-house w-6 text-center"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('materi.index') }}"
+
+                <a href="{{ route('materiv2.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
-                    <i class="fas fa-book w-6 text-center"></i>
+                    <i class="fas fa-folder w-6 text-center"></i>
                     <span>Materi</span>
                 </a>
                 <a href="{{ route('learning.index') }}"
@@ -75,10 +76,15 @@
                     <i class="fas fa-chalkboard-teacher w-6 text-center"></i>
                     <span>Learning</span>
                 </a>
+                <a href="{{ route('tes_soal.index') }}"
+                    class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
+                    <i class="fas fa-folder w-6 text-center"></i>
+                    <span>Tes Soal</span>
+                </a>
                 <a href="{{ route('kuis-tugas.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
                     <i class="fas fa-tasks w-6 text-center"></i>
-                    <span>Kuis/Tugas</span>
+                    <span>Tugas</span>
                 </a>
                 @php
                     $role = auth()->user()->role;
@@ -90,11 +96,7 @@
                         <span>Data Siswa</span>
                     </a>
                 @endif
-                <a href="{{ route('modul.index') }}"
-                    class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
-                    <i class="fas fa-folder w-6 text-center"></i>
-                    <span>Modul</span>
-                </a>
+
             </div>
 
             <!-- Main Content -->
@@ -106,9 +108,9 @@
                                 <h1 class="text-2xl font-bold mb-4">Data Siswa (Total: {{ $users->count() }})</h1>
 
                                 <!-- Table to display user data -->
-                                <div class="overflow-x-auto">
+                                <div class="overflow-x-auto max-h-[500px] border rounded shadow-inner">
                                     <table class="min-w-full divide-y divide-gray-200 border border-gray-300">
-                                        <thead class="bg-gray-50">
+                                        <thead class="bg-gray-50 sticky top-0 z-10">
                                             <tr>
                                                 <th scope="col"
                                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">

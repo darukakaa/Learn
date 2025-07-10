@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Learning;
 use App\Models\User;
-use App\Models\Modul;
 use App\Models\Materi;
+use App\Models\Materiv2;
 use App\Models\Tugas;
 use Illuminate\Http\Request;
 
@@ -16,10 +16,10 @@ class AdminDashboardController extends Controller
         // Count the number of users with role '2'
         $jumlahSiswa = User::where('role', 2)->count();
         $jumlahLearning = Learning::all()->count();
-        $jumlahModul = Modul::all()->count();
         $jumlahMateri = Materi::all()->count();
+        $jumlahMateriv2 = Materiv2::count();
         $jumlahTugas = Tugas::all()->count();
 
-        return view('admin', compact('jumlahSiswa', 'jumlahLearning', 'jumlahModul', 'jumlahMateri', 'jumlahTugas'));
+        return view('admin', compact('jumlahSiswa', 'jumlahMateriv2', 'jumlahLearning', 'jumlahMateri', 'jumlahTugas'));
     }
 }

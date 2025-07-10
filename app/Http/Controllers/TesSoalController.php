@@ -13,7 +13,7 @@ class TesSoalController extends Controller
 {
     public function index()
     {
-        $tes = TesSoal::all()->map(function ($item) {
+        $tes = TesSoal::orderBy('tanggal_tes', 'desc')->get()->map(function ($item) {
             $item->sudah_mengerjakan = Jawaban::where('tes_soal_id', $item->id)
                 ->where('user_id', Auth::id())
                 ->exists();

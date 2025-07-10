@@ -242,25 +242,7 @@
         </div>
     </section>
 
-    <section class="features">
-        <div class="feature">
-            <img src="{{ asset('storage/tes/1.jpg') }}" alt="Zonda" />
-            <h3>ZONDA</h3>
-            <p>Ikon hypercar legendaris yang memadukan performa dan desain tak tertandingi.</p>
-        </div>
-        <div class="feature">
-            <img src="{{ asset('storage/tes/1.jpg') }}" alt="Hyura" />
 
-            <h3>HUAYRA</h3>
-            <p>Perpaduan teknologi tinggi dan estetika futuristik dalam satu mobil.</p>
-        </div>
-        <div class="feature">
-            <img src="{{ asset('storage/tes/1.jpg') }}" alt="Utopia" />
-
-            <h3>UTOPIA</h3>
-            <p>Model terbaru yang melambangkan era baru hypercar Italia.</p>
-        </div>
-    </section>
 
     <footer>
         &copy; Learnify 2024.
