@@ -149,12 +149,13 @@
                                 </div>
 
                                 <!-- Tampilkan Materi -->
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
                                     @forelse ($materi as $item)
                                         <div
-                                            class="relative bg-custombone shadow p-4 rounded hover:bg-customold transition">
-                                            <a href="{{ route('materiv2.show', $item->id) }}">
-                                                <h3 class="text-lg font-semibold text-blue-600 hover:underline">
+                                            class="relative bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col">
+                                            <a href="{{ route('materiv2.show', $item->id) }}"
+                                                class="block p-6 text-center">
+                                                <h3 class="text-lg font-bold mb-2 text-blue-600 hover:underline">
                                                     {{ $item->nama_materi }}
                                                 </h3>
                                                 <p class="text-sm text-gray-500">
@@ -163,26 +164,26 @@
                                             </a>
 
                                             @if (auth()->user()->role === 0 || auth()->user()->role === 1)
-                                                <form id="hapus-form-{{ $item->id }}"
-                                                    action="{{ route('materiv2.destroy', $item->id) }}" method="POST"
-                                                    class="absolute top-2 right-2">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button"
-                                                        onclick="konfirmasiHapus({{ $item->id }})"
-                                                        class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700">
-                                                        Hapus
-                                                    </button>
-                                                </form>
+                                                <div class="bg-gray-200 text-center py-2 flex justify-around">
+                                                    <form id="hapus-form-{{ $item->id }}"
+                                                        action="{{ route('materiv2.destroy', $item->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button"
+                                                            onclick="konfirmasiHapus({{ $item->id }})"
+                                                            class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm">
+                                                            Hapus
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             @endif
-
                                         </div>
-
                                     @empty
-
-                                        <p>Tidak ada materi.</p>
+                                        <p class="col-span-3 text-center text-gray-500">Tidak ada materi.</p>
                                     @endforelse
                                 </div>
+
 
                             </div>
                         </div>

@@ -112,13 +112,16 @@
                     @if (session('success'))
                         <div class="text-green-600 mb-2">{{ session('success') }}</div>
                     @endif
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <ul class="space-y-2">
-                            @foreach ($tes as $item)
-                                <li class="p-4 bg-white rounded shadow">
-                                    <strong>{{ $item->nama_tes }}</strong><br>
-                                    <span class="text-sm text-gray-600">{{ $item->tanggal_tes }}</span>
-                                    <!-- Tombol Masuk Tes -->
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($tes as $item)
+                            <div
+                                class="relative bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col">
+                                <div class="block p-6 text-center">
+                                    <h3 class="text-lg font-bold mb-2">{{ $item->nama_tes }}</h3>
+                                    <p class="text-sm text-gray-500">
+                                        {{ \Carbon\Carbon::parse($item->tanggal_tes)->translatedFormat('d F Y') }}</p>
+
                                     @php
                                         $user = auth()->user();
                                         $sudahMengerjakan = \App\Models\Jawaban::where('user_id', $user->id)
@@ -129,50 +132,56 @@
                                             ->exists();
                                     @endphp
 
-                                    @if ($user->role === 0 || $user->role === 1 || ($user->role === 2 && !$sudahMengerjakan))
-                                        <a href="{{ route('tes_soal.show', $item->id) }}" class="btn btn-primary">
-                                            Masuk Tes
-                                        </a>
-                                    @endif
-                                    @if ($user->role == 2)
-                                        @if ($sudahMengerjakan)
-                                            <a href="{{ route('nilai_tes.index', ['userId' => auth()->id(), 'tesSoalId' => $item->id]) }}"
-                                                class="btn btn-primary">
-                                                Nilai Anda
+                                    <div class="mt-3 space-y-1">
+                                        @if ($user->role === 0 || $user->role === 1 || ($user->role === 2 && !$sudahMengerjakan))
+                                            <a href="{{ route('tes_soal.show', $item->id) }}"
+                                                class="inline-block bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm">
+                                                Masuk Tes
                                             </a>
-                                        @else
-                                            <p>Anda belum mengerjakan</p>
                                         @endif
-                                    @endif
-                                    @if (auth()->user()->role === 0 || auth()->user()->role === 1)
-                                        <div class="mt-2 flex gap-2">
-                                            <!-- Tombol Edit -->
-                                            <button
-                                                onclick="editTes({{ $item->id }}, '{{ $item->nama_tes }}', '{{ $item->tanggal_tes }}')"
-                                                class="btn btn-warning">
-                                                <span>Edit</span>
+
+                                        @if ($user->role == 2)
+                                            @if ($sudahMengerjakan)
+                                                <a href="{{ route('nilai_tes.index', ['userId' => $user->id, 'tesSoalId' => $item->id]) }}"
+                                                    class="inline-block bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm">
+                                                    Nilai Anda
+                                                </a>
+                                            @else
+                                                <p class="text-sm text-red-500 mt-2">Anda belum mengerjakan</p>
+                                            @endif
+                                        @endif
+                                    </div>
+                                </div>
+
+                                @if ($user->role === 0 || $user->role === 1)
+                                    <div class="bg-gray-200 text-center py-2 flex justify-around">
+                                        <button
+                                            onclick="editTes({{ $item->id }}, '{{ $item->nama_tes }}', '{{ $item->tanggal_tes }}')"
+                                            class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">
+                                            Edit
+                                        </button>
+
+                                        <form action="{{ route('tessoal.destroy', $item->id) }}" method="POST"
+                                            onsubmit="return confirm('Yakin ingin menghapus tes ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm">
+                                                Hapus
                                             </button>
+                                        </form>
 
-                                            <!-- Tombol Hapus -->
-                                            <form action="{{ route('tessoal.destroy', $item->id) }}" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menghapus tes ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Hapus</button>
-                                            </form>
-                                            <!-- Tombol Nilai Siswa -->
-                                            <a href="{{ route('nilai_tes.siswa', ['tesSoalId' => $item->id]) }}"
-                                                class="btn btn-info">
-                                                Nilai Siswa
-                                            </a>
-                                        </div>
-                                    @endif
-
-                                </li>
-                            @endforeach
-                        </ul>
+                                        <a href="{{ route('nilai_tes.siswa', ['tesSoalId' => $item->id]) }}"
+                                            class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-sm">
+                                            Nilai Siswa
+                                        </a>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
                 </div>
+
 
                 <!-- Add Tes Modal -->
                 <div id="tessoalModal"

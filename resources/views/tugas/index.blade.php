@@ -146,30 +146,36 @@
                                     @endif
                                 </div>
                             @else
-                                <!-- All Task Cards -->
-                                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                     @foreach ($tugas as $item)
                                         <div
-                                            class="bg-customGrayLight shadow-lg rounded-lg p-4 hover:bg-customGrayMedium transition flex flex-col items-center">
-                                            <a href="{{ route('tugas.show', $item->id) }}" class="w-full text-center">
-                                                <h3 class="text-lg font-semibold">{{ $item->nama_tugas }}</h3>
-                                                <p class="text-gray-600">Tanggal Dibuat:
+                                            class="relative bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col">
+                                            <a href="{{ route('tugas.show', $item->id) }}"
+                                                class="block p-6 text-center">
+                                                <h3 class="text-lg font-bold mb-2 text-blue-600 hover:underline">
+                                                    {{ $item->nama_tugas }}</h3>
+                                                <p class="text-sm text-gray-500">Tanggal Dibuat:
                                                     {{ $item->tanggal_dibuat->format('d-m-Y') }}</p>
                                             </a>
+
                                             @if (auth()->user()->role == '0' || auth()->user()->role == '1')
-                                                <form action="{{ route('tugas.destroy', $item->id) }}" method="POST"
-                                                    class="mt-2 delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger delete-btn"
-                                                        data-task-name="{{ $item->nama_tugas }}">
-                                                        Hapus
-                                                    </button>
-                                                </form>
+                                                <div class="bg-gray-200 text-center py-2 flex justify-around">
+                                                    <form action="{{ route('tugas.destroy', $item->id) }}"
+                                                        method="POST" class="w-full">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button"
+                                                            class="w-full bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm delete-btn"
+                                                            data-task-name="{{ $item->nama_tugas }}">
+                                                            Hapus
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             @endif
                                         </div>
                                     @endforeach
                                 </div>
+
                             @endif
                         </div>
 
