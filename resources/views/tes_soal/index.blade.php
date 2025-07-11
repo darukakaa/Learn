@@ -135,14 +135,13 @@
                                         </a>
                                     @endif
                                     @if ($user->role == 2)
-                                        <p>Role 2 terdeteksi</p>
                                         @if ($sudahMengerjakan)
                                             <a href="{{ route('nilai_tes.index', ['userId' => auth()->id(), 'tesSoalId' => $item->id]) }}"
                                                 class="btn btn-primary">
                                                 Nilai Anda
                                             </a>
                                         @else
-                                            <p>Belum mengerjakan</p>
+                                            <p>Anda belum mengerjakan</p>
                                         @endif
                                     @endif
                                     @if (auth()->user()->role === 0 || auth()->user()->role === 1)

@@ -42,11 +42,16 @@ class Materiv2Controller extends Controller
             'tujuan' => 'nullable|string',
             'capaian' => 'nullable|string',
             'file_pdf' => 'nullable|mimes:pdf|max:2048',
+            'links' => 'nullable|array',
+            'links.*' => 'nullable|url'
         ]);
 
         $materi->deskripsi = $request->deskripsi;
         $materi->tujuan = $request->tujuan;
         $materi->capaian = $request->capaian;
+
+        // Simpan array link sebagai JSON
+        $materi->link = json_encode(array_filter($request->links));
 
         if ($request->hasFile('file_pdf')) {
             $filePath = $request->file('file_pdf')->store('materiv2_pdf', 'public');

@@ -10,6 +10,7 @@ class Materiv2 extends Model
     use HasFactory;
 
     protected $table = 'materiv2';
+
     protected $fillable = [
         'nama_materi',
         'tanggal',
@@ -17,5 +18,10 @@ class Materiv2 extends Model
         'tujuan',
         'capaian',
         'file_pdf',
+        'link',
+    ];
+
+    protected $casts = [
+        'link' => 'array',
     ];
 }

@@ -106,20 +106,21 @@
                         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div class="p-6 text-gray-900">
                                 <div class="p-6">
-                                    <h1 class="text-2xl font-bold mb-4">Detail Materi</h1>
-
                                     <div class="bg-white shadow p-6 rounded">
                                         <h2 class="text-xl font-semibold">{{ $materi->nama_materi }}</h2>
                                         <p class="text-sm text-gray-500 mt-2">
                                             Tanggal:
                                             {{ \Carbon\Carbon::parse($materi->tanggal)->translatedFormat('d F Y') }}
                                         </p>
+                                        <a href="{{ route('materiv2.index') }}"
+                                            class="inline-block mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
+                                            Kembali ke Daftar Materi
+                                        </a>
+
+
                                     </div>
 
-                                    <a href="{{ route('materiv2.index') }}"
-                                        class="inline-block mt-4 px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
-                                        Kembali ke Daftar Materi
-                                    </a>
+
                                     @if (session('success'))
                                         <div class="text-green-600 mb-4">{{ session('success') }}</div>
                                     @endif
@@ -156,6 +157,23 @@
                                                                 PDF</a></p>
                                                     @endif
                                                 </div>
+                                                <div class="mb-4">
+                                                    <label class="block font-semibold">Link YouTube</label>
+                                                    <div id="link-container">
+                                                        @php
+                                                            $links = json_decode($materi->link, true) ?? [''];
+                                                        @endphp
+
+                                                        @foreach ($links as $link)
+                                                            <input type="url" name="links[]"
+                                                                value="{{ $link }}"
+                                                                class="w-full border px-3 py-2 rounded mb-2"
+                                                                placeholder="https://youtube.com/..." />
+                                                        @endforeach
+                                                    </div>
+                                                    <button type="button" onclick="addLinkField()"
+                                                        class="text-blue-600 underline text-sm">+ Tambah Link</button>
+                                                </div>
                                                 <div class="flex justify-end">
                                                     <button type="submit"
                                                         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Simpan</button>
@@ -189,8 +207,34 @@
                                                 </a>
                                             @endif
 
+                                            @if ($materi->link)
+                                                <h3 class="font-bold mb-2 mt-6">Video Pembelajaran</h3>
+                                                @foreach (json_decode($materi->link, true) as $youtubeLink)
+                                                    @php
+                                                        preg_match(
+                                                            '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu.be\/)([\w\-]+)/',
+                                                            $youtubeLink,
+                                                            $matches,
+                                                        );
+                                                        $videoId = $matches[1] ?? null;
+                                                    @endphp
+
+                                                    @if ($videoId)
+                                                        <div class="mb-4">
+                                                            <iframe width="100%" height="315"
+                                                                src="https://www.youtube.com/embed/{{ $videoId }}"
+                                                                frameborder="0" allowfullscreen></iframe>
+                                                        </div>
+                                                    @else
+                                                        <p class="text-red-600 text-sm">Link tidak valid:
+                                                            {{ $youtubeLink }}</p>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+
                                         </div>
                                     @endif
+
 
 
                                 </div>
@@ -216,7 +260,17 @@
                     console.error(error);
                 });
         </script>
-
+        <script>
+            function addLinkField() {
+                const container = document.getElementById('link-container');
+                const input = document.createElement('input');
+                input.type = 'url';
+                input.name = 'links[]';
+                input.placeholder = 'https://youtube.com/...';
+                input.className = 'w-full border px-3 py-2 rounded mb-2';
+                container.appendChild(input);
+            }
+        </script>
 
 
 
