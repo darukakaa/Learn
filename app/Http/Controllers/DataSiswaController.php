@@ -32,4 +32,11 @@ class DataSiswaController extends Controller
 
         return redirect()->back()->with('success', 'Role berhasil diperbarui.');
     }
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->back()->with('success_delete', 'User berhasil dihapus.');
+    }
 }

@@ -57,21 +57,16 @@
         <div class="flex flex-1 flex-col md:flex-row">
             <!-- Sidebar -->
             <div class="sidebar bg-customGrayLight p-2 flex flex-col space-y-2">
-                <!-- link sidebar seperti sebelumnya -->
+                <!-- link sidebar -->
                 <a href="{{ route('dashboard') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
                     <i class="fa-solid fa-house w-6 text-center"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('materi.index') }}"
-                    class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
-                    <i class="fas fa-book w-6 text-center"></i>
-                    <span>Materi</span>
-                </a>
                 <a href="{{ route('materiv2.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
                     <i class="fas fa-folder w-6 text-center"></i>
-                    <span>Materiv2</span>
+                    <span>Materi</span>
                 </a>
                 <a href="{{ route('learning.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
@@ -86,7 +81,7 @@
                 <a href="{{ route('kuis-tugas.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
                     <i class="fas fa-tasks w-6 text-center"></i>
-                    <span>Kuis/Tugas</span>
+                    <span>Tugas</span>
                 </a>
                 <a href="{{ route('data-siswa') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
@@ -105,9 +100,9 @@
                 <div class="py-12 flex-grow">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                            @foreach ([['route' => 'learning.index', 'title' => 'Learning', 'count' => $jumlahLearning], ['route' => 'materi.index', 'title' => 'Jumlah Materi', 'count' => $jumlahMateri], ['route' => 'tugas.index', 'title' => 'Tugas', 'count' => $jumlahTugas], ['route' => 'data-siswa', 'title' => 'Jumlah Siswa', 'count' => $jumlahSiswa]] as $card)
+                            @foreach ([['route' => 'learning.index', 'title' => 'Learning', 'count' => $jumlahLearning], ['route' => 'materiv2.index', 'title' => 'Jumlah Materi', 'count' => $jumlahMateriv2], ['route' => 'tugas.index', 'title' => 'Tugas', 'count' => $jumlahTugas], ['route' => 'data-siswa', 'title' => 'Jumlah Siswa', 'count' => $jumlahSiswa]] as $card)
                                 <a href="{{ route($card['route']) }}"
-                                    class="bg-custombone shadow-lg rounded-lg p-4 hover:bg-customold transition flex flex-col items-center">
+                                    class="relative bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col items-center">
                                     <h3 class="font-semibold text-lg text-customBlack">{{ $card['title'] }}</h3>
                                     <p class="text-customBlack text-3xl mt-2">{{ $card['count'] }}</p>
                                     <div

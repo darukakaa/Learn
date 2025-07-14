@@ -23,6 +23,7 @@ export default {
                 customwhite: '#daf1de',
                 custombone: '#d8cfbc',
                 customold: '#f7f8e5',
+                customlight: '#fffbf4',
             },
         },
     },

@@ -50,6 +50,7 @@
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
                 integrity="sha512-papmHCE9W8Me6iXKgp8n+HF8rhITxu6mA49wA2Yp3RxReD8BjOXQqePh1vN5R1+DoCdPQU09UugV1i5lFGY4Rw=="
                 crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         </head>
 
         <!-- Container utama full height, flex column -->
@@ -180,21 +181,18 @@
                         <!-- Kelompok Cards (Menampilkan Kelompok yang sudah ditambahkan) -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($kelompok as $k)
-                                <a href="{{ route('kelompok.stage2.show', ['learning' => $learning->id, 'id' => $k->id]) }}"
-                                    class="block bg-customold p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                                    <h2 class="text-lg font-semibold">{{ $k->nama_kelompok }}</h2>
-                                    <p class="text-sm mt-2">Jumlah Kelompok: {{ $k->jumlah_kelompok }}</p>
-
-                                    <p class="text-sm mt-2">Anggota yang Bergabung: {{ $k->anggota->count() }} /
-                                        {{ $k->jumlah_kelompok }}</p>
-                                    <!-- Delete Button -->
-                                    <form action="{{ route('kelompok.destroy', $k->id) }}" method="POST"
-                                        class="mt-4">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Hapus</button>
-                                    </form>
-                                </a>
+                                <div
+                                    class="bg-customold p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300 flex flex-col justify-between h-full">
+                                    <a href="{{ route('kelompok.stage2.show', ['learning' => $learning->id, 'id' => $k->id]) }}"
+                                        class="block mb-4">
+                                        <h2 class="text-lg font-semibold">{{ $k->nama_kelompok }}</h2>
+                                        <p class="text-sm mt-2">Jumlah Kelompok: {{ $k->jumlah_kelompok }}</p>
+                                        <p class="text-sm mt-2">Anggota yang Bergabung: {{ $k->anggota->count() }} /
+                                            {{ $k->jumlah_kelompok }}</p>
+                                    </a>
+                                    <button onclick="confirmDeleteKelompok({{ $k->id }})"
+                                        class="btn btn-danger w-full">Hapus</button>
+                                </div>
                             @endforeach
                         </div>
 
@@ -344,6 +342,41 @@
             </div>
         </div>
     @endif
+    <script>
+        function confirmDeleteKelompok(kelompokId) {
+            Swal.fire({
+                title: 'Yakin ingin menghapus?',
+                text: "Kelompok ini akan dihapus permanen.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e3342f',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/kelompok/${kelompokId}`;
+
+                    const csrf = document.createElement('input');
+                    csrf.type = 'hidden';
+                    csrf.name = '_token';
+                    csrf.value = '{{ csrf_token() }}';
+
+                    const method = document.createElement('input');
+                    method.type = 'hidden';
+                    method.name = '_method';
+                    method.value = 'DELETE';
+
+                    form.appendChild(csrf);
+                    form.appendChild(method);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
+    </script>
     <!-- Footer: di luar container flex-row, full width -->
     <footer class="bg-customBlack text-center py-2 px-4 text-sm">
         <p class="text-customGrayLight">&copy; Learnify 2024</p>

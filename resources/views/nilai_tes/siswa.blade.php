@@ -64,9 +64,10 @@
                     <i class="fa-solid fa-house w-6 text-center"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('materi.index') }}"
+
+                <a href="{{ route('materiv2.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
-                    <i class="fas fa-book w-6 text-center"></i>
+                    <i class="fas fa-folder w-6 text-center"></i>
                     <span>Materi</span>
                 </a>
                 <a href="{{ route('learning.index') }}"
@@ -82,7 +83,7 @@
                 <a href="{{ route('kuis-tugas.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
                     <i class="fas fa-tasks w-6 text-center"></i>
-                    <span>Kuis/Tugas</span>
+                    <span>Tugas</span>
                 </a>
                 @php
                     $role = auth()->user()->role;
@@ -94,8 +95,6 @@
                         <span>Data Siswa</span>
                     </a>
                 @endif
-
-
             </div>
             <!-- Main Content -->
             <div class="flex-1 p-6 text-gray-900">

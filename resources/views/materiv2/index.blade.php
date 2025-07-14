@@ -155,7 +155,7 @@
                                             class="relative bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col">
                                             <a href="{{ route('materiv2.show', $item->id) }}"
                                                 class="block p-6 text-center">
-                                                <h3 class="text-lg font-bold mb-2 text-blue-600 hover:underline">
+                                                <h3 class="text-lg font-bold mb-2 text-dark hover:underline">
                                                     {{ $item->nama_materi }}
                                                 </h3>
                                                 <p class="text-sm text-gray-500">
@@ -164,7 +164,7 @@
                                             </a>
 
                                             @if (auth()->user()->role === 0 || auth()->user()->role === 1)
-                                                <div class="bg-gray-200 text-center py-2 flex justify-around">
+                                                <div class="bg-custombone text-center py-2 flex justify-around ">
                                                     <form id="hapus-form-{{ $item->id }}"
                                                         action="{{ route('materiv2.destroy', $item->id) }}"
                                                         method="POST">

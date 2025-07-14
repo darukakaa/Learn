@@ -65,9 +65,10 @@
                     <i class="fa-solid fa-house w-6 text-center"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('materi.index') }}"
+
+                <a href="{{ route('materiv2.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
-                    <i class="fas fa-book w-6 text-center"></i>
+                    <i class="fas fa-folder w-6 text-center"></i>
                     <span>Materi</span>
                 </a>
                 <a href="{{ route('learning.index') }}"
@@ -75,10 +76,15 @@
                     <i class="fas fa-chalkboard-teacher w-6 text-center"></i>
                     <span>Learning</span>
                 </a>
+                <a href="{{ route('tes_soal.index') }}"
+                    class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
+                    <i class="fas fa-folder w-6 text-center"></i>
+                    <span>Tes Soal</span>
+                </a>
                 <a href="{{ route('kuis-tugas.index') }}"
                     class="sidebar-link flex items-center px-2 py-2 rounded bg-customBlue text-customGrayLight hover:bg-customBlack transition md:justify-start justify-center">
                     <i class="fas fa-tasks w-6 text-center"></i>
-                    <span>Kuis/Tugas</span>
+                    <span>Tugas</span>
                 </a>
                 @php
                     $role = auth()->user()->role;
@@ -152,20 +158,19 @@
                                             class="relative bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col">
                                             <a href="{{ route('tugas.show', $item->id) }}"
                                                 class="block p-6 text-center">
-                                                <h3 class="text-lg font-bold mb-2 text-blue-600 hover:underline">
+                                                <h3 class="text-lg font-bold mb-2 text-dark hover:underline">
                                                     {{ $item->nama_tugas }}</h3>
                                                 <p class="text-sm text-gray-500">Tanggal Dibuat:
                                                     {{ $item->tanggal_dibuat->format('d-m-Y') }}</p>
                                             </a>
 
                                             @if (auth()->user()->role == '0' || auth()->user()->role == '1')
-                                                <div class="bg-gray-200 text-center py-2 flex justify-around">
+                                                <div class="bg-custombone text-center py-2 flex justify-around">
                                                     <form action="{{ route('tugas.destroy', $item->id) }}"
                                                         method="POST" class="w-full">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button"
-                                                            class="w-full bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm delete-btn"
+                                                        <button type="button" class="btn btn-danger delete-btn"
                                                             data-task-name="{{ $item->nama_tugas }}">
                                                             Hapus
                                                         </button>

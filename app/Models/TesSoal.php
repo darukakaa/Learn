@@ -13,7 +13,7 @@ class TesSoal extends Model
         'tanggal_tes',
     ];
 
-    public function soals()
+    public function soal()
     {
         return $this->hasMany(Soal::class, 'tes_soals_id');
     }

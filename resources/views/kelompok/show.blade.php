@@ -277,7 +277,7 @@
                         {{-- Tombol Navigasi --}}
                         <div class="flex justify-between mt-6">
                             <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
-                                class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600 inline-block">
+                                class="btn btn-primary rounded-full">
                                 Selanjutnya
                             </a>
                         </div>

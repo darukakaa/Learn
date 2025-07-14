@@ -50,6 +50,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
             integrity="sha512-papmHCE9W8Me6iXKgp8n+HF8rhITxu6mA49wA2Yp3RxReD8BjOXQqePh1vN5R1+DoCdPQU09UugV1i5lFGY4Rw=="
             crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
 
     <!-- Container utama full height, flex column -->
@@ -114,28 +115,30 @@
                         <!-- Grid of Learning items as Cards -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($learnings as $learning)
-                                <a href="{{ route('learning.show', ['learning' => $learning->id]) }}" class="card-link">
-                                    <div
-                                        class="block bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col">
+                                <div
+                                    class="relative bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col">
+                                    <!-- Bagian klik ke detail -->
+                                    <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
+                                        class="card-link flex-1">
                                         <div class="p-6 text-center">
                                             <h3 class="text-lg font-bold mb-2">{{ $learning->name }}</h3>
                                             @if ($learning->is_completed)
                                                 <span
-                                                    class="inline-block mt-2 px-3 py-1 bg-green-200 text-green-800 text-sm font-semibold rounded-full">
+                                                    class="inline-block mt-2 px-3 py-1 bg-customlight text-green-800 text-sm font-semibold rounded-full">
                                                     Selesai
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="bg-gray-200 text-center py-2 flex justify-around">
-                                            <!-- Delete Button -->
-                                            @if (auth()->user()->role == '0' || auth()->user()->role == '1')
-                                                <button type="button" class="btn btn-danger"
-                                                    onclick="event.preventDefault(); openDeleteModal({{ $learning->id }})">Hapus</button>
-                                            @endif
-                                        </div>
+                                    </a>
+                                    <div class="bg-customblue text-center py-2 flex justify-around">
+                                        @if (auth()->user()->role == '0' || auth()->user()->role == '1')
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="confirmDelete({{ $learning->id }})">Hapus</button>
+                                        @endif
                                     </div>
-                                </a>
+                                </div>
                             @endforeach
+
                         </div>
                     </div>
                 </div>
@@ -164,24 +167,7 @@
             </div>
         </div>
 
-        <!-- Delete Confirmation Modal -->
-        <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
-            <div class="bg-white p-6 rounded-lg shadow-lg w-96">
-                <h2 class="text-xl mb-4">Hapus Learning</h2>
-                <p>Apakah Anda yakin ingin menghapus learning ini?</p>
-                <form method="POST" action="" id="deleteForm">
-                    @csrf
-                    @method('DELETE')
-                    <div class="flex justify-end mt-4">
-                        <button type="button"
-                            class="bg-gray-400 hover:bg-gray-500 text-black font-bold py-2 px-4 rounded mr-2"
-                            onclick="closeDeleteModal()">Batal</button>
-                        <button type="submit"
-                            class="bg-red-500 hover:bg-red-600 text-black font-bold py-2 px-4 rounded">Hapus</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+
 
         <!-- JavaScript for modals -->
         <script>
@@ -200,6 +186,49 @@
 
             function closeDeleteModal() {
                 document.getElementById('deleteModal').classList.add('hidden');
+            }
+        </script>
+        <script>
+            function openAddModal() {
+                document.getElementById('addModal').classList.remove('hidden');
+            }
+
+            function closeAddModal() {
+                document.getElementById('addModal').classList.add('hidden');
+            }
+
+            function confirmDelete(learningId) {
+                Swal.fire({
+                    title: 'Yakin ingin menghapus?',
+                    text: "Data learning ini akan dihapus secara permanen.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e3342f',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, Hapus',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = `/learning/${learningId}`;
+
+                        const csrf = document.createElement('input');
+                        csrf.type = 'hidden';
+                        csrf.name = '_token';
+                        csrf.value = '{{ csrf_token() }}';
+
+                        const method = document.createElement('input');
+                        method.type = 'hidden';
+                        method.name = '_method';
+                        method.value = 'DELETE';
+
+                        form.appendChild(csrf);
+                        form.appendChild(method);
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
             }
         </script>
         <!-- Footer: di luar container flex-row, full width -->

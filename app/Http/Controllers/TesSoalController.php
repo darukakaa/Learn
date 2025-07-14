@@ -13,15 +13,19 @@ class TesSoalController extends Controller
 {
     public function index()
     {
-        $tes = TesSoal::orderBy('tanggal_tes', 'desc')->get()->map(function ($item) {
-            $item->sudah_mengerjakan = Jawaban::where('tes_soal_id', $item->id)
-                ->where('user_id', Auth::id())
-                ->exists();
-            return $item;
-        });
+        $tes = TesSoal::withCount('soal')
+            ->orderBy('tanggal_tes', 'desc')
+            ->get()
+            ->map(function ($item) {
+                $item->sudah_mengerjakan = Jawaban::where('tes_soal_id', $item->id)
+                    ->where('user_id', Auth::id())
+                    ->exists();
+                return $item;
+            });
 
         return view('tes_soal.index', compact('tes'));
     }
+
 
     public function show($id)
     {

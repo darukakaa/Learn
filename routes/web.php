@@ -286,6 +286,7 @@ Route::delete('/materiv2/{id}', [Materiv2Controller::class, 'destroy'])->name('m
 
 
 
+Route::delete('/users/{id}', [DataSiswaController::class, 'destroy'])->name('users.destroy');
 
 Route::post('/update-user-role', [\App\Http\Controllers\DataSiswaController::class, 'updateRole'])->name('update-user-role');
 // nilai

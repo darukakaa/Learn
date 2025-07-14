@@ -120,14 +120,16 @@
                                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
                                                     Email
                                                 </th>
-                                                <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-                                                    Role
-                                                </th>
-                                                <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
-                                                    Aksi
-                                                </th>
+                                                @if (auth()->user()->role === 0)
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+                                                        Role
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-300">
+                                                        Aksi
+                                                    </th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
@@ -150,24 +152,33 @@
                                                             class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b border-gray-300">
                                                             {{ $user->email }}
                                                         </td>
-                                                        <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b border-gray-300">
-                                                            @if ($user->role === 0)
-                                                                Admin
-                                                            @elseif ($user->role === 1)
-                                                                Guru
-                                                            @else
-                                                                Siswa
-                                                            @endif
-                                                        </td>
-                                                        <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b border-gray-300">
-                                                            <button
-                                                                onclick="openRoleModal({{ $user->id }}, {{ $user->role }}, '{{ $user->name }}')"
-                                                                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                                                                Edit Role
-                                                            </button>
-                                                        </td>
+
+                                                        @if (auth()->user()->role === 0)
+                                                            <td
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b border-gray-300">
+                                                                @if ($user->role === 0)
+                                                                    Admin
+                                                                @elseif ($user->role === 1)
+                                                                    Guru
+                                                                @else
+                                                                    Siswa
+                                                                @endif
+                                                            </td>
+                                                            <td
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-b border-gray-300">
+                                                                <button
+                                                                    onclick="confirmDeleteUser({{ $user->id }}, '{{ $user->name }}')"
+                                                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm ml-2">
+                                                                    Hapus
+                                                                </button>
+                                                                <button
+                                                                    onclick="openRoleModal({{ $user->id }}, {{ $user->role }}, '{{ $user->name }}')"
+                                                                    class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                                                                    Edit Role
+                                                                </button>
+                                                            </td>
+                                                        @endif
+
                                                     </tr>
                                                 @endforeach
                                             @endif
@@ -215,6 +226,43 @@
             document.getElementById('editRoleModal').classList.add('hidden');
         }
     </script>
+    <script>
+        function confirmDeleteUser(userId, userName) {
+            Swal.fire({
+                title: 'Yakin ingin menghapus?',
+                text: `User "${userName}" akan dihapus permanen.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e3342f',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Buat dan kirimkan form DELETE
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/users/' + userId;
+
+                    const csrf = document.createElement('input');
+                    csrf.type = 'hidden';
+                    csrf.name = '_token';
+                    csrf.value = '{{ csrf_token() }}';
+
+                    const method = document.createElement('input');
+                    method.type = 'hidden';
+                    method.name = '_method';
+                    method.value = 'DELETE';
+
+                    form.appendChild(csrf);
+                    form.appendChild(method);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        }
+    </script>
+
 
 </x-app-layout>
 

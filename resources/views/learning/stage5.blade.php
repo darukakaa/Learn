@@ -110,32 +110,32 @@
                                 </p>
                                 <div class="flex justify-center mt-3 space-x-2">
                                     <a href="{{ route('learning.index') }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">Kembali
-                                        ke Daftar
-                                        Learning</a>
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Daftar Learning
+                                    </a>
                                     <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Tahap 1
                                     </a>
                                     <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Tahap 2
                                     </a>
                                     <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Tahap 3
                                     </a>
                                     <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Tahap 4
                                     </a>
                                     <a href="{{ route('learning.activity', ['learningId' => $learning->id]) }}"
-                                        class="btn btn-primary mt-4 inline-block ml-2">
+                                        class="btn btn-primary inline-block px-3 py-1 text-sm">
                                         Aktivitas Siswa
                                     </a>
                                     <button
                                         onclick="confirmSelesaikanLearning('{{ $learning->id }}', '{{ $learning->nama_learning }}')"
-                                        class="btn btn-danger mt-4 inline-block ml-2">
+                                        class="btn btn-danger inline-block px-3 py-1 text-sm">
                                         Selesaikan Learning
                                     </button>
                                     @if (session('learning_completed'))
@@ -254,7 +254,6 @@
                             ->pluck('kelompok_id')
                             ->toArray();
                     @endphp
-                    <!-- Refleksi -->
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-customold shadow-sm sm:rounded-lg mb-6">
                             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
@@ -466,84 +465,90 @@
                                 <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
                                 <p class="mt-4 text-2xl font-semibold">Tahap 5 Pengevaluasian masalah dan Penyimpulan
                                 </p>
-                                <!-- Navigation Buttons -->
                                 <div class="flex justify-center mt-3 space-x-2">
                                     <a href="{{ route('learning.index') }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Daftar Learning
                                     </a>
                                     <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Tahap 1
                                     </a>
                                     <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Tahap 2
                                     </a>
                                     <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Tahap 3
                                     </a>
                                     <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}"
-                                        class="btn btn-secondary mt-4 inline-block ml-2">
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
                                         Kembali ke Tahap 4
                                     </a>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Refleksi -->
+                    <!-- Refleksi -->
+                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-customold shadow-sm sm:rounded-lg mb-6">
-                            <div class="p-6 border-b">
-                                <p class="font-semibold text-lg">RELEKSI</p>
+                            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
+                                <div class="bg-customold shadow-sm sm:rounded-lg p-4">
+                                    <p class="font-semibold text-lg">RELEKSI</p>
+                                    @if (!$existingRefleksi)
+                                        <form action="{{ route('refleksi.store') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="learning_id" value="{{ $learning->id }}">
 
-                                @if (!$existingRefleksi)
-                                    <form action="{{ route('refleksi.store') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="learning_id" value="{{ $learning->id }}">
+                                            <div class="mb-4">
+                                                <label>Apa yang telah dipelajari:</label>
+                                                <textarea name="apa_yang_dipelahari" class="w-full border p-2" required></textarea>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label>Kesulitan yang dialami:</label>
+                                                <textarea name="kesulitan" class="w-full border p-2" required></textarea>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label>Kontribusi pribadi:</label>
+                                                <textarea name="kontribusi" class="w-full border p-2" required></textarea>
+                                            </div>
+                                            <div class="mb-4">
+                                                <label>Saran untuk perbaikan:</label>
+                                                <textarea name="saran" class="w-full border p-2" required></textarea>
+                                            </div>
 
-                                        <div class="mb-4">
-                                            <label>Apa yang telah dipelajari:</label>
-                                            <textarea name="apa_yang_dipelahari" class="w-full border p-2" required></textarea>
+                                            <button type="submit" class="btn btn-primary">Kirim Refleksi</button>
+                                        </form>
+                                    @else
+                                        <div class="p-4 bg-green-100 border border-green-400 rounded text-green-700">
+                                            ✅ Anda telah menambahkan refleksi pada learning
+                                            <strong>{{ $learning->name }}</strong>.
                                         </div>
-                                        <div class="mb-4">
-                                            <label>Kesulitan yang dialami:</label>
-                                            <textarea name="kesulitan" class="w-full border p-2" required></textarea>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label>Kontribusi pribadi:</label>
-                                            <textarea name="kontribusi" class="w-full border p-2" required></textarea>
-                                        </div>
-                                        <div class="mb-4">
-                                            <label>Saran untuk perbaikan:</label>
-                                            <textarea name="saran" class="w-full border p-2" required></textarea>
-                                        </div>
+                                    @endif
 
-                                        <button type="submit" class="btn btn-primary">Kirim Refleksi</button>
-                                    </form>
-                                @else
-                                    <div class="p-4 bg-green-100 border border-green-400 rounded text-green-700">
-                                        ✅ Anda telah menambahkan refleksi pada learning
-                                        <strong>{{ $learning->name }}</strong>.
-                                    </div>
-                                @endif
-
-                                @if (session('success'))
-                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                                    <script>
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Sukses!',
-                                            text: '{{ session('success') }}',
-                                            confirmButtonText: 'Tutup'
-                                        });
-                                    </script>
-                                @endif
+                                    @if (session('success'))
+                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                        <script>
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Sukses!',
+                                                text: '{{ session('success') }}',
+                                                confirmButtonText: 'Tutup'
+                                            });
+                                        </script>
+                                    @endif
+                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="bg-customold shadow-sm sm:rounded-lg mb-6">
-                            <div class="p-6 border-b">
-                                <p class="font-semibold text-lg">EVALUASI</p>
+                            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
+                                <div class="bg-customold shadow-sm sm:rounded-lg p-4">
+                                    <p class="font-semibold text-lg">EVALUASI</p>
+                                </div>
                                 @php
                                     $evaluasis = \App\Models\Evaluasi::where('learning_id', $learning->id)
                                         ->get()
@@ -562,14 +567,13 @@
                                             <p>Belum ada evaluasi.</p>
                                         @endif
                                     @endforeach
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     @endif
     <!-- Footer: di luar container flex-row, full width -->
     <footer class="bg-customBlack text-center py-2 px-4 text-sm">

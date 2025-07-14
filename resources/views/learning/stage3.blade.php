@@ -525,7 +525,7 @@
 
                                 @if (auth()->user()->role == 2 && $isValidated)
                                     <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}"
-                                        class="bg-gray-500 text-white font-bold py-2 px-6 rounded-full hover:bg-gray-600 inline-block mt-4">
+                                        class="btn btn-primary rounded-full">
                                         Lanjut ke Tahap 4
                                     </a>
                                 @endif

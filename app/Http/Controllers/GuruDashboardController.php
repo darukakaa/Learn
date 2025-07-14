@@ -16,10 +16,10 @@ class GuruDashboardController extends Controller
         // Count the number of users with role '2'
         $jumlahSiswa = User::where('role', 2)->count();
         $jumlahLearning = Learning::all()->count();
-
         $jumlahMateri = Materi::all()->count();
+        $jumlahMateriv2 = Materiv2::count();
         $jumlahTugas = Tugas::all()->count();
 
-        return view('guru', compact('jumlahSiswa', 'jumlahLearning', 'jumlahMateriv2', 'jumlahTugas'));
+        return view('guru', compact('jumlahSiswa', 'jumlahMateriv2', 'jumlahLearning', 'jumlahMateri', 'jumlahTugas'));
     }
 }
