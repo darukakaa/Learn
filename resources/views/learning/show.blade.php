@@ -428,9 +428,7 @@
                                 </div>
                             @endif
 
-
-
-                            @if (is_null($existingResult))
+                            @if (is_null($existingResult) && $learningStage1)
                                 <!-- Form tambah hasil identifikasi masalah -->
                                 <form method="POST"
                                     action="{{ route('learning.stage1.result.store', ['learningStage1Id' => $learningStage1->id]) }}">
@@ -471,6 +469,10 @@
                                         </button>
                                     </div>
                                 </form>
+                            @elseif (is_null($existingResult) && !$learningStage1)
+                                <div class="text-red-600 font-semibold text-center">
+                                    Permasalahan belum tersedia. Silakan tunggu admin/guru menambahkannya.
+                                </div>
                             @endif
 
                             @if (session('error'))
@@ -497,6 +499,7 @@
                                 </div>
                             @endif
                         </div>
+
 
 
 
