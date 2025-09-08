@@ -7,6 +7,7 @@ use App\Models\Learning;
 use App\Models\Materi;
 use App\Models\Tugas;
 use App\Models\Materiv2;
+use App\Models\TesSoal;
 use Illuminate\Http\Request;
 
 class GuruDashboardController extends Controller
@@ -19,7 +20,8 @@ class GuruDashboardController extends Controller
         $jumlahMateri = Materi::all()->count();
         $jumlahMateriv2 = Materiv2::count();
         $jumlahTugas = Tugas::all()->count();
+        $jumlahTes = TesSoal::all()->count();
 
-        return view('guru', compact('jumlahSiswa', 'jumlahMateriv2', 'jumlahLearning', 'jumlahMateri', 'jumlahTugas'));
+        return view('guru', compact('jumlahSiswa', 'jumlahMateriv2', 'jumlahLearning', 'jumlahMateri', 'jumlahTugas', 'jumlahTes'));
     }
 }

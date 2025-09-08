@@ -100,7 +100,7 @@
                 <div class="py-4 flex-grow">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
-                            @foreach ([['route' => 'learning.index', 'title' => 'Learning', 'count' => $jumlahLearning], ['route' => 'materiv2.index', 'title' => 'Jumlah Materi', 'count' => $jumlahMateriv2], ['route' => 'tugas.index', 'title' => 'Tugas', 'count' => $jumlahTugas], ['route' => 'data-siswa', 'title' => 'Jumlah Siswa', 'count' => $jumlahSiswa]] as $index => $card)
+                            @foreach ([['route' => 'learning.index', 'title' => 'Learning', 'count' => $jumlahLearning], ['route' => 'materiv2.index', 'title' => 'Jumlah Materi', 'count' => $jumlahMateriv2], ['route' => 'tes_soal.index', 'title' => 'Tes', 'count' => $jumlahTes], ['route' => 'tugas.index', 'title' => 'Tugas', 'count' => $jumlahTugas], ['route' => 'data-siswa', 'title' => 'Jumlah Siswa', 'count' => $jumlahSiswa]] as $index => $card)
                                 <a href="{{ route($card['route']) }}"
                                     class="relative bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col items-center">
                                     <h3 class="font-semibold text-lg text-customBlack">{{ $card['title'] }}</h3>
