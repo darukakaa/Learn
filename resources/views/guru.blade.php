@@ -91,20 +91,23 @@
             </div>
 
             <!-- Main Content -->
-            <div class="flex-1 flex flex-col bg-customGrayLight min-h-screen">
-                <div class="p-4 border-b border-customGrayMedium bg-customGrayLight">
-                    <h2 class="font-semibold text-xl text-customBlack leading-tight">
+            <div class="main-content flex-1 flex flex-col bg-customGrayLight">
+                <div class="px-4 py-0 mt-0 border-b border-customGrayMedium bg-customGrayLight">
+                    <h2 class="font-semibold text-lg text-customBlack leading-tight">
                         {{ __('Guru Dashboard') }}
                     </h2>
                 </div>
-                <div class="py-12 flex-grow">
+                <div class="py-4 flex-grow">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-                            @foreach ([['route' => 'learning.index', 'title' => 'Learning', 'count' => $jumlahLearning], ['route' => 'materiv2.index', 'title' => 'Jumlah Materi', 'count' => $jumlahMateriv2], ['route' => 'tugas.index', 'title' => 'Tugas', 'count' => $jumlahTugas], ['route' => 'data-siswa', 'title' => 'Jumlah Siswa', 'count' => $jumlahSiswa]] as $card)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
+                            @foreach ([['route' => 'learning.index', 'title' => 'Learning', 'count' => $jumlahLearning], ['route' => 'materiv2.index', 'title' => 'Jumlah Materi', 'count' => $jumlahMateriv2], ['route' => 'tugas.index', 'title' => 'Tugas', 'count' => $jumlahTugas], ['route' => 'data-siswa', 'title' => 'Jumlah Siswa', 'count' => $jumlahSiswa]] as $index => $card)
                                 <a href="{{ route($card['route']) }}"
                                     class="relative bg-custombone shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200 hover:bg-customold transition flex flex-col items-center">
                                     <h3 class="font-semibold text-lg text-customBlack">{{ $card['title'] }}</h3>
-                                    <p class="text-customBlack text-3xl mt-2">{{ $card['count'] }}</p>
+                                    <p class="text-customBlack text-3xl mt-2">
+                                        <span class="count" data-target="{{ $card['count'] }}"
+                                            id="count-{{ $index }}">0</span>
+                                    </p>
                                     <div
                                         class="w-full bg-customBlue p-2 mt-4 rounded-b-lg text-center text-customGrayLight font-semibold cursor-pointer">
                                         <span>Selengkapnya <i class="fas fa-chevron-right"></i></span>
@@ -121,5 +124,37 @@
         <footer class="bg-customBlack text-center py-2 px-4 text-sm">
             <p class="text-customGrayLight">&copy; Learnify 2024</p>
         </footer>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const counters = document.querySelectorAll('.count');
+                const duration = 1500; // durasi animasi
+
+                counters.forEach(counter => {
+                    const target = +counter.getAttribute('data-target');
+                    const startTime = performance.now();
+
+                    function easeOutQuad(t) {
+                        return t * (2 - t);
+                    }
+
+                    function update(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const eased = easeOutQuad(progress);
+                        const currentValue = Math.floor(eased * target);
+
+                        counter.textContent = currentValue;
+
+                        if (progress < 1) {
+                            requestAnimationFrame(update);
+                        } else {
+                            counter.textContent = target;
+                        }
+                    }
+
+                    requestAnimationFrame(update);
+                });
+            });
+        </script>
     </div>
 </x-app-layout>

@@ -165,7 +165,8 @@ Route::post('/learning/{learningId}/kelompok', [LearningController::class, 'stor
 Route::post('/kelompok/store/{learningId}/{stageId}', [KelompokController::class, 'store'])->name('kelompok.store');
 Route::get('/learning/{learningId}/stage2', [LearningController::class, 'showStage2'])->name('learning.stage2');
 
-Route::delete('/kelompok/{id}', [KelompokController::class, 'destroy'])->name('kelompok.destroy');
+Route::delete('/learning/{learningId}/stage2/kelompok/{id}', [KelompokController::class, 'destroy'])->name('kelompok.destroy');
+
 
 // Show kelompok detail
 Route::get('/kelompok/{kelompok}', [KelompokController::class, 'show'])->name('kelompok.show');
