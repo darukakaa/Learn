@@ -117,6 +117,14 @@
                                 <li class="bg-gray-50 p-4 rounded shadow">
                                     <p><strong>Pertanyaan:</strong> {{ $soal->pertanyaan }}</p>
 
+                                    {{-- Tampilkan gambar jika ada --}}
+                                    @if ($soal->gambar)
+                                        <div class="mt-2">
+                                            <img src="{{ asset('storage/' . $soal->gambar) }}" alt="Gambar Soal"
+                                                class="max-w-xs rounded border">
+                                        </div>
+                                    @endif
+
                                     @foreach (['A', 'B', 'C', 'D', 'E'] as $opt)
                                         <p class="ml-4">
                                             <strong>{{ $opt }}.</strong>
@@ -147,14 +155,12 @@
                         </ul>
                     </div>
 
-
                 </div>
-            </div>
 
+            </div>
         </div>
-    </div>
-    <!-- Footer: di luar container flex-row, full width -->
-    <footer class="bg-customBlack text-center py-2 px-4 text-sm">
-        <p class="text-customGrayLight">&copy; Learnify 2024</p>
-    </footer>
+        <!-- Footer: di luar container flex-row, full width -->
+        <footer class="bg-customBlack text-center py-2 px-4 text-sm">
+            <p class="text-customGrayLight">&copy; Learnify 2024</p>
+        </footer>
 </x-app-layout>
