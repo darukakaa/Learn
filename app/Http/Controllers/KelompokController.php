@@ -13,17 +13,28 @@ use Illuminate\Http\Request;
 
 class KelompokController extends Controller
 {
+
     // Menampilkan form kelompok
     public function showForm($learningId, $stageId)
     {
-        // Mengambil semua kelompok berdasarkan learningId dan stageId
         $kelompok = Kelompok::where('learning_id', $learningId)
             ->where('stage_id', $stageId)
             ->get();
 
-        // Mengirimkan data ke view
-        return view('kelompok.show', compact('kelompok', 'learningId', 'stageId'));
+        $learning = Learning::findOrFail($learningId);
+        $user = auth()->user();
+
+        // cek apakah user sudah gabung kelompok
+        $isJoined = UserKelompokLearning::where('user_id', $user->id)
+            ->where('learning_id', $learningId)
+            ->exists();
+
+        // progress tahap 2 → misalnya 20% jika sudah gabung
+        $progress = $isJoined ? 20 : 0;
+
+        return view('stage2', compact('kelompok', 'learning', 'learningId', 'stageId', 'progress'));
     }
+
 
     // Method untuk menghapus kelompok
     public function destroy($learningId, $id)
@@ -48,7 +59,7 @@ class KelompokController extends Controller
             ->where('kelompok_id', $kelompokId)
             ->get();
 
-        // dd($penugasans); // Hapus ini jika sudah tidak perlu
+
 
         return view('kelompok.show', compact('learning', 'kelompok', 'penugasans'));
     }

@@ -494,35 +494,94 @@
             {{-- Konten Utama --}}
             <div class="main-content py-12 flex-1">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <!-- Title + Progress -->
                     <div class="bg-customold shadow-sm rounded-lg mb-4 border border-gray-300 px-4 py-3 -mt-10">
-                        <div class="text-center">
-                            <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
-                            <p class="mt-4 text-2xl font-semibold">Tahap 5 Pengevaluasian masalah dan Penyimpulan
-                            </p>
-                            <div class="flex justify-center mt-3 space-x-2">
-                                <a href="{{ route('learning.index') }}"
-                                    class="btn btn-secondary inline-block px-3 py-1 text-sm">
-                                    Kembali ke Daftar Learning
-                                </a>
-                                <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
-                                    class="btn btn-secondary inline-block px-3 py-1 text-sm">
-                                    Kembali ke Tahap 1
-                                </a>
-                                <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
-                                    class="btn btn-secondary inline-block px-3 py-1 text-sm">
-                                    Kembali ke Tahap 2
-                                </a>
-                                <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
-                                    class="btn btn-secondary inline-block px-3 py-1 text-sm">
-                                    Kembali ke Tahap 3
-                                </a>
-                                <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}"
-                                    class="btn btn-secondary inline-block px-3 py-1 text-sm">
-                                    Kembali ke Tahap 4
-                                </a>
+                        <div class="flex items-center justify-between">
+                            <!-- Bagian kiri: judul -->
+                            <div class="text-left">
+                                <h1 class="text-4xl font-bold">{{ $learning->name }}</h1>
+                                <p class="mt-4 text-2xl font-semibold">Tahap 5 Pengevaluasian masalah dan Penyimpulan
+                                </p>
+
+                                <!-- Tombol Navigasi -->
+                                <div class="flex flex-wrap mt-3 space-x-2">
+                                    <a href="{{ route('learning.index') }}"
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Daftar Learning
+                                    </a>
+                                    <a href="{{ route('learning.show', ['learning' => $learning->id]) }}"
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Tahap 1
+                                    </a>
+                                    <a href="{{ route('learning.stage', ['learningId' => $learning->id, 'stageId' => 2]) }}"
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Tahap 2
+                                    </a>
+                                    <a href="{{ route('learning.stage3', ['learningId' => $learning->id]) }}"
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Tahap 3
+                                    </a>
+                                    <a href="{{ route('learning.stage4', ['id' => $learning->id]) }}"
+                                        class="btn btn-secondary inline-block px-3 py-1 text-sm">
+                                        Kembali ke Tahap 4
+                                    </a>
+
+                                </div>
+                            </div>
+
+                            <!-- Bagian kanan: progress bar lingkaran -->
+                            <div class="relative w-24 h-24 mt-6 sm:mt-0">
+                                <svg class="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+                                    <!-- Lingkaran background -->
+                                    <circle class="text-gray-300" stroke-width="10" stroke="currentColor"
+                                        fill="transparent" r="45" cx="50" cy="50" />
+                                    <!-- Lingkaran progress -->
+                                    <circle id="progressCircle" class="text-green-500" stroke-width="10"
+                                        stroke-linecap="round" stroke="currentColor" fill="transparent" r="45"
+                                        cx="50" cy="50"
+                                        style="stroke-dasharray: 283; stroke-dashoffset: 283; transition: stroke-dashoffset 1s ease-out;" />
+                                </svg>
+                                <!-- Angka % -->
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span id="progressText" class="text-lg font-bold">0%</span>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Script animasi progress -->
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                let target = {{ $progress }}; // ambil dari controller
+                                let circle = document.getElementById("progressCircle");
+                                let text = document.getElementById("progressText");
+
+                                let radius = 45;
+                                let circumference = 2 * Math.PI * radius;
+
+                                circle.style.strokeDasharray = circumference;
+                                circle.style.strokeDashoffset = circumference;
+
+                                // animasi lingkaran
+                                let offset = circumference - (target / 100) * circumference;
+                                setTimeout(() => {
+                                    circle.style.strokeDashoffset = offset;
+                                }, 200);
+
+                                // animasi angka
+                                let current = 0;
+                                let step = Math.ceil(target / 50);
+                                let interval = setInterval(() => {
+                                    current += step;
+                                    if (current >= target) {
+                                        current = target;
+                                        clearInterval(interval);
+                                    }
+                                    text.textContent = current + "%";
+                                }, 20);
+                            });
+                        </script>
                     </div>
+
                 </div>
 
                 <!-- Refleksi -->

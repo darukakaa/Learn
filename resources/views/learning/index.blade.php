@@ -133,12 +133,32 @@
                                     class="card-link flex-1">
                                     <div class="p-6 text-center">
                                         <h3 class="text-lg font-bold mb-2">{{ $learning->name }}</h3>
+
+                                        {{-- Progress bar hanya untuk user biasa (role = 2) --}}
+                                        @if ($role === 2)
+                                            <div class="relative w-20 h-20 mx-auto">
+                                                <svg class="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
+                                                    <circle class="text-gray-300" stroke-width="10"
+                                                        stroke="currentColor" fill="transparent" r="45" cx="50"
+                                                        cy="50" />
+                                                    <circle class="text-green-500" stroke-width="10"
+                                                        stroke-linecap="round" stroke="currentColor" fill="transparent"
+                                                        r="45" cx="50" cy="50"
+                                                        style="stroke-dasharray: 283; stroke-dashoffset: {{ 283 - ($learning->progress / 100) * 283 }};" />
+                                                </svg>
+                                                <div class="absolute inset-0 flex items-center justify-center">
+                                                    <span class="text-sm font-bold">{{ $learning->progress }}%</span>
+                                                </div>
+                                            </div>
+                                        @endif
+
                                         @if ($learning->is_completed)
                                             <span
                                                 class="inline-block mt-2 px-3 py-1 bg-customlight text-green-800 text-sm font-semibold rounded-full">Selesai</span>
                                         @endif
                                     </div>
                                 </a>
+
                                 @if ($role === 0 || $role === 1)
                                     <div class="bg-customblue text-center py-2 flex justify-around">
                                         <button type="button" class="btn btn-danger"

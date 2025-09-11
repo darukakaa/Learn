@@ -19,9 +19,68 @@ class LearningController extends Controller
     // Fetch and display the learning index page
     public function index()
     {
-        $learnings = Learning::orderBy('created_at', 'desc')->get();
-        return view('learning.index', compact('learnings'));
+        $user = auth()->user();
+        $role = $user->role;
+
+        // Ambil semua learning dan hitung progress untuk tiap learning
+        $learnings = Learning::orderBy('created_at', 'desc')->get()->map(function ($learning) use ($user) {
+            $progress = 0;
+
+            // Tahap 1
+            $stage1 = \App\Models\LearningStage1::where('learning_id', $learning->id)->first();
+            if ($stage1) {
+                $result = \App\Models\LearningStage1Result::where('learning_stage1_id', $stage1->id)
+                    ->where('user_id', $user->id)
+                    ->first();
+                if ($result && $result->is_validated) {
+                    $progress += 20;
+                }
+            }
+
+            // Tahap 2 (user gabung kelompok)
+            $userKelompok = \App\Models\UserKelompokLearning::where('user_id', $user->id)
+                ->where('learning_id', $learning->id)
+                ->first();
+            if ($userKelompok) {
+                $progress += 20;
+            }
+
+            // Tahap 3 (catatan)
+            $catatan = \App\Models\Catatan::where('learning_id', $learning->id)
+                ->where('user_id', $user->id)
+                ->exists();
+            if ($catatan) {
+                $progress += 20;
+            }
+
+            // Tahap 4 (laporan kelompok tervalidasi)
+            $laporan = \App\Models\LaporanKelompok::whereIn('kelompok_id', function ($query) use ($learning) {
+                $query->select('id')
+                    ->from('kelompok')
+                    ->where('learning_id', $learning->id);
+            })
+                ->where('is_validated', true)
+                ->exists();
+            if ($laporan) {
+                $progress += 20;
+            }
+
+            // Tahap 5 (refleksi user submit)
+            $refleksi = \App\Models\RefleksiUser::where('learning_id', $learning->id)
+                ->where('user_id', $user->id)
+                ->exists();
+            if ($refleksi) {
+                $progress += 20;
+            }
+
+            // Tambahkan property progress ke objek learning
+            $learning->progress = $progress;
+            return $learning;
+        });
+
+        return view('learning.index', compact('learnings', 'role'));
     }
+
 
     // Store a new learning item
     public function store(Request $request)
@@ -50,21 +109,70 @@ class LearningController extends Controller
     public function show($id)
     {
         $learning = Learning::findOrFail($id);
+        $userId = auth()->id();
 
-
-        // Retrieve the learning stage data (you can adjust as needed)
+        // Tahap 1
         $learningStage1 = LearningStage1::with('learningStage1Results.user')
             ->where('learning_id', $id)
             ->first();
 
-        // Check if the user has already added a result
         $existingResult = $learningStage1 ? LearningStage1Result::where('learning_stage1_id', $learningStage1->id)
-            ->where('user_id', auth()->id())
+            ->where('user_id', $userId)
             ->first() : null;
 
+        // Hitung progress
+        $validatedStages = 0;
 
-        return view('learning.show', compact('learning', 'learningStage1', 'existingResult'));
+        // Tahap 1 (identifikasi masalah tervalidasi)
+        if ($existingResult && $existingResult->is_validated) {
+            $validatedStages++;
+        }
+
+        // Tahap 2 (sudah join kelompok)
+        if (\App\Models\UserKelompokLearning::where('learning_id', $learning->id)
+            ->where('user_id', $userId)
+            ->exists()
+        ) {
+            $validatedStages++;
+        }
+
+        // Tahap 3 (sudah buat catatan)
+        if (\App\Models\Catatan::where('learning_id', $learning->id)
+            ->where('user_id', $userId)
+            ->exists()
+        ) {
+            $validatedStages++;
+        }
+
+        // Tahap 4 (laporan kelompok sudah divalidasi)
+        if (\App\Models\LaporanKelompok::where('learning_id', $learning->id)
+            ->where('is_validated', true)
+            ->whereHas('kelompok.anggota', fn($q) => $q->where('user_id', $userId))
+            ->exists()
+        ) {
+            $validatedStages++;
+        }
+
+        // Tahap 5 (sudah submit refleksi)
+        if (\App\Models\RefleksiUser::where('learning_id', $learning->id)
+            ->where('user_id', $userId)
+            ->exists()
+        ) {
+            $validatedStages++;
+        }
+
+        // Hitung progres akhir
+        $progress = ($validatedStages / 5) * 100;
+
+        return view('learning.show', compact(
+            'learning',
+            'learningStage1',
+            'existingResult',
+            'progress'
+        ));
     }
+
+
 
     // Store the stage 1 data for learning
     public function storeStage1(Request $request, $id)
@@ -155,17 +263,69 @@ class LearningController extends Controller
     }
 
 
-    // Show Stage 2
+
     public function showStage2($learningId)
     {
         $learning = Learning::findOrFail($learningId);
 
         // Ambil semua kelompok yang terkait dengan learning_id dan urutkan berdasarkan created_at
         $kelompok = Kelompok::where('learning_id', $learningId)
-            ->orderBy('created_at', 'desc')  // Paling baru di atas
+            ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('learning.stage2', compact('learning', 'kelompok'));
+        $user = auth()->user();
+        $progress = 0;
+        $totalStages = 5;
+        $perStage = 100 / $totalStages;
+
+        if ($user) {
+            // --- Tahap 1: cek identifikasi masalah sudah divalidasi ---
+            $stage1 = \App\Models\LearningStage1Result::where('user_id', $user->id)
+                ->whereHas('learningStage1', function ($q) use ($learningId) {
+                    $q->where('learning_id', $learningId);
+                })
+                ->first();
+
+            if ($stage1 && $stage1->is_validated) {
+                $progress += $perStage;
+            }
+
+            // --- Tahap 2: cek apakah sudah gabung kelompok ---
+            $isJoined = \App\Models\UserKelompokLearning::where('user_id', $user->id)
+                ->where('learning_id', $learningId)
+                ->exists();
+
+            if ($isJoined) {
+                $progress += $perStage;
+            }
+
+            // --- Tahap 3: cek apakah user sudah buat catatan ---
+            if (\App\Models\Catatan::where('learning_id', $learningId)
+                ->where('user_id', $user->id)
+                ->exists()
+            ) {
+                $progress += $perStage;
+            }
+
+            // --- Tahap 4: cek apakah laporan kelompok user sudah divalidasi ---
+            if (\App\Models\LaporanKelompok::where('learning_id', $learningId)
+                ->where('is_validated', true)
+                ->whereHas('kelompok.anggota', fn($q) => $q->where('user_id', $user->id))
+                ->exists()
+            ) {
+                $progress += $perStage;
+            }
+
+            // --- Tahap 5: cek apakah user sudah submit refleksi ---
+            if (\App\Models\RefleksiUser::where('learning_id', $learningId)
+                ->where('user_id', $user->id)
+                ->exists()
+            ) {
+                $progress += $perStage;
+            }
+        }
+
+        return view('learning.stage2', compact('learning', 'kelompok', 'progress'));
     }
 
     public function showInStage2($learningId, $id)
@@ -175,8 +335,6 @@ class LearningController extends Controller
 
         return view('kelompok.show', compact('kelompok', 'learning'));
     }
-
-
 
 
     // Store a new group (Kelompok)
@@ -199,7 +357,13 @@ class LearningController extends Controller
     {
         $learning = Learning::findOrFail($id);
 
-        $userRole = Auth::user()->role;
+        $user = Auth::user();
+        $userRole = $user->role;
+
+        // Default progress
+        $progress = 0;
+        $totalStages = 5; // total ada 5 tahap
+        $perStage = 100 / $totalStages;
 
         if ($userRole === 0 || $userRole === 1) {
             // Admin atau guru, tampilkan semua catatan
@@ -207,22 +371,77 @@ class LearningController extends Controller
                 ->with(['user', 'kelompok'])
                 ->get();
 
-            $kelompok = null; // Admin dan guru mungkin gak perlu kelompok spesifik
+            $kelompok = null;
         } else {
-            // User biasa, tampilkan catatan sesuai kelompok dan user
-            $kelompok = Auth::user()->kelompokBelajar()->wherePivot('learning_id', $id)->first();
+            // User biasa
+            $kelompok = $user->kelompokBelajar()->wherePivot('learning_id', $id)->first();
 
             $catatanList = Catatan::where('learning_id', $id)
-                ->where('user_id', Auth::id())
+                ->where('user_id', $user->id)
                 ->when($kelompok, function ($query) use ($kelompok) {
                     return $query->where('kelompok_id', $kelompok->id);
                 })
                 ->with('user')
                 ->get();
+
+
+            // --- Tahap 1: identifikasi masalah tervalidasi ---
+            $stage1 = \App\Models\LearningStage1Result::where('user_id', $user->id)
+                ->whereHas('learningStage1', function ($q) use ($id) {
+                    $q->where('learning_id', $id);
+                })
+                ->first();
+
+            if ($stage1 && $stage1->is_validated) {
+                $progress += $perStage;
+            }
+
+            // --- Tahap 2: sudah gabung kelompok ---
+            $isJoined = \App\Models\UserKelompokLearning::where('user_id', $user->id)
+                ->where('learning_id', $id)
+                ->exists();
+
+            if ($isJoined) {
+                $progress += $perStage;
+            }
+
+            // --- Tahap 3: catatan tervalidasi ---
+            $validatedCatatan = Catatan::where('learning_id', $id)
+                ->where('user_id', $user->id)
+                ->when($kelompok, function ($query) use ($kelompok) {
+                    return $query->where('kelompok_id', $kelompok->id);
+                })
+                ->where('is_validated', true)
+                ->exists();
+
+            if ($validatedCatatan) {
+                $progress += $perStage;
+            }
+
+            // --- Tahap 4: laporan kelompok tervalidasi ---
+            $laporan = \App\Models\LaporanKelompok::where('kelompok_id', optional($kelompok)->id)
+                ->where('learning_id', $id)
+                ->where('is_validated', true)
+                ->exists();
+
+            if ($laporan) {
+                $progress += $perStage;
+            }
+
+            // --- Tahap 5: refleksi sudah submit ---
+            $refleksi = \App\Models\RefleksiUser::where('learning_id', $id)
+                ->where('user_id', $user->id)
+                ->exists();
+
+            if ($refleksi) {
+                $progress += $perStage;
+            }
         }
 
-        return view('learning.stage3', compact('learning', 'kelompok', 'catatanList'));
+        return view('learning.stage3', compact('learning', 'kelompok', 'catatanList', 'progress'));
     }
+
+
 
     public function stage4($id)
     {
@@ -233,6 +452,9 @@ class LearningController extends Controller
 
         $kelompok = null;
         $laporan = collect(); // Default kosong
+        $progress = 0; // Default progress
+        $totalStages = 5;
+        $perStage = 100 / $totalStages;
 
         if ($user->role === 0 || $user->role === 1) {
             // Admin atau Guru: ambil semua laporan dari seluruh kelompok dalam learning ini
@@ -241,8 +463,10 @@ class LearningController extends Controller
                     ->from('kelompok')
                     ->where('learning_id', $id);
             })->with(['kelompok', 'uploader'])->get();
+
+            // Admin/guru tidak perlu progress
         } else {
-            // User biasa: ambil hanya laporan dari kelompoknya
+            // User biasa
             $userKelompok = \App\Models\UserKelompokLearning::where('user_id', $user->id)
                 ->where('learning_id', $learning->id)
                 ->first();
@@ -251,38 +475,95 @@ class LearningController extends Controller
                 $kelompok = \App\Models\Kelompok::with(['catatan.user'])
                     ->find($userKelompok->kelompok_id);
 
+                // Ambil laporan kelompok
                 $laporan = \App\Models\LaporanKelompok::where('kelompok_id', $userKelompok->kelompok_id)
                     ->with(['kelompok', 'uploader'])
                     ->get();
             }
+
+            // === Hitung progress akumulatif ===
+
+            // Tahap 1: identifikasi masalah tervalidasi
+            $stage1 = \App\Models\LearningStage1Result::where('user_id', $user->id)
+                ->whereHas('learningStage1', function ($q) use ($id) {
+                    $q->where('learning_id', $id);
+                })
+                ->first();
+
+            if ($stage1 && $stage1->is_validated) {
+                $progress += $perStage;
+            }
+
+            // Tahap 2: sudah gabung kelompok
+            $isJoined = \App\Models\UserKelompokLearning::where('user_id', $user->id)
+                ->where('learning_id', $id)
+                ->exists();
+
+            if ($isJoined) {
+                $progress += $perStage;
+            }
+
+            // Tahap 3: catatan tervalidasi
+            $validatedCatatan = \App\Models\Catatan::where('learning_id', $id)
+                ->where('user_id', $user->id)
+                ->when($kelompok, function ($query) use ($kelompok) {
+                    return $query->where('kelompok_id', $kelompok->id);
+                })
+                ->where('is_validated', true)
+                ->exists();
+
+            if ($validatedCatatan) {
+                $progress += $perStage;
+            }
+
+            // Tahap 4: laporan kelompok tervalidasi
+            $laporanValid = \App\Models\LaporanKelompok::where('kelompok_id', optional($kelompok)->id)
+                ->where('learning_id', $id)
+                ->where('is_validated', true)
+                ->exists();
+
+            if ($laporanValid) {
+                $progress += $perStage;
+            }
+
+            // Tahap 5: refleksi sudah submit (tidak perlu validasi)
+            $refleksi = \App\Models\RefleksiUser::where('learning_id', $id)
+                ->where('user_id', $user->id)
+                ->exists();
+
+            if ($refleksi) {
+                $progress += $perStage;
+            }
         }
 
-        return view('learning.stage4', compact('learning', 'kelompok', 'laporan'));
+        return view('learning.stage4', compact('learning', 'kelompok', 'laporan', 'progress'));
     }
-
 
 
     public function showStage5($id)
     {
         $learning = Learning::findOrFail($id);
 
-        // Ambil refleksi seperti sebelumnya
+        // Ambil refleksi user login
         $existingRefleksi = RefleksiUser::where('user_id', auth()->id())
             ->where('learning_id', $learning->id)
             ->first();
 
-        $semuaRefleksi = RefleksiUser::where('learning_id', $learning->id)->with('user')->get();
+        $semuaRefleksi = RefleksiUser::where('learning_id', $learning->id)
+            ->with('user')
+            ->get();
 
         // Ambil role user login
-        $userRole = auth()->user()->role;
+        $user = auth()->user();
+        $userRole = $user->role;
 
         if (in_array($userRole, [0, 1])) {
-            // Jika admin (0) atau guru (1), ambil semua kelompok di learning
+            // Jika admin/guru, ambil semua kelompok
             $kelompok = Kelompok::where('learning_id', $learning->id)
                 ->with('anggota.user')
                 ->get();
         } else {
-            // Jika user biasa, ambil kelompok yang user itu anggotanya
+            // User biasa → kelompok dia saja
             $kelompok = Kelompok::where('learning_id', $learning->id)
                 ->whereHas('anggota', function ($query) {
                     $query->where('user_id', auth()->id());
@@ -291,14 +572,83 @@ class LearningController extends Controller
                 ->get();
         }
 
-        // Ambil evaluasi untuk kelompok-kelompok tersebut
+        // Ambil evaluasi
         $evaluasi = Evaluasi::where('learning_id', $learning->id)
             ->whereIn('kelompok_id', $kelompok->pluck('id'))
             ->get()
             ->groupBy('kelompok_id');
 
-        return view('learning.stage5', compact('learning', 'existingRefleksi', 'semuaRefleksi', 'kelompok', 'evaluasi'));
+        // ==============================
+        // Hitung progress konsisten
+        // ==============================
+        $progress = 0;
+        $totalStages = 5;
+        $perStage = 100 / $totalStages;
+
+        if ($userRole == 2) { // hanya user biasa dihitung
+            // Tahap 1: identifikasi masalah tervalidasi
+            $stage1 = \App\Models\LearningStage1Result::where('user_id', $user->id)
+                ->whereHas('learningStage1', function ($q) use ($id) {
+                    $q->where('learning_id', $id);
+                })
+                ->first();
+
+            if ($stage1 && $stage1->is_validated) {
+                $progress += $perStage;
+            }
+
+            // Tahap 2: sudah gabung kelompok
+            $isJoined = \App\Models\UserKelompokLearning::where('user_id', $user->id)
+                ->where('learning_id', $id)
+                ->exists();
+
+            if ($isJoined) {
+                $progress += $perStage;
+            }
+
+            // Tahap 3: catatan tervalidasi
+            $kelompokUser = $user->kelompokBelajar()->wherePivot('learning_id', $id)->first();
+            $validatedCatatan = \App\Models\Catatan::where('learning_id', $id)
+                ->where('user_id', $user->id)
+                ->when($kelompokUser, function ($query) use ($kelompokUser) {
+                    return $query->where('kelompok_id', $kelompokUser->id);
+                })
+                ->where('is_validated', true)
+                ->exists();
+
+            if ($validatedCatatan) {
+                $progress += $perStage;
+            }
+
+            // Tahap 4: laporan kelompok tervalidasi
+            $laporanValid = \App\Models\LaporanKelompok::where('kelompok_id', optional($kelompokUser)->id)
+                ->where('learning_id', $id)
+                ->where('is_validated', true)
+                ->exists();
+
+            if ($laporanValid) {
+                $progress += $perStage;
+            }
+
+            // Tahap 5: refleksi (cukup submit)
+            if ($existingRefleksi) {
+                $progress += $perStage;
+            }
+        }
+
+        return view('learning.stage5', compact(
+            'learning',
+            'existingRefleksi',
+            'semuaRefleksi',
+            'kelompok',
+            'evaluasi',
+            'progress'
+        ));
     }
+
+
+
+
     public function selesaikan($learningId)
     {
         $learning = Learning::findOrFail($learningId);
