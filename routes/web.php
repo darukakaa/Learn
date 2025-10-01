@@ -225,6 +225,8 @@ Route::get('/learning/{id}/stage4', [LearningController::class, 'stage4'])->name
 Route::post('/laporan-kelompok', [LaporanKelompokController::class, 'store'])->name('laporan_kelompok.store');
 Route::patch('/laporan/{id}/validasi', [\App\Http\Controllers\LaporanKelompokController::class, 'validasi'])->name('laporan.validasi');
 Route::patch('/laporan/{id}/nilai', [LaporanKelompokController::class, 'beriNilai'])->name('laporan.nilai');
+Route::patch('/laporan/{learningId}/deadline', [LaporanKelompokController::class, 'setDeadline'])
+    ->name('laporan.deadline');
 
 
 

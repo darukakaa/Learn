@@ -167,6 +167,19 @@
 
                                 <div class="bg-white shadow-sm sm:rounded-lg p-4">
                                     <h2 class="text-xl font-semibold mb-4">Laporan Kelompok</h2>
+                                    <button
+                                        onclick="document.getElementById('modal-deadline').classList.remove('hidden')"
+                                        class="btn btn-primary">
+                                        <i class="fa-solid fa-calendar"></i> Atur Deadline
+                                    </button>
+
+                                    <!-- ✅ Tampilkan Deadline jika sudah diatur -->
+                                    @if ($learning->deadline_laporan)
+                                        <div class="mb-4 p-3 bg-yellow-100 border border-yellow-400 rounded">
+                                            <strong>Deadline Pengumpulan:</strong>
+                                            {{ \Carbon\Carbon::parse($learning->deadline_laporan)->translatedFormat('d F Y') }}
+                                        </div>
+                                    @endif
                                     <table class="table-auto w-full border">
                                         <thead class="bg-gray-100">
                                             <tr>
@@ -250,6 +263,30 @@
                                             @endforeach
                                         </tbody>
                                         <!-- Modal -->
+
+                                        <div id="modal-deadline"
+                                            class="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 hidden flex justify-center items-center">
+                                            <div class="bg-white p-6 rounded shadow-md w-96">
+                                                <h2 class="text-lg font-bold mb-4">Atur Deadline Pengumpulan</h2>
+                                                <form action="{{ route('laporan.deadline', $learning->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <label for="deadline" class="block mb-2">Tanggal Deadline:</label>
+                                                    <input type="date" id="deadline" name="deadline"
+                                                        value="{{ $learning->deadline_laporan ? \Carbon\Carbon::parse($learning->deadline_laporan)->format('Y-m-d') : '' }}"
+                                                        class="w-full border px-3 py-2 rounded mb-4" required>
+
+                                                    <div class="flex justify-end gap-2">
+                                                        <button type="button"
+                                                            onclick="document.getElementById('modal-deadline').classList.add('hidden')"
+                                                            class="btn btn-danger">Batal</button>
+                                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
                                         <div id="modal-nilai"
                                             class="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 hidden justify-center items-center">
                                             <div class="bg-white p-6 rounded shadow-md w-96">
@@ -260,9 +297,9 @@
                                                     <input type="hidden" name="laporan_id" id="laporan_id">
                                                     <label for="nilai" class="block mb-2">Nilai (0 -
                                                         100):</label>
-                                                    <input type="number" min="0" max="100" id="nilai"
-                                                        name="nilai" class="w-full border px-3 py-2 rounded mb-4"
-                                                        required>
+                                                    <input type="number" min="0" max="100"
+                                                        id="nilai" name="nilai"
+                                                        class="w-full border px-3 py-2 rounded mb-4" required>
                                                     <div class="flex justify-end gap-2">
                                                         <button type="button" onclick="closeModal()"
                                                             class="btn btn-danger">Batal</button>
@@ -639,6 +676,13 @@
                             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 mb-6">
                                 <div class="bg-white shadow-sm sm:rounded-lg p-4">
                                     <h2 class="text-xl font-semibold mb-4">Laporan Kelompok Anda</h2>
+                                    <!-- ✅ Tampilkan Deadline jika sudah diatur -->
+                                    @if ($learning->deadline_laporan)
+                                        <div class="mb-4 p-3 bg-yellow-100 border border-yellow-400 rounded">
+                                            <strong>Deadline Pengumpulan:</strong>
+                                            {{ \Carbon\Carbon::parse($learning->deadline_laporan)->translatedFormat('d F Y') }}
+                                        </div>
+                                    @endif
                                     <table class="table-auto w-full border">
                                         <thead class="bg-gray-100">
                                             <tr>
@@ -673,7 +717,20 @@
 
                                                     <td class="border px-4 py-2">
                                                         {{ $item->created_at->format('d M Y') }}
+                                                        @if ($learning->deadline_laporan)
+                                                            @if ($item->created_at->gt(\Carbon\Carbon::parse($learning->deadline_laporan)))
+                                                                <span class="text-red-600 font-bold block">⚠
+                                                                    Terlambat</span>
+                                                            @else
+                                                                <span class="text-green-600 font-bold block">✅ Tepat
+                                                                    Waktu</span>
+                                                            @endif
+                                                        @else
+                                                            <span class="text-gray-500 block">⏳ Deadline belum
+                                                                ditentukan</span>
+                                                        @endif
                                                     </td>
+
                                                     <td class="border px-4 py-2">
                                                         {{ $item->is_validated ? 'Tervalidasi' : 'Belum Divalidasi' }}
                                                     </td>

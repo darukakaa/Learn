@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\AktivitasSiswa;
+use App\Models\Learning;
 use App\Models\LaporanKelompok;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,20 +23,21 @@ class LaporanKelompokController extends Controller
         $file = $request->file('file_laporan');
         $filePath = $file->store('laporan_kelompok', 'public');
 
-        // Cari learning_id dari kelompok_id
+        // Cari kelompok dan learning
         $kelompok = \App\Models\Kelompok::findOrFail($request->kelompok_id);
+        $learning = \App\Models\Learning::findOrFail($kelompok->learning_id);
 
-        // Simpan ke DB
-        LaporanKelompok::create([
+        // Simpan laporan
+        $laporan = LaporanKelompok::create([
             'kelompok_id' => $request->kelompok_id,
             'uploaded_by' => auth()->id(),
             'file_path' => $filePath,
             'is_validated' => false,
-            'user_id' => auth()->id(),               // tambah user_id
-            'learning_id' => $kelompok->learning_id, // tambah learning_id
+            'user_id' => auth()->id(),
+            'learning_id' => $kelompok->learning_id,
         ]);
 
-        // Simpan aktivitas siswa
+        // Simpan aktivitas
         AktivitasSiswa::create([
             'user_id' => auth()->id(),
             'learning_id' => $kelompok->learning_id,
@@ -45,9 +47,22 @@ class LaporanKelompokController extends Controller
             'waktu_aktivitas' => now(),
         ]);
 
-
         return redirect()->back()->with('success', 'Laporan berhasil diupload.');
     }
+
+    public function setDeadline(Request $request, $learningId)
+    {
+        $request->validate([
+            'deadline' => 'required|date',
+        ]);
+
+        $learning = Learning::findOrFail($learningId);
+        $learning->deadline_laporan = $request->deadline; // pastikan kolom ada di DB
+        $learning->save();
+
+        return back()->with('success', 'Deadline berhasil diatur!');
+    }
+
 
     public function validasi($id)
     {
