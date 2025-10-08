@@ -180,13 +180,16 @@ class LearningController extends Controller
         $request->validate([
             'learning_id' => 'required|exists:learnings,id',
             'problem' => 'required|string|max:255',
-            'file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // Ubah bagian validasi file:
+            'file' => 'nullable|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
+            // max:5120 = 5MB, bisa kamu sesuaikan
         ]);
 
         $filePath = null;
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileName = time() . '_' . $file->getClientOriginalName();
+            // Simpan di folder yang sama
             $filePath = $file->storeAs('uploads/learning_stage1', $fileName, 'public');
         }
 
@@ -196,8 +199,11 @@ class LearningController extends Controller
             'file' => $filePath,
         ]);
 
-        return redirect()->route('learning.show', ['learning' => $id])->with('success', 'Data Tahap 1 berhasil ditambahkan!');
+        return redirect()
+            ->route('learning.show', ['learning' => $id])
+            ->with('success', 'Data Tahap 1 berhasil ditambahkan!');
     }
+
 
     // Store the result data for learning stage 1
     public function storeStage1Result(Request $request, $learningStage1Id)

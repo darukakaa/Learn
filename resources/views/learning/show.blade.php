@@ -148,12 +148,57 @@
                         <div class="bg-white shadow-sm sm:rounded-lg">
                             <div class="p-6 bg-customold shadow-sm sm:rounded-lg border-b border-gray-200 flex">
                                 <div class="w-1/2">
-                                    <h3 class="text-lg font-semibold">Permasalahan</h3>
-                                    <p>{{ $learningStage1->problem }}</p>
+                                    <h3 class="text-lg font-semibold mb-2">Permasalahan</h3>
+                                    <p>{{ $learningStage1->problem ?? '-' }}</p>
 
-                                    <h3 class="text-lg font-semibold mt-4">Gambar</h3>
-                                    <img src="{{ asset('storage/' . $learningStage1->file) }}" class="img-fluid"
-                                        alt="Gambar" style="width: 400px; height: auto;">
+                                    <h3 class="text-lg font-semibold mt-4 mb-2">File</h3>
+
+                                    @if ($learningStage1 && $learningStage1->file)
+                                        @php
+                                            $ext = strtolower(pathinfo($learningStage1->file, PATHINFO_EXTENSION));
+                                            $fileUrl = asset('storage/' . $learningStage1->file);
+                                        @endphp
+
+                                        {{-- Jika file berupa gambar --}}
+                                        @if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif']))
+                                            <img src="{{ $fileUrl }}" alt="Gambar"
+                                                class="img-fluid rounded shadow" style="width: 400px; height: auto;">
+                                            <div class="mt-2">
+                                                <a href="{{ $fileUrl }}" download
+                                                    class="inline-block px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                                                    <i class="fas fa-download"></i> Download Gambar
+                                                </a>
+                                            </div>
+
+                                            {{-- Jika file berupa PDF --}}
+                                        @elseif ($ext === 'pdf')
+                                            <iframe src="{{ $fileUrl }}" width="100%" height="500px"
+                                                class="border rounded shadow"></iframe>
+                                            <div class="mt-2">
+                                                <a href="{{ $fileUrl }}" download
+                                                    class="inline-block px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                                                    <i class="fas fa-download"></i> Download PDF
+                                                </a>
+                                            </div>
+
+                                            {{-- Jika file berupa Word --}}
+                                        @elseif (in_array($ext, ['doc', 'docx']))
+                                            <a href="{{ $fileUrl }}" download
+                                                class="inline-block px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                                                <i class="fas fa-download"></i> Download File Word
+                                            </a>
+
+                                            {{-- Jika jenis file tidak dikenal --}}
+                                        @else
+                                            <p>Jenis file tidak dikenali.</p>
+                                            <a href="{{ $fileUrl }}" download
+                                                class="inline-block px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 transition">
+                                                <i class="fas fa-download"></i> Download File
+                                            </a>
+                                        @endif
+                                    @else
+                                        <p class="text-gray-500">Tidak ada file yang diunggah.</p>
+                                    @endif
                                 </div>
 
                                 <div class="w-1/2 ml-6">
@@ -226,11 +271,11 @@
                                     </div>
 
                                     <div class="mb-4">
-                                        <label for="file" class="block text-gray-700">Upload File (Image
-                                            Only)</label>
+                                        <label for="file" class="block text-gray-700">Upload File
+                                            (jpg/png/pdf/doc)</label>
                                         <input type="file" name="file" id="file"
                                             class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                                            accept="image/*">
+                                            accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
                                     </div>
 
                                     <div class="flex justify-center">
@@ -238,8 +283,10 @@
                                             class="px-4 py-2 bg-gray-800 text-white rounded-lg">Tambah</button>
                                     </div>
                                 </form>
+
                                 @if (session('success'))
-                                    <div id="success-notification" class="bg-green-100 text-green-800 p-4 mb-4 rounded">
+                                    <div id="success-notification"
+                                        class="bg-green-100 text-green-800 p-4 mb-4 rounded">
                                         {{ session('success') }}
                                     </div>
 
@@ -492,15 +539,54 @@
                                         <input class="form-control form-control-lg" type="text"
                                             value="{{ $learningStage1->problem ?? '' }}" readonly>
 
-                                        <label for="gambar"
-                                            class="block text-gray-700 font-semibold mb-2">Gambar</label>
+                                        <label for="file"
+                                            class="block text-gray-700 font-semibold mb-2 mt-4">File</label>
+
                                         @if ($learningStage1 && $learningStage1->file)
-                                            <img src="{{ asset('storage/' . $learningStage1->file) }}"
-                                                style="width: 400px; height: auto;" alt="Gambar">
+                                            @php
+                                                $ext = strtolower(pathinfo($learningStage1->file, PATHINFO_EXTENSION));
+                                                $fileUrl = asset('storage/' . $learningStage1->file);
+                                            @endphp
+
+                                            {{-- Jika file berupa gambar --}}
+                                            @if (in_array($ext, ['jpg', 'jpeg', 'png']))
+                                                <img src="{{ $fileUrl }}" style="width: 400px; height: auto;"
+                                                    alt="Gambar">
+                                                <div class="mt-2">
+                                                    <a href="{{ $fileUrl }}" download
+                                                        class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
+                                                        <i class="fa-solid fa-download mr-2"></i> Download Gambar
+                                                    </a>
+                                                </div>
+
+                                                {{-- Jika file berupa PDF --}}
+                                            @elseif ($ext === 'pdf')
+                                                <iframe src="{{ $fileUrl }}" width="100%"
+                                                    height="500px"></iframe>
+                                                <div class="mt-2">
+                                                    <a href="{{ $fileUrl }}" download
+                                                        class="inline-flex items-center px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition">
+                                                        <i class="fa-solid fa-download mr-2"></i> Download PDF
+                                                    </a>
+                                                </div>
+
+                                                {{-- Jika file berupa Word --}}
+                                            @elseif (in_array($ext, ['doc', 'docx']))
+                                                <a href="{{ $fileUrl }}" download
+                                                    class="inline-flex items-center px-3 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition">
+                                                    <i class="fa-solid fa-file-word mr-2"></i> Download File Word
+                                                </a>
+
+                                                {{-- Jika jenis file tidak dikenali --}}
+                                            @else
+                                                <p>Jenis file tidak dikenali</p>
+                                            @endif
                                         @else
-                                            <p>No image available</p>
+                                            <p>Tidak ada file yang diunggah</p>
                                         @endif
                                     </div>
+
+
 
                                     <!-- Right: Hasil Identifikasi Masalah -->
                                     <div class="w-1/2">
